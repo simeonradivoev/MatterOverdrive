@@ -1,5 +1,6 @@
 package matteroverdrive.world.dimensions.alien;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOldLeaf;
@@ -16,8 +17,8 @@ import java.util.Random;
  */
 public class WorldGenAlienForest extends WorldGenAbstractTree
 {
-	private static final IBlockState logBlockState = MatterOverdriveBlocks.alienLog.getDefaultState();
-	private static final IBlockState field_181630_b = MatterOverdriveBlocks.alienLeaves.getDefaultState().withProperty(BlockOldLeaf.CHECK_DECAY, Boolean.valueOf(false));
+	private static final IBlockState logBlockState = MatterOverdrive.blocks.alienLog.getDefaultState();
+	private static final IBlockState field_181630_b = MatterOverdrive.blocks.alienLeaves.getDefaultState().withProperty(BlockOldLeaf.CHECK_DECAY, Boolean.valueOf(false));
 	private boolean useExtraRandomHeight;
 
 	public WorldGenAlienForest(boolean p_i45449_1_, boolean p_i45449_2_)

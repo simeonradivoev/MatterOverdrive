@@ -18,6 +18,7 @@
 
 package matteroverdrive.data.dialog;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.dialog.IDialogNpc;
 import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.init.MatterOverdriveItems;
@@ -55,7 +56,7 @@ public class DialogMessageAndroidTransformation extends DialogMessage
 
 		for (int i = 0; i < player.inventory.getSizeInventory(); i++)
 		{
-			if (player.inventory.getStackInSlot(i) != null && player.inventory.getStackInSlot(i).getItem() == MatterOverdriveItems.androidParts)
+			if (player.inventory.getStackInSlot(i) != null && player.inventory.getStackInSlot(i).getItem() == MatterOverdrive.items.androidParts)
 			{
 				int damage = player.inventory.getStackInSlot(i).getItemDamage();
 				if (damage < hasParts.length)
@@ -85,7 +86,7 @@ public class DialogMessageAndroidTransformation extends DialogMessage
 
 		for (int i = 0; i < player.inventory.getSizeInventory(); i++)
 		{
-			if (player.inventory.getStackInSlot(i) != null && player.inventory.getStackInSlot(i).getItem() == MatterOverdriveItems.androidParts)
+			if (player.inventory.getStackInSlot(i) != null && player.inventory.getStackInSlot(i).getItem() == MatterOverdrive.items.androidParts)
 			{
 				int damage = player.inventory.getStackInSlot(i).getItemDamage();
 				if (damage < hasParts.length)

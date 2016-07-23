@@ -18,6 +18,7 @@
 
 package matteroverdrive.init;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.fluids.FluidMatterPlasma;
 import matteroverdrive.fluids.FluidMoltenTritanium;
 import net.minecraft.item.ItemStack;
@@ -46,11 +47,13 @@ public class MatterOverdriveFluids
 		moltenTritanium.setLuminosity(15);
 		moltenTritanium.setTemperature(2000);
 		FluidRegistry.registerFluid(moltenTritanium);
+
+		registerFluidContainers();
 	}
 
 	@SuppressWarnings("deprecation")
-	public static void register()
+	private static void registerFluidContainers()
 	{
-		FluidContainerRegistry.registerFluidContainer(new FluidStack(matterPlasma, 32), new ItemStack(MatterOverdriveItems.matterContainerFull), new ItemStack(MatterOverdriveItems.matterContainer));
+		FluidContainerRegistry.registerFluidContainer(new FluidStack(matterPlasma, 32), new ItemStack(MatterOverdrive.items.matterContainerFull), new ItemStack(MatterOverdrive.items.matterContainer));
 	}
 }

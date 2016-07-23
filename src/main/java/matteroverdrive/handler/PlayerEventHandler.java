@@ -264,12 +264,12 @@ public class PlayerEventHandler
 	@SubscribeEvent
 	public void onAnvilRepair(AnvilUpdateEvent event)
 	{
-		if (event.getLeft() != null && event.getRight() != null && event.getLeft().getItem() == MatterOverdriveItems.portableDecomposer)
+		if (event.getLeft() != null && event.getRight() != null && event.getLeft().getItem() == MatterOverdrive.items.portableDecomposer)
 		{
 			event.setOutput(event.getLeft().copy());
 			event.setMaterialCost(1);
 			event.setCost(3);
-			MatterOverdriveItems.portableDecomposer.addStackToList(event.getOutput(), event.getRight());
+			MatterOverdrive.items.portableDecomposer.addStackToList(event.getOutput(), event.getRight());
 		}
 	}
 

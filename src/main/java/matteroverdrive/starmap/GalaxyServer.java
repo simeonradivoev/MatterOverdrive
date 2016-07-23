@@ -194,10 +194,10 @@ public class GalaxyServer extends GalaxyCommon implements IConfigSubscriber
 		planet.setHomeworld(true);
 		planet.setBuildingSpaces(8);
 		planet.setFleetSpaces(10);
-		ItemStack base = new ItemStack(MatterOverdriveItems.buildingBase);
+		ItemStack base = new ItemStack(MatterOverdrive.items.buildingBase);
 		((IBuilding)base.getItem()).setOwner(base, EntityPlayer.getUUID(player.getGameProfile()));
 		planet.addBuilding(base);
-		ItemStack scoutShip = new ItemStack(MatterOverdriveItems.scoutShip);
+		ItemStack scoutShip = new ItemStack(MatterOverdrive.items.scoutShip);
 		((IShip)scoutShip.getItem()).setOwner(scoutShip, EntityPlayer.getUUID(player.getGameProfile()));
 		planet.addShip(scoutShip);
 		planet.markDirty();

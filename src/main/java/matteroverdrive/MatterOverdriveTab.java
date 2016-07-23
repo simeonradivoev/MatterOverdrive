@@ -17,7 +17,7 @@ public class MatterOverdriveTab extends CreativeTabs
 	{
 		if (item == null)
 		{
-			return MatterOverdriveItems.matter_scanner;
+			return MatterOverdrive.items.matter_scanner;
 		}
 		return item;
 	}

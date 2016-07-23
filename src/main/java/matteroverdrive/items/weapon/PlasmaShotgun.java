@@ -226,7 +226,7 @@ public class PlasmaShotgun extends EnergyWeapon
 	{
 		if (module != null)
 		{
-			return module.getItem() == MatterOverdriveItems.weapon_module_color || (module.getItem() == MatterOverdriveItems.weapon_module_barrel && module.getItemDamage() != WeaponModuleBarrel.HEAL_BARREL_ID);
+			return module.getItem() == MatterOverdrive.items.weapon_module_color || (module.getItem() == MatterOverdrive.items.weapon_module_barrel && module.getItemDamage() != WeaponModuleBarrel.HEAL_BARREL_ID);
 		}
 		return false;
 	}

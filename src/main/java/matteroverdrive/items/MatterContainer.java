@@ -18,6 +18,7 @@
 
 package matteroverdrive.items;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.items.includes.MOBaseItem;
@@ -93,17 +94,17 @@ public class MatterContainer extends MOBaseItem
 
 					IBlockState block = world.getBlockState(pos);
 
-					if (block.getBlock() == MatterOverdriveBlocks.blockMatterPlasma)
+					if (block.getBlock() == MatterOverdrive.blocks.blockMatterPlasma)
 					{
 						world.setBlockToAir(pos);
-						return this.darinFluid(itemStack, entityPlayer, MatterOverdriveItems.matterContainerFull);
+						return this.darinFluid(itemStack, entityPlayer, MatterOverdrive.items.matterContainerFull);
 					}
 				}
 				else
 				{
 					if (!this.isFull)
 					{
-						return new ItemStack(MatterOverdriveItems.matterContainer);
+						return new ItemStack(MatterOverdrive.items.matterContainer);
 					}
 
 					pos = pos.offset(movingobjectposition.sideHit);
@@ -118,14 +119,14 @@ public class MatterContainer extends MOBaseItem
 						itemStack.stackSize--;
 						if (itemStack.stackSize > 1)
 						{
-							if (!entityPlayer.inventory.addItemStackToInventory(new ItemStack(MatterOverdriveItems.matterContainer)))
+							if (!entityPlayer.inventory.addItemStackToInventory(new ItemStack(MatterOverdrive.items.matterContainer)))
 							{
-								entityPlayer.dropItem(new ItemStack(MatterOverdriveItems.matterContainer), false);
+								entityPlayer.dropItem(new ItemStack(MatterOverdrive.items.matterContainer), false);
 							}
 						}
 						else if (itemStack.stackSize <= 0)
 						{
-							return new ItemStack(MatterOverdriveItems.matterContainer);
+							return new ItemStack(MatterOverdrive.items.matterContainer);
 						}
 					}
 				}
@@ -176,7 +177,7 @@ public class MatterContainer extends MOBaseItem
 					world.destroyBlock(pos, true);
 				}
 
-				world.setBlockState(pos, MatterOverdriveBlocks.blockMatterPlasma.getDefaultState(), 3);
+				world.setBlockState(pos, MatterOverdrive.blocks.blockMatterPlasma.getDefaultState(), 3);
 
 				return true;
 			}

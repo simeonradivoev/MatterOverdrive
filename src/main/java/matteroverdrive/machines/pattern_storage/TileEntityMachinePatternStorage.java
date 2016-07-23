@@ -18,6 +18,7 @@
 
 package matteroverdrive.machines.pattern_storage;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.IScannable;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter.IMatterDatabase;
@@ -101,7 +102,7 @@ public class TileEntityMachinePatternStorage extends MOTileEntityMachineEnergy i
 		}
 		else
 		{
-			if (isActive() && random.nextFloat() < 0.2f && getBlockType(BlockPatternStorage.class) != null && getBlockType(BlockPatternStorage.class).hasVentParticles && worldObj.getBlockState(getPos()).getBlock() == MatterOverdriveBlocks.pattern_storage)
+			if (isActive() && random.nextFloat() < 0.2f && getBlockType(BlockPatternStorage.class) != null && getBlockType(BlockPatternStorage.class).hasVentParticles && worldObj.getBlockState(getPos()).getBlock() == MatterOverdrive.blocks.pattern_storage)
 			{
 				SpawnVentParticles(0.03f, getOppositeSide(worldObj.getBlockState(getPos()).getValue(MOBlock.PROPERTY_DIRECTION)), 1);
 			}

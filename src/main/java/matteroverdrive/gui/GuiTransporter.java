@@ -18,6 +18,7 @@
 
 package matteroverdrive.gui;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.container.ContainerFactory;
 import matteroverdrive.gui.element.*;
 import matteroverdrive.init.MatterOverdriveCapabilities;
@@ -167,9 +168,9 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
 			ItemStack usb = machine.getStackInSlot(machine.usbSlotID);
 			if (usb != null)
 			{
-				if (MatterOverdriveItems.transportFlashDrive.hasTarget(usb))
+				if (MatterOverdrive.items.transportFlashDrive.hasTarget(usb))
 				{
-					machine.setSelectedLocation(MatterOverdriveItems.transportFlashDrive.getTarget(usb).add(0, 1, 0), name.getText());
+					machine.setSelectedLocation(MatterOverdrive.items.transportFlashDrive.getTarget(usb).add(0, 1, 0), name.getText());
 					machine.sendConfigsToServer(true);
 					updateInfo();
 				}
@@ -208,10 +209,10 @@ public class GuiTransporter extends MOGuiMachine<TileEntityMachineTransporter>
 		ItemStack usb = machine.getStackInSlot(machine.usbSlotID);
 		if (usb != null)
 		{
-			BlockPos target = MatterOverdriveItems.transportFlashDrive.getTarget(usb);
+			BlockPos target = MatterOverdrive.items.transportFlashDrive.getTarget(usb);
 			int targetDestination = target != null ? (int)Math.sqrt(target.distanceSq(machine.getPos())) : 0;
 			int transportRange = machine.getTransportRange();
-			boolean hasTarget = MatterOverdriveItems.transportFlashDrive.hasTarget(usb);
+			boolean hasTarget = MatterOverdrive.items.transportFlashDrive.hasTarget(usb);
 			if (!hasTarget || targetDestination > transportRange)
 			{
 				importButton.setEnabled(false);

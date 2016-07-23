@@ -123,7 +123,7 @@ public class MOExtendedProperties
 			{
 				if (questData.getActiveQuests().size() <= 0 && questData.getCompletedQuests().size() <= 0)
 				{
-					player.inventory.addItemStackToInventory(new ItemStack(MatterOverdriveItems.dataPad));
+					player.inventory.addItemStackToInventory(new ItemStack(MatterOverdrive.items.dataPad));
 				}
 				QuestStack addedQuest = questData.addQuest(questStack);
 				if (addedQuest != null)

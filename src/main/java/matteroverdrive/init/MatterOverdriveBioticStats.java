@@ -18,6 +18,7 @@
 
 package matteroverdrive.init;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.android.BionicStatGuiInfo;
 import matteroverdrive.api.android.IAndroidStatRegistry;
 import matteroverdrive.data.biostats.*;
@@ -57,7 +58,7 @@ public class MatterOverdriveBioticStats
 	public static BioticStatAirDash airDash;
 	public static BioticstatOxygen oxygen;
 
-	public static void init(FMLPreInitializationEvent event)
+	public static void init()
 	{
 		teleport = new BioticStatTeleport("teleport", 48);
 		nanobots = new BiostatNanobots("nanobots", 26);
@@ -67,7 +68,7 @@ public class MatterOverdriveBioticStats
 		highJump = new BioticStatHighJump("high_jump", 36);
 		highJump.addReqiredItm(new ItemStack(Blocks.PISTON));
 		equalizer = new BioticStatEqualizer("equalizer", 24);
-		equalizer.addReqiredItm(new ItemStack(MatterOverdriveItems.spacetime_equalizer));
+		equalizer.addReqiredItm(new ItemStack(MatterOverdrive.items.spacetime_equalizer));
 		shield = new BioticStatShield("shield", 36);
 		attack = new BioticStatAttack("attack", 30);
 		cloak = new BioticStatCloak("cloak", 36);
@@ -83,11 +84,13 @@ public class MatterOverdriveBioticStats
 		itemMagnet = new BioticStatItemMagnet("item_magnet", 24);
 		airDash = new BioticStatAirDash("air_dash", 28);
 		oxygen = new BioticstatOxygen("oxygen", 12);
+
+		configure();
 	}
 
-	public static void configure()
+	private static void configure()
 	{
-		teleport.addReqiredItm(new ItemStack(MatterOverdriveItems.h_compensator));
+		teleport.addReqiredItm(new ItemStack(MatterOverdrive.items.h_compensator));
 		teleport.addToEnabledBlacklist(shield);
 		nanoArmor.setRoot(nanobots, false);
 		nanoArmor.addCompetitor(attack);
@@ -96,7 +99,7 @@ public class MatterOverdriveBioticStats
 		inertialDampers.setRoot(highJump, false);
 		equalizer.setRoot(inertialDampers, false);
 		shield.setRoot(nanoArmor, true);
-		shield.addReqiredItm(new ItemStack(MatterOverdriveItems.forceFieldEmitter, 1));
+		shield.addReqiredItm(new ItemStack(MatterOverdrive.items.forceFieldEmitter, 1));
 		attack.addCompetitor(nanoArmor);
 		attack.setRoot(nanobots, false);
 		cloak.setRoot(shield, true);

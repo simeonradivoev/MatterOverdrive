@@ -18,10 +18,10 @@
 
 package matteroverdrive.world.buildings;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.entity.monster.EntityMeleeRougeAndroidMob;
 import matteroverdrive.entity.monster.EntityRangedRogueAndroidMob;
-import matteroverdrive.init.MatterOverdriveBlocks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
@@ -36,28 +36,28 @@ public class MOAndroidHouseBuilding extends MOWorldGenBuilding
 	{
 		super(name, new ResourceLocation(Reference.PATH_WORLD_TEXTURES + "android_house.png"), 21, 21);
 		setyOffset(-2);
-		addMapping(0x00fffc, MatterOverdriveBlocks.decorative_beams, MatterOverdriveBlocks.decorative_carbon_fiber_plate, MatterOverdriveBlocks.decorative_white_plate);
+		addMapping(0x00fffc, MatterOverdrive.blocks.decorative_beams, MatterOverdrive.blocks.decorative_carbon_fiber_plate, MatterOverdrive.blocks.decorative_white_plate);
 		addMapping(0x623200, Blocks.DIRT);
-		addMapping(0xffa200, MatterOverdriveBlocks.decorative_floor_tiles);
-		addMapping(0xfff600, MatterOverdriveBlocks.decorative_holo_matrix);
+		addMapping(0xffa200, MatterOverdrive.blocks.decorative_floor_tiles);
+		addMapping(0xfff600, MatterOverdrive.blocks.decorative_holo_matrix);
 		addMapping(0x80b956, Blocks.GRASS);
-		addMapping(0x539ac3, MatterOverdriveBlocks.decorative_tritanium_plate);
-		addMapping(0xb1c8d5, MatterOverdriveBlocks.decorative_floor_noise, MatterOverdriveBlocks.decorative_floor_tiles_green, MatterOverdriveBlocks.decorative_floot_tile_white);
-		addMapping(0x5f6569, MatterOverdriveBlocks.decorative_vent_dark);
+		addMapping(0x539ac3, MatterOverdrive.blocks.decorative_tritanium_plate);
+		addMapping(0xb1c8d5, MatterOverdrive.blocks.decorative_floor_noise, MatterOverdrive.blocks.decorative_floor_tiles_green, MatterOverdrive.blocks.decorative_floor_tile_white);
+		addMapping(0x5f6569, MatterOverdrive.blocks.decorative_vent_dark);
 		addMapping(0xf1f1f1, Blocks.AIR);
-		addMapping(0xe400ff, MatterOverdriveBlocks.starMap);
-		addMapping(0x1850ad, MatterOverdriveBlocks.decorative_clean);
-		addMapping(0x9553c3, MatterOverdriveBlocks.forceGlass);
-		addMapping(0x35d6e0, MatterOverdriveBlocks.replicator);
-		addMapping(0x35e091, MatterOverdriveBlocks.network_switch);
-		addMapping(0xc8d43d, MatterOverdriveBlocks.tritaniumCrate);
-		addMapping(0x2a4071, MatterOverdriveBlocks.androidStation, MatterOverdriveBlocks.weapon_station);
-		addMapping(0xa13e5f, MatterOverdriveBlocks.network_pipe);
-		addMapping(0xa16a3e, MatterOverdriveBlocks.chargingStation);
-		addMapping(0x416173, MatterOverdriveBlocks.decorative_tritanium_plate_stripe);
-		addMapping(0x187716, MatterOverdriveBlocks.pattern_monitor);
-		addMapping(0xac7c1e, MatterOverdriveBlocks.decorative_vent_bright);
-		addMapping(0x007eff, MatterOverdriveBlocks.decorative_stripes);
+		addMapping(0xe400ff, MatterOverdrive.blocks.starMap);
+		addMapping(0x1850ad, MatterOverdrive.blocks.decorative_clean);
+		addMapping(0x9553c3, MatterOverdrive.blocks.forceGlass);
+		addMapping(0x35d6e0, MatterOverdrive.blocks.replicator);
+		addMapping(0x35e091, MatterOverdrive.blocks.network_switch);
+		addMapping(0xc8d43d, MatterOverdrive.blocks.tritaniumCrate);
+		addMapping(0x2a4071, MatterOverdrive.blocks.androidStation, MatterOverdrive.blocks.weapon_station);
+		addMapping(0xa13e5f, MatterOverdrive.blocks.network_pipe);
+		addMapping(0xa16a3e, MatterOverdrive.blocks.chargingStation);
+		addMapping(0x416173, MatterOverdrive.blocks.decorative_tritanium_plate_stripe);
+		addMapping(0x187716, MatterOverdrive.blocks.pattern_monitor);
+		addMapping(0xac7c1e, MatterOverdrive.blocks.decorative_vent_bright);
+		addMapping(0x007eff, MatterOverdrive.blocks.decorative_stripes);
 	}
 
 	@Override

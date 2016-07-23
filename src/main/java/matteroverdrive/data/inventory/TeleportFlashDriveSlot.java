@@ -18,6 +18,7 @@
 
 package matteroverdrive.data.inventory;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.proxy.ClientProxy;
@@ -37,7 +38,7 @@ public class TeleportFlashDriveSlot extends Slot
 
 	public boolean isValidForSlot(ItemStack item)
 	{
-		return item != null && item.getItem() == MatterOverdriveItems.transportFlashDrive;
+		return item != null && item.getItem() == MatterOverdrive.items.transportFlashDrive;
 	}
 
 	@SideOnly(Side.CLIENT)

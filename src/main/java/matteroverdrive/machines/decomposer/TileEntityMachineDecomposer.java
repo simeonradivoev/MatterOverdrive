@@ -18,6 +18,7 @@
 
 package matteroverdrive.machines.decomposer;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.MatterSlot;
@@ -207,7 +208,7 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
 		}
 		else
 		{
-			if (stack.getItem() == MatterOverdriveItems.matter_dust)
+			if (stack.getItem() == MatterOverdrive.items.matter_dust)
 			{
 				if (stack.getItemDamage() == matter && stack.stackSize < stack.getMaxStackSize())
 				{
@@ -226,15 +227,15 @@ public class TileEntityMachineDecomposer extends MOTileEntityMachineMatter imple
 
 		if (stack != null)
 		{
-			if (stack.getItem() == MatterOverdriveItems.matter_dust && stack.getItemDamage() == matter && stack.stackSize < stack.getMaxStackSize())
+			if (stack.getItem() == MatterOverdrive.items.matter_dust && stack.getItemDamage() == matter && stack.stackSize < stack.getMaxStackSize())
 			{
 				stack.stackSize++;
 			}
 		}
 		else
 		{
-			stack = new ItemStack(MatterOverdriveItems.matter_dust);
-			MatterOverdriveItems.matter_dust.setMatter(stack, matter);
+			stack = new ItemStack(MatterOverdrive.items.matter_dust);
+			MatterOverdrive.items.matter_dust.setMatter(stack, matter);
 			setInventorySlotContents(OUTPUT_SLOT_ID, stack);
 		}
 	}

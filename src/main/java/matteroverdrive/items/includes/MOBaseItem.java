@@ -29,26 +29,26 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.shadowfacts.shadowmc.item.ItemBase;
 import org.lwjgl.input.Keyboard;
 
 import java.util.List;
 
-public class MOBaseItem extends Item
+public class MOBaseItem extends ItemBase
 {
 	public MOBaseItem(String name)
 	{
-		this.setUnlocalizedName(name);
+		super(name);
 		this.setCreativeTab(MatterOverdrive.tabMatterOverdrive);
-		setRegistryName(new ResourceLocation(Reference.MOD_ID, name));
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void addInformation(ItemStack itemstack, EntityPlayer player, List<String> infos, boolean p_77624_4_)
+	public void addInformation(ItemStack itemstack, EntityPlayer player, List<String> infos, boolean advanced)
 	{
 		if (hasDetails(itemstack))
 		{
-			if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || p_77624_4_)
+			if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || advanced)
 			{
 				addDetails(itemstack, player, infos);
 			}

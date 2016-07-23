@@ -123,7 +123,7 @@ public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implement
 
 			for (k = 0; k < j; ++k)
 			{
-				this.dropItem(MatterOverdriveItems.energyPack, 1);
+				this.dropItem(MatterOverdrive.items.energyPack, 1);
 			}
 
 			float lootingModifier = (Math.min(lootingLevel, 10) / 10f);
@@ -157,11 +157,11 @@ public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implement
 		if (itemstack != null && itemstack.getItem() instanceof EnergyWeapon)
 		{
 			this.aiBoltAttack.setMaxChaseDistance(((EnergyWeapon)itemstack.getItem()).getRange(itemstack) - 2);
-			if (itemstack.getItem() == MatterOverdriveItems.ionSniper)
+			if (itemstack.getItem() == MatterOverdrive.items.ionSniper)
 			{
 				aiRangedRunFromMelee.setMinDistance(16f);
 			}
-			else if (itemstack.getItem() != MatterOverdriveItems.plasmaShotgun)
+			else if (itemstack.getItem() != MatterOverdrive.items.plasmaShotgun)
 			{
 				aiRangedRunFromMelee.setMinDistance(3f);
 			}

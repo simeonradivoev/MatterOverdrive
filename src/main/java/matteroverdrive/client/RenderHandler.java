@@ -29,8 +29,6 @@ import matteroverdrive.api.renderer.IBionicPartRenderer;
 import matteroverdrive.api.renderer.IBioticStatRenderer;
 import matteroverdrive.api.starmap.IStarmapRenderRegistry;
 import matteroverdrive.blocks.BlockDecorativeColored;
-import matteroverdrive.client.model.ModelDrone;
-import matteroverdrive.client.model.ModelHulkingScientist;
 import matteroverdrive.client.model.ModelTritaniumArmor;
 import matteroverdrive.client.render.*;
 import matteroverdrive.client.render.biostat.BioticStatRendererShield;
@@ -51,8 +49,6 @@ import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.entity.weapon.PlasmaBolt;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.init.MatterOverdriveBioticStats;
-import matteroverdrive.init.MatterOverdriveBlocks;
-import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.items.IsolinearCircuit;
 import matteroverdrive.items.ItemUpgrade;
 import matteroverdrive.items.SecurityProtocol;
@@ -244,18 +240,18 @@ public class RenderHandler
 
 	public static void registerItemRendererVarients()
 	{
-		regItemRenderVer(MatterOverdriveItems.item_upgrade, "upgrade", ItemUpgrade.subItemNames);
-		regItemRenderVer(MatterOverdriveItems.weapon_module_barrel, "barrel", WeaponModuleBarrel.names);
-		regItemRenderVer(MatterOverdriveItems.isolinear_circuit, "isolinear_circuit", IsolinearCircuit.subItemNames);
-		regItemRenderVer(MatterOverdriveItems.androidPill, "android_pill", AndroidPill.names);
-		regItemRenderVer(MatterOverdriveItems.security_protocol, "security_protocol", SecurityProtocol.types);
-		regItemRenderVer(MatterOverdriveItems.androidParts, "rogue_android_part", RougeAndroidParts.names);
-		regItemRenderVer(MatterOverdriveItems.androidParts, "weapon_module_color", WeaponModuleColor.names);
+		regItemRenderVer(MatterOverdrive.items.item_upgrade, "upgrade", ItemUpgrade.subItemNames);
+		regItemRenderVer(MatterOverdrive.items.weapon_module_barrel, "barrel", WeaponModuleBarrel.names);
+		regItemRenderVer(MatterOverdrive.items.isolinear_circuit, "isolinear_circuit", IsolinearCircuit.subItemNames);
+		regItemRenderVer(MatterOverdrive.items.androidPill, "android_pill", AndroidPill.names);
+		regItemRenderVer(MatterOverdrive.items.security_protocol, "security_protocol", SecurityProtocol.types);
+		regItemRenderVer(MatterOverdrive.items.androidParts, "rogue_android_part", RougeAndroidParts.names);
+		regItemRenderVer(MatterOverdrive.items.androidParts, "weapon_module_color", WeaponModuleColor.names);
 	}
 
 	public static void registerCustomStateMappers()
 	{
-		ModelLoader.setCustomStateMapper(MatterOverdriveBlocks.alienLeaves, new StateMap.Builder().ignore(BlockLeaves.CHECK_DECAY, BlockLeaves.DECAYABLE).build());
+		ModelLoader.setCustomStateMapper(MatterOverdrive.blocks.alienLeaves, new StateMap.Builder().ignore(BlockLeaves.CHECK_DECAY, BlockLeaves.DECAYABLE).build());
 	}
 
 	private static void regItemRenderVer(Item item, String name, String[] subNames)
@@ -408,7 +404,7 @@ public class RenderHandler
 		FMLClientHandler.instance().getClient().getBlockColors().registerBlockColorHandler((state, p_186720_2_, pos, tintIndex) -> {
 			EnumDyeColor color = state.getValue(BlockDecorativeColored.COLOR);
 			return ItemDye.DYE_COLORS[MathHelper.clamp_int(color.getMetadata(),0, ItemDye.DYE_COLORS.length-1)];
-		}, MatterOverdriveBlocks.decorative_tritanium_plate_colored);
+		}, MatterOverdrive.blocks.decorative_tritanium_plate_colored);
 	}
 
 	public void createItemRenderers()
@@ -453,11 +449,11 @@ public class RenderHandler
 	@SubscribeEvent
 	public void onModelBake(ModelBakeEvent event)
 	{
-		event.getModelRegistry().putObject(new ModelResourceLocation(MatterOverdriveItems.phaser.getRegistryName(), "inventory"), rendererPhaser);
-		event.getModelRegistry().putObject(new ModelResourceLocation(MatterOverdriveItems.phaserRifle.getRegistryName(), "inventory"), rendererPhaserRifle);
-		event.getModelRegistry().putObject(new ModelResourceLocation(MatterOverdriveItems.omniTool.getRegistryName(), "inventory"), rendererOmniTool);
-		event.getModelRegistry().putObject(new ModelResourceLocation(MatterOverdriveItems.ionSniper.getRegistryName(), "inventory"), rendererIonSniper);
-		event.getModelRegistry().putObject(new ModelResourceLocation(MatterOverdriveItems.plasmaShotgun.getRegistryName(), "inventory"), renderPlasmaShotgun);
+		event.getModelRegistry().putObject(new ModelResourceLocation(MatterOverdrive.items.phaser.getRegistryName(), "inventory"), rendererPhaser);
+		event.getModelRegistry().putObject(new ModelResourceLocation(MatterOverdrive.items.phaserRifle.getRegistryName(), "inventory"), rendererPhaserRifle);
+		event.getModelRegistry().putObject(new ModelResourceLocation(MatterOverdrive.items.omniTool.getRegistryName(), "inventory"), rendererOmniTool);
+		event.getModelRegistry().putObject(new ModelResourceLocation(MatterOverdrive.items.ionSniper.getRegistryName(), "inventory"), rendererIonSniper);
+		event.getModelRegistry().putObject(new ModelResourceLocation(MatterOverdrive.items.plasmaShotgun.getRegistryName(), "inventory"), renderPlasmaShotgun);
 
 		bakeItemModels();
 	}
@@ -473,138 +469,138 @@ public class RenderHandler
 
 	public void registerItemRenderers()
 	{
-		regItemRender(MatterOverdriveItems.dataPad);
-		regItemRender(MatterOverdriveItems.scoutShip);
-		regItemRender(MatterOverdriveItems.buildingBase);
-		regItemRender(MatterOverdriveItems.buildingMatterExtractor);
-		regItemRender(MatterOverdriveItems.buildingResidential);
-		regItemRender(MatterOverdriveItems.buildingShipHangar);
-		regItemRender(MatterOverdriveItems.contract);
-		regItemRender(MatterOverdriveItems.dilithium_ctystal);
-		regItemRender(MatterOverdriveItems.earl_gray_tea);
-		regItemRender(MatterOverdriveItems.emergency_ration);
-		regItemRender(MatterOverdriveItems.forceFieldEmitter);
-		regItemRender(MatterOverdriveItems.h_compensator);
-		regItemRender(MatterOverdriveItems.integration_matrix);
-		regItemRender(MatterOverdriveItems.machine_casing);
-		regItemRender(MatterOverdriveItems.me_conversion_matrix);
-		regItemRender(MatterOverdriveItems.plasmaCore);
-		regItemRender(MatterOverdriveItems.portableDecomposer);
-		regItemRender(MatterOverdriveItems.romulan_ale);
-		regItemRender(MatterOverdriveItems.s_magnet);
-		regItemRender(MatterOverdriveItems.shipFactory);
-		regItemRender(MatterOverdriveItems.sniperScope);
-		regItemRender(MatterOverdriveItems.tritaniumSpine);
-		regItemRender(MatterOverdriveItems.tritaniumChestplate);
-		regItemRender(MatterOverdriveItems.tritanium_dust);
-		regItemRender(MatterOverdriveItems.tritaniumHelemet);
-		regItemRender(MatterOverdriveItems.tritaniumHoe);
-		regItemRender(MatterOverdriveItems.tritaniumShovel);
-		regItemRender(MatterOverdriveItems.tritanium_nugget);
-		regItemRender(MatterOverdriveItems.tritaniumLeggings);
-		regItemRender(MatterOverdriveItems.tritaniumPickaxe);
-		regItemRender(MatterOverdriveItems.tritanium_plate);
-		regItemRender(MatterOverdriveItems.tritaniumSword);
-		regItemRender(MatterOverdriveItems.wrench);
-		regItemRender(MatterOverdriveItems.battery);
-		regItemRender(MatterOverdriveItems.hc_battery);
-		regItemRender(MatterOverdriveItems.creative_battery);
-		regItemRender(MatterOverdriveItems.energyPack);
-		regItemRender(MatterOverdriveItems.matterContainer);
-		regItemRender(MatterOverdriveItems.matterContainerFull);
-		regItemRender(MatterOverdriveItems.pattern_drive);
-		//regItemRender(MatterOverdriveItems.creativePatternDrive);
-		regItemRender(MatterOverdriveItems.spacetime_equalizer);
-		regItemRender(MatterOverdriveItems.item_upgrade, "upgrade", ItemUpgrade.subItemNames);
-		regItemRender(MatterOverdriveItems.weapon_module_color, "weapon_module_color", WeaponModuleColor.names);
-		regItemRender(MatterOverdriveItems.weapon_module_barrel, "barrel", WeaponModuleBarrel.names);
-		regItemRender(MatterOverdriveItems.isolinear_circuit, "isolinear_circuit", IsolinearCircuit.subItemNames);
-		regItemRender(MatterOverdriveItems.matter_dust);
-		regItemRender(MatterOverdriveItems.matter_dust_refined);
-		regItemRender(MatterOverdriveItems.androidPill, "android_pill", AndroidPill.names);
-		regItemRender(MatterOverdriveItems.security_protocol, "security_protocol", SecurityProtocol.types);
-		regItemRender(MatterOverdriveItems.androidParts, "rogue_android_part", RougeAndroidParts.names);
-		regItemRender(MatterOverdriveItems.tritanium_ingot);
-		regItemRender(MatterOverdriveItems.transportFlashDrive);
-		regItemRender(MatterOverdriveItems.networkFlashDrive);
-		regItemRender(MatterOverdriveItems.weaponHandle);
-		regItemRender(MatterOverdriveItems.weaponReceiver);
-		regItemRender(MatterOverdriveItems.matter_scanner);
-		regItemRender(MatterOverdriveItems.phaser);
-		regItemRender(MatterOverdriveItems.phaserRifle);
-		regItemRender(MatterOverdriveItems.plasmaShotgun);
-		regItemRender(MatterOverdriveItems.omniTool);
-		regItemRender(MatterOverdriveItems.ionSniper);
-		regItemRender(MatterOverdriveItems.omniTool);
-		regItemRender(MatterOverdriveItems.plasmaShotgun);
-		regItemRender(MatterOverdriveItems.colonizerShip);
-		regItemRender(MatterOverdriveItems.tritaniumBoots);
-		regItemRender(MatterOverdriveItems.buildingPowerGenerator);
-		regItemRender(MatterOverdriveItems.weaponModuleRicochet);
+		regItemRender(MatterOverdrive.items.dataPad);
+		regItemRender(MatterOverdrive.items.scoutShip);
+		regItemRender(MatterOverdrive.items.buildingBase);
+		regItemRender(MatterOverdrive.items.buildingMatterExtractor);
+		regItemRender(MatterOverdrive.items.buildingResidential);
+		regItemRender(MatterOverdrive.items.buildingShipHangar);
+		regItemRender(MatterOverdrive.items.contract);
+		regItemRender(MatterOverdrive.items.dilithium_crystal);
+		regItemRender(MatterOverdrive.items.earl_gray_tea);
+		regItemRender(MatterOverdrive.items.emergency_ration);
+		regItemRender(MatterOverdrive.items.forceFieldEmitter);
+		regItemRender(MatterOverdrive.items.h_compensator);
+		regItemRender(MatterOverdrive.items.integration_matrix);
+		regItemRender(MatterOverdrive.items.machine_casing);
+		regItemRender(MatterOverdrive.items.me_conversion_matrix);
+		regItemRender(MatterOverdrive.items.plasmaCore);
+		regItemRender(MatterOverdrive.items.portableDecomposer);
+		regItemRender(MatterOverdrive.items.romulan_ale);
+		regItemRender(MatterOverdrive.items.s_magnet);
+		regItemRender(MatterOverdrive.items.shipFactory);
+		regItemRender(MatterOverdrive.items.sniperScope);
+		regItemRender(MatterOverdrive.items.tritaniumSpine);
+		regItemRender(MatterOverdrive.items.tritaniumChestplate);
+		regItemRender(MatterOverdrive.items.tritanium_dust);
+		regItemRender(MatterOverdrive.items.tritaniumHelmet);
+		regItemRender(MatterOverdrive.items.tritaniumHoe);
+		regItemRender(MatterOverdrive.items.tritaniumShovel);
+		regItemRender(MatterOverdrive.items.tritanium_nugget);
+		regItemRender(MatterOverdrive.items.tritaniumLeggings);
+		regItemRender(MatterOverdrive.items.tritaniumPickaxe);
+		regItemRender(MatterOverdrive.items.tritanium_plate);
+		regItemRender(MatterOverdrive.items.tritaniumSword);
+		regItemRender(MatterOverdrive.items.wrench);
+		regItemRender(MatterOverdrive.items.battery);
+		regItemRender(MatterOverdrive.items.hc_battery);
+		regItemRender(MatterOverdrive.items.creative_battery);
+		regItemRender(MatterOverdrive.items.energyPack);
+		regItemRender(MatterOverdrive.items.matterContainer);
+		regItemRender(MatterOverdrive.items.matterContainerFull);
+		regItemRender(MatterOverdrive.items.pattern_drive);
+		//regItemRender(MatterOverdrive.items.creativePatternDrive);
+		regItemRender(MatterOverdrive.items.spacetime_equalizer);
+		regItemRender(MatterOverdrive.items.item_upgrade, "upgrade", ItemUpgrade.subItemNames);
+		regItemRender(MatterOverdrive.items.weapon_module_color, "weapon_module_color", WeaponModuleColor.names);
+		regItemRender(MatterOverdrive.items.weapon_module_barrel, "barrel", WeaponModuleBarrel.names);
+		regItemRender(MatterOverdrive.items.isolinear_circuit, "isolinear_circuit", IsolinearCircuit.subItemNames);
+		regItemRender(MatterOverdrive.items.matter_dust);
+		regItemRender(MatterOverdrive.items.matter_dust_refined);
+		regItemRender(MatterOverdrive.items.androidPill, "android_pill", AndroidPill.names);
+		regItemRender(MatterOverdrive.items.security_protocol, "security_protocol", SecurityProtocol.types);
+		regItemRender(MatterOverdrive.items.androidParts, "rogue_android_part", RougeAndroidParts.names);
+		regItemRender(MatterOverdrive.items.tritanium_ingot);
+		regItemRender(MatterOverdrive.items.transportFlashDrive);
+		regItemRender(MatterOverdrive.items.networkFlashDrive);
+		regItemRender(MatterOverdrive.items.weaponHandle);
+		regItemRender(MatterOverdrive.items.weaponReceiver);
+		regItemRender(MatterOverdrive.items.matter_scanner);
+		regItemRender(MatterOverdrive.items.phaser);
+		regItemRender(MatterOverdrive.items.phaserRifle);
+		regItemRender(MatterOverdrive.items.plasmaShotgun);
+		regItemRender(MatterOverdrive.items.omniTool);
+		regItemRender(MatterOverdrive.items.ionSniper);
+		regItemRender(MatterOverdrive.items.omniTool);
+		regItemRender(MatterOverdrive.items.plasmaShotgun);
+		regItemRender(MatterOverdrive.items.colonizerShip);
+		regItemRender(MatterOverdrive.items.tritaniumBoots);
+		regItemRender(MatterOverdrive.items.buildingPowerGenerator);
+		regItemRender(MatterOverdrive.items.weaponModuleRicochet);
 
-		regItemRender(MatterOverdriveBlocks.weapon_station);
-		regItemRender(MatterOverdriveBlocks.androidStation);
-		regItemRender(MatterOverdriveBlocks.replicator);
-		regItemRender(MatterOverdriveBlocks.decomposer);
-		regItemRender(MatterOverdriveBlocks.recycler);
-		regItemRender(MatterOverdriveBlocks.matter_analyzer);
-		regItemRender(MatterOverdriveBlocks.transporter);
-		regItemRender(MatterOverdriveBlocks.network_router);
-		regItemRender(MatterOverdriveBlocks.network_switch);
-		regItemRender(MatterOverdriveBlocks.fusion_reactor_coil);
-		regItemRender(MatterOverdriveBlocks.machine_hull);
-		regItemRender(MatterOverdriveBlocks.fusionReactorIO);
-		regItemRender(MatterOverdriveBlocks.dilithium_ore);
-		regItemRender(MatterOverdriveBlocks.tritaniumOre);
-		regItemRender(MatterOverdriveBlocks.tritanium_block);
-		regItemRender(MatterOverdriveBlocks.starMap);
-		regItemRender(MatterOverdriveBlocks.solar_panel);
-		regItemRender(MatterOverdriveBlocks.matter_pipe);
-		regItemRender(MatterOverdriveBlocks.heavy_matter_pipe);
-		regItemRender(MatterOverdriveBlocks.network_pipe);
-		regItemRender(MatterOverdriveBlocks.spacetimeAccelerator);
-		regItemRender(MatterOverdriveBlocks.forceGlass);
-		regItemRender(MatterOverdriveBlocks.pattern_monitor);
-		regItemRender(MatterOverdriveBlocks.holoSign);
-		regItemRender(MatterOverdriveBlocks.pattern_storage);
-		regItemRender(MatterOverdriveBlocks.inscriber);
-		regItemRender(MatterOverdriveBlocks.gravitational_anomaly);
-		regItemRender(MatterOverdriveBlocks.fusion_reactor_controller);
-		regItemRender(MatterOverdriveBlocks.pylon);
-		regItemRender(MatterOverdriveBlocks.tritaniumCrate);
-		regItemRender(MatterOverdriveBlocks.tritaniumCrateYellow);
+		regItemRender(MatterOverdrive.blocks.weapon_station);
+		regItemRender(MatterOverdrive.blocks.androidStation);
+		regItemRender(MatterOverdrive.blocks.replicator);
+		regItemRender(MatterOverdrive.blocks.decomposer);
+		regItemRender(MatterOverdrive.blocks.recycler);
+		regItemRender(MatterOverdrive.blocks.matter_analyzer);
+		regItemRender(MatterOverdrive.blocks.transporter);
+		regItemRender(MatterOverdrive.blocks.network_router);
+		regItemRender(MatterOverdrive.blocks.network_switch);
+		regItemRender(MatterOverdrive.blocks.fusion_reactor_coil);
+		regItemRender(MatterOverdrive.blocks.machine_hull);
+		regItemRender(MatterOverdrive.blocks.fusionReactorIO);
+		regItemRender(MatterOverdrive.blocks.dilithium_ore);
+		regItemRender(MatterOverdrive.blocks.tritaniumOre);
+		regItemRender(MatterOverdrive.blocks.tritanium_block);
+		regItemRender(MatterOverdrive.blocks.starMap);
+		regItemRender(MatterOverdrive.blocks.solar_panel);
+		regItemRender(MatterOverdrive.blocks.matter_pipe);
+		regItemRender(MatterOverdrive.blocks.heavy_matter_pipe);
+		regItemRender(MatterOverdrive.blocks.network_pipe);
+		regItemRender(MatterOverdrive.blocks.spacetimeAccelerator);
+		regItemRender(MatterOverdrive.blocks.forceGlass);
+		regItemRender(MatterOverdrive.blocks.pattern_monitor);
+		regItemRender(MatterOverdrive.blocks.holoSign);
+		regItemRender(MatterOverdrive.blocks.pattern_storage);
+		regItemRender(MatterOverdrive.blocks.inscriber);
+		regItemRender(MatterOverdrive.blocks.gravitational_anomaly);
+		regItemRender(MatterOverdrive.blocks.fusion_reactor_controller);
+		regItemRender(MatterOverdrive.blocks.pylon);
+		regItemRender(MatterOverdrive.blocks.tritaniumCrate);
+		regItemRender(MatterOverdrive.blocks.tritaniumCrateYellow);
 
-		regItemRender(MatterOverdriveBlocks.decorative_stripes);
-		regItemRender(MatterOverdriveBlocks.decorative_coils);
-		regItemRender(MatterOverdriveBlocks.decorative_clean);
-		regItemRender(MatterOverdriveBlocks.decorative_vent_dark);
-		regItemRender(MatterOverdriveBlocks.decorative_vent_bright);
-		regItemRender(MatterOverdriveBlocks.decorative_holo_matrix);
-		regItemRender(MatterOverdriveBlocks.decorative_tritanium_plate);
-		regItemRender(MatterOverdriveBlocks.decorative_carbon_fiber_plate);
-		regItemRender(MatterOverdriveBlocks.decorative_floor_tiles);
-		regItemRender(MatterOverdriveBlocks.decorative_floor_tiles_green);
-		regItemRender(MatterOverdriveBlocks.decorative_floor_noise);
-		regItemRender(MatterOverdriveBlocks.decorative_tritanium_plate_stripe);
-		regItemRender(MatterOverdriveBlocks.decorative_floot_tile_white);
-		regItemRender(MatterOverdriveBlocks.decorative_white_plate);
-		regItemRender(MatterOverdriveBlocks.decorative_tritanium_plate_colored, 16);
-		regItemRender(MatterOverdriveBlocks.decorative_engine_exhaust_plasma);
-		regItemRender(MatterOverdriveBlocks.decorative_beams, 2);
-		regItemRender(MatterOverdriveBlocks.decorative_matter_tube, 2);
-		regItemRender(MatterOverdriveBlocks.decorative_tritanium_lamp, 2);
-		regItemRender(MatterOverdriveBlocks.decorative_separator, 2);
+		regItemRender(MatterOverdrive.blocks.decorative_stripes);
+		regItemRender(MatterOverdrive.blocks.decorative_coils);
+		regItemRender(MatterOverdrive.blocks.decorative_clean);
+		regItemRender(MatterOverdrive.blocks.decorative_vent_dark);
+		regItemRender(MatterOverdrive.blocks.decorative_vent_bright);
+		regItemRender(MatterOverdrive.blocks.decorative_holo_matrix);
+		regItemRender(MatterOverdrive.blocks.decorative_tritanium_plate);
+		regItemRender(MatterOverdrive.blocks.decorative_carbon_fiber_plate);
+		regItemRender(MatterOverdrive.blocks.decorative_floor_tiles);
+		regItemRender(MatterOverdrive.blocks.decorative_floor_tiles_green);
+		regItemRender(MatterOverdrive.blocks.decorative_floor_noise);
+		regItemRender(MatterOverdrive.blocks.decorative_tritanium_plate_stripe);
+		regItemRender(MatterOverdrive.blocks.decorative_floor_tile_white);
+		regItemRender(MatterOverdrive.blocks.decorative_white_plate);
+		regItemRender(MatterOverdrive.blocks.decorative_tritanium_plate_colored, 16);
+		regItemRender(MatterOverdrive.blocks.decorative_engine_exhaust_plasma);
+		regItemRender(MatterOverdrive.blocks.decorative_beams, 2);
+		regItemRender(MatterOverdrive.blocks.decorative_matter_tube, 2);
+		regItemRender(MatterOverdrive.blocks.decorative_tritanium_lamp, 2);
+		regItemRender(MatterOverdrive.blocks.decorative_separator, 2);
 	}
 
 	public void registerItemColors()
 	{
-		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack,tintIndex) -> tintIndex == 1 ? Reference.COLOR_HOLO_RED.getColor() : -1,MatterOverdriveItems.energyPack);
-		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack,tintIndex) -> tintIndex == 1 ? Reference.COLOR_MATTER.getColor() : -1,MatterOverdriveItems.battery);
-		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack,tintIndex) -> tintIndex == 1 ? Reference.COLOR_YELLOW_STRIPES.getColor() : -1,MatterOverdriveItems.hc_battery);
-		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack,tintIndex) -> tintIndex == 1 ? Reference.COLOR_HOLO_RED.getColor() : -1,MatterOverdriveItems.creative_battery);
-		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack,tintIndex) -> tintIndex == 1 ? Reference.COLOR_YELLOW_STRIPES.getColor() : -1,MatterOverdriveItems.networkFlashDrive);
-		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack,tintIndex) -> tintIndex == 1 ? Reference.COLOR_HOLO_GREEN.getColor() : -1,MatterOverdriveItems.transportFlashDrive);
-		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack,tintIndex) -> tintIndex == 1 ? Reference.COLOR_MATTER.getColor() : tintIndex == 2 ? Reference.COLOR_YELLOW_STRIPES.getColor() : -1,MatterOverdriveItems.matterContainerFull);
+		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack,tintIndex) -> tintIndex == 1 ? Reference.COLOR_HOLO_RED.getColor() : -1,MatterOverdrive.items.energyPack);
+		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack,tintIndex) -> tintIndex == 1 ? Reference.COLOR_MATTER.getColor() : -1,MatterOverdrive.items.battery);
+		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack,tintIndex) -> tintIndex == 1 ? Reference.COLOR_YELLOW_STRIPES.getColor() : -1,MatterOverdrive.items.hc_battery);
+		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack,tintIndex) -> tintIndex == 1 ? Reference.COLOR_HOLO_RED.getColor() : -1,MatterOverdrive.items.creative_battery);
+		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack,tintIndex) -> tintIndex == 1 ? Reference.COLOR_YELLOW_STRIPES.getColor() : -1,MatterOverdrive.items.networkFlashDrive);
+		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack,tintIndex) -> tintIndex == 1 ? Reference.COLOR_HOLO_GREEN.getColor() : -1,MatterOverdrive.items.transportFlashDrive);
+		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack,tintIndex) -> tintIndex == 1 ? Reference.COLOR_MATTER.getColor() : tintIndex == 2 ? Reference.COLOR_YELLOW_STRIPES.getColor() : -1,MatterOverdrive.items.matterContainerFull);
 		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack, tintIndex) -> {
 			if (tintIndex == 1 && stack != null && stack.getItem() != null)
 			{
@@ -613,7 +609,7 @@ public class RenderHandler
 			{
 				return 16777215;
 			}
-		}, MatterOverdriveItems.weapon_module_color);
+		}, MatterOverdrive.items.weapon_module_color);
 		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack, tintIndex) -> {
 			if (tintIndex == 0 && stack != null && stack.getItem() != null)
 			{
@@ -622,7 +618,7 @@ public class RenderHandler
 			{
 				return -1;
 			}
-		}, Item.getItemFromBlock(MatterOverdriveBlocks.decorative_tritanium_plate_colored));
+		}, Item.getItemFromBlock(MatterOverdrive.blocks.decorative_tritanium_plate_colored));
 	}
 
 	private <T extends Item> void regItemRender(T item, String name, String[] subNames)

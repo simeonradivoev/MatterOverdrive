@@ -18,6 +18,7 @@
 
 package matteroverdrive.world.buildings;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import net.minecraft.block.Block;
@@ -50,8 +51,8 @@ public class MOSandPit extends MOWorldGenBuilding
 		addMapping(0xffff00, Blocks.SAND);
 		addMapping(0xc735e1, Blocks.GLOWSTONE);
 		addMapping(0x35a2e1, Blocks.WATER);
-		addMapping(0x359ae1, MatterOverdriveBlocks.decorative_tritanium_plate);
-		addMapping(0xff8400, MatterOverdriveBlocks.decorative_coils);
+		addMapping(0x359ae1, MatterOverdrive.blocks.decorative_tritanium_plate);
+		addMapping(0xff8400, MatterOverdrive.blocks.decorative_coils);
 		addMapping(0x6b4400, Blocks.OAK_FENCE);
 	}
 

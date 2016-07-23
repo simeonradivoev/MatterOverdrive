@@ -158,7 +158,7 @@ public class MadScientistHouse extends StructureVillagePieces.Village
 		this.setBlockState(worldIn, Blocks.WOODEN_PRESSURE_PLATE.getDefaultState(), 6, 2, 3, structureBoundingBoxIn);
 		this.setBlockState(worldIn, Blocks.OAK_FENCE.getDefaultState(), 4, 1, 3, structureBoundingBoxIn);
 		this.setBlockState(worldIn, Blocks.WOODEN_PRESSURE_PLATE.getDefaultState(), 4, 2, 3, structureBoundingBoxIn);
-		this.setBlockState(worldIn, MatterOverdriveBlocks.inscriber.getDefaultState(), 7, 1, 1, structureBoundingBoxIn);
+		this.setBlockState(worldIn, MatterOverdrive.blocks.inscriber.getDefaultState(), 7, 1, 1, structureBoundingBoxIn);
 		this.setBlockState(worldIn, Blocks.AIR.getDefaultState(), 1, 1, 0, structureBoundingBoxIn);
 		this.setBlockState(worldIn, Blocks.AIR.getDefaultState(), 1, 2, 0, structureBoundingBoxIn);
 		this.setBlockState(worldIn, Blocks.OAK_DOOR.getDefaultState().withProperty(BlockDoor.FACING, EnumFacing.NORTH), 1, 1, 0, structureBoundingBoxIn);
@@ -177,14 +177,14 @@ public class MadScientistHouse extends StructureVillagePieces.Village
 
 			if (boundingBox.isVecInside(pos))
 			{
-				worldIn.setBlockState(pos, MatterOverdriveBlocks.tritaniumCrate.getDefaultState(), 2);
+				worldIn.setBlockState(pos, MatterOverdrive.blocks.tritaniumCrate.getDefaultState(), 2);
 				TileEntityTritaniumCrate tileentitycrate = (TileEntityTritaniumCrate)worldIn.getTileEntity(pos);
 				tileentitycrate.getInventory().addItem(MatterOverdrive.questFactory.generateQuestStack(randomIn, MatterOverdrive.quests.getQuestByName("gmo")).getContract());
-				ItemStack scanner = new ItemStack(MatterOverdriveItems.dataPad);
+				ItemStack scanner = new ItemStack(MatterOverdrive.items.dataPad);
 				scanner.setStackDisplayName("Mad Scientist's Data Pad");
-				MatterOverdriveItems.dataPad.addToScanWhitelist(scanner, Blocks.CARROTS);
-				MatterOverdriveItems.dataPad.addToScanWhitelist(scanner, Blocks.POTATOES);
-				MatterOverdriveItems.dataPad.addToScanWhitelist(scanner, Blocks.WHEAT);
+				MatterOverdrive.items.dataPad.addToScanWhitelist(scanner, Blocks.CARROTS);
+				MatterOverdrive.items.dataPad.addToScanWhitelist(scanner, Blocks.POTATOES);
+				MatterOverdrive.items.dataPad.addToScanWhitelist(scanner, Blocks.WHEAT);
 				scanner.getTagCompound().setBoolean("Destroys", true);
 				scanner.getTagCompound().setBoolean("nogui", true);
 				tileentitycrate.getInventory().addItem(scanner);

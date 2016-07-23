@@ -18,6 +18,7 @@
 
 package matteroverdrive.items.starmap;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.starmap.BuildingType;
 import matteroverdrive.api.starmap.IBuilding;
 import matteroverdrive.api.starmap.ShipType;
@@ -52,8 +53,8 @@ public class ItemColonizerShip extends ItemShipAbstract
 		UUID owner = getOwnerID(shipStack);
 		if (owner != null)
 		{
-			ItemStack base = new ItemStack(MatterOverdriveItems.buildingBase);
-			MatterOverdriveItems.buildingBase.setOwner(base, owner);
+			ItemStack base = new ItemStack(MatterOverdrive.items.buildingBase);
+			MatterOverdrive.items.buildingBase.setOwner(base, owner);
 			if (to.canBuild((IBuilding)base.getItem(), base, new ArrayList<>()))
 			{
 				shipStack.stackSize = 0;

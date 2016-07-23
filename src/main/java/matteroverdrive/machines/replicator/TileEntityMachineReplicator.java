@@ -18,6 +18,7 @@
 
 package matteroverdrive.machines.replicator;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.matter_network.IMatterNetworkClient;
 import matteroverdrive.api.matter_network.IMatterNetworkConnection;
@@ -194,8 +195,8 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 
 		if (stack == null)
 		{
-			stack = new ItemStack(MatterOverdriveItems.matter_dust);
-			MatterOverdriveItems.matter_dust.setMatter(stack, amount);
+			stack = new ItemStack(MatterOverdrive.items.matter_dust);
+			MatterOverdrive.items.matter_dust.setMatter(stack, amount);
 			setInventorySlotContents(SECOND_OUTPUT_SLOT_ID, stack);
 			return true;
 		}
@@ -317,7 +318,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 		}
 		else
 		{
-			if (stack.getItem() == MatterOverdriveItems.matter_dust && stack.getItemDamage() == matter && stack.stackSize < stack.getMaxStackSize())
+			if (stack.getItem() == MatterOverdrive.items.matter_dust && stack.getItemDamage() == matter && stack.stackSize < stack.getMaxStackSize())
 			{
 				return true;
 			}
@@ -423,7 +424,7 @@ public class TileEntityMachineReplicator extends MOTileEntityMachineMatter imple
 /*    public void setInternalPatternStorage(ItemPattern internalPatternStorage){this.internalPatternStorage = internalPatternStorage;}*/
 	private int getShielding()
 	{
-		if (getStackInSlot(SHIELDING_SLOT_ID) != null && getStackInSlot(SHIELDING_SLOT_ID).getItem() == MatterOverdriveItems.tritanium_plate)
+		if (getStackInSlot(SHIELDING_SLOT_ID) != null && getStackInSlot(SHIELDING_SLOT_ID).getItem() == MatterOverdrive.items.tritanium_plate)
 		{
 			return getStackInSlot(SHIELDING_SLOT_ID).stackSize;
 		}

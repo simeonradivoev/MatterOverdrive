@@ -63,7 +63,7 @@ public class BlockFusionReactorController extends MOBlockMachine<TileEntityMachi
         }
         else if (side == MOBlockHelper.getRightSide(meta) || side == MOBlockHelper.getLeftSide(meta))
         {
-            return MatterOverdriveBlocks.decomposer.iconTop;
+            return MatterOverdrive.blocks.decomposer.iconTop;
         }
         else
         {

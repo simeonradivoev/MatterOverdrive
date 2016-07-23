@@ -110,13 +110,13 @@ public class PageGuideDescription extends ElementBaseGroup
 		elements.add(bt_scroll_right);
 		elements.add(bt_return);
 
-		loadGuideInfo(MatterOverdriveItems.dataPad.getGuideID(dataPadStack));
+		loadGuideInfo(MatterOverdrive.items.dataPad.getGuideID(dataPadStack));
 	}
 
 	@Override
 	public void drawForeground(int mouseX, int mouseY)
 	{
-		if (MatterOverdriveItems.dataPad.getGuideID(dataPadStack) >= 0)
+		if (MatterOverdrive.items.dataPad.getGuideID(dataPadStack) >= 0)
 		{
 			boolean lastUnicodeFlag = Minecraft.getMinecraft().fontRendererObj.getUnicodeFlag();
 			//set yunicode for smaller text and all characters
@@ -208,15 +208,15 @@ public class PageGuideDescription extends ElementBaseGroup
 
 	public void OpenGuide(int id, int page, boolean writeToHistory)
 	{
-		if (MatterOverdriveItems.dataPad.getGuideID(dataPadStack) != id)
+		if (MatterOverdrive.items.dataPad.getGuideID(dataPadStack) != id)
 		{
 			if (writeToHistory)
 			{
-				historyStack.push(new HistoryEntry(MatterOverdriveItems.dataPad.getGuideID(dataPadStack), scroll));
+				historyStack.push(new HistoryEntry(MatterOverdrive.items.dataPad.getGuideID(dataPadStack), scroll));
 			}
 
 			loadGuideInfo(id);
-			MatterOverdriveItems.dataPad.setOpenGuide(dataPadStack, id);
+			MatterOverdrive.items.dataPad.setOpenGuide(dataPadStack, id);
 			MatterOverdrive.packetPipeline.sendToServer(new PacketDataPadCommands(hand, dataPadStack));
 			scroll = page;
 			tabID = 0;

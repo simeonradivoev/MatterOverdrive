@@ -1,5 +1,6 @@
 package matteroverdrive.world.dimensions.alien;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.blocks.alien.BlockFlowerAlien;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import net.minecraft.util.math.BlockPos;
@@ -23,8 +24,8 @@ public class BiomeDecoratorAlien extends BiomeDecorator
 	public BiomeDecoratorAlien()
 	{
 		super();
-		sandGen = new WorldGenSand(MatterOverdriveBlocks.alienSand, 7);
-		gravelAsSandGen = new WorldGenSand(MatterOverdriveBlocks.alienGravel, 6);
+		sandGen = new WorldGenSand(MatterOverdrive.blocks.alienSand, 7);
+		gravelAsSandGen = new WorldGenSand(MatterOverdrive.blocks.alienGravel, 6);
 
 	}
 
@@ -61,7 +62,7 @@ public class BiomeDecoratorAlien extends BiomeDecorator
 		super.decorate(worldIn, random, p_180292_3_, p_180292_4_);
 		if (worldIn == null)
 		{
-			WorldGenerator gravelGen = new WorldGenMinable(MatterOverdriveBlocks.alienGravel.getDefaultState(), this.chunkProviderSettings.gravelSize);
+			WorldGenerator gravelGen = new WorldGenMinable(MatterOverdrive.blocks.alienGravel.getDefaultState(), this.chunkProviderSettings.gravelSize);
 			this.gravelGen = gravelGen;
 		}
 	}

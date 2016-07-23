@@ -22,8 +22,11 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.compat.MatterOverdriveCompat;
 import matteroverdrive.handler.GoogleAnalyticsCommon;
 import matteroverdrive.handler.weapon.CommonWeaponHandler;
+import matteroverdrive.items.tools.TritaniumAxe;
 import matteroverdrive.starmap.GalaxyServer;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -79,4 +82,14 @@ public class CommonProxy
 	{
 		return googleAnalyticsCommon;
 	}
+
+	public void registerItemModel(Item item, int meta, String path)
+	{
+
+	}
+
+	public void registerItemModel(Block block, int meta, String path) {
+		registerItemModel(Item.getItemFromBlock(block), meta, path);
+	}
+
 }

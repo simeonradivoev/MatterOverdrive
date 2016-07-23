@@ -170,7 +170,7 @@ public class ComponentPowerGeneration extends MachineComponentAbstract<TileEntit
 
 			BlockPos destPos = machine.mainBlock.add((int)(random.nextGaussian() * 7), (int)(random.nextGaussian() * 6), (int)(random.nextGaussian() * 7));
 			IBlockState state = getWorld().getBlockState(destPos);
-			if (state.getBlock() == MatterOverdriveBlocks.pylon)
+			if (state.getBlock() == MatterOverdrive.blocks.pylon)
 			{
 				TileEntity tileEntity = getWorld().getTileEntity(destPos);
 				if (tileEntity instanceof TileEntityMachineDimensionalPylon)

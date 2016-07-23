@@ -23,10 +23,12 @@ import matteroverdrive.Reference;
 import matteroverdrive.blocks.*;
 import matteroverdrive.blocks.alien.*;
 import matteroverdrive.blocks.includes.MOBlock;
-import matteroverdrive.blocks.includes.MOBlockContainer;
 import matteroverdrive.blocks.includes.MOBlockMachine;
+import matteroverdrive.blocks.includes.MOBlockOre;
 import matteroverdrive.blocks.world.DilithiumOre;
 import matteroverdrive.items.includes.MOMachineBlockItem;
+import matteroverdrive.util.IConfigSubscriber;
+import matteroverdrive.util.MOLog;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.material.MapColor;
@@ -36,150 +38,246 @@ import net.minecraft.item.ItemColored;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.BlockFluidFinite;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.oredict.OreDictionary;
+import net.shadowfacts.shadowmc.block.ModBlocks;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MatterOverdriveBlocks
+public class MatterOverdriveBlocks extends ModBlocks
 {
-	public final static MaterialTritanium tritanium = new MaterialTritanium(MapColor.CLAY);
-	public final static BlockReplicator replicator = new BlockReplicator(tritanium, "replicator");
-	public final static BlockDecomposer decomposer = new BlockDecomposer(tritanium, "decomposer");
-	public final static BlockTransporter transporter = new BlockTransporter(tritanium, "transporter");
-	public final static BlockMatterPipe matter_pipe = new BlockMatterPipe(tritanium, "matter_pipe");
-	public final static BlockNetworkPipe network_pipe = new BlockNetworkPipe(tritanium, "network_pipe");
-	public final static BlockNetworkRouter network_router = new BlockNetworkRouter(tritanium, "network_router");
-	public final static BlockMatterAnalyzer matter_analyzer = new BlockMatterAnalyzer(tritanium, "matter_analyzer");
-	public final static DilithiumOre dilithium_ore = new DilithiumOre(Material.ROCK, "dilithium_ore");
-	public final static MOBlock tritaniumOre = (MOBlock)new MOBlock(Material.ROCK, "tritanium_ore").setHardness(8f).setResistance(5.0F);
-	public final static MOBlock tritanium_block = (MOBlock)new MOBlock(tritanium, "tritanium_block").setHardness(15.0F).setResistance(10.0F);
-	public final static MOBlock machine_hull = (MOBlock)new MOBlock(tritanium, "machine_hull").setHardness(15.0F).setResistance(8.0F);
-	public final static BlockPatternStorage pattern_storage = new BlockPatternStorage(tritanium, "pattern_storage");
-	;
-	public final static BlockSolarPanel solar_panel = new BlockSolarPanel(tritanium, "solar_panel");
-	public final static BlockWeaponStation weapon_station = new BlockWeaponStation(tritanium, "weapon_station");
-	public final static BlockPatternMonitor pattern_monitor = new BlockPatternMonitor(tritanium, "pattern_monitor");
-	public final static BlockNetworkSwitch network_switch = new BlockNetworkSwitch(tritanium, "network_switch");
-	public final static BlockGravitationalAnomaly gravitational_anomaly = new BlockGravitationalAnomaly(Material.PORTAL, "gravitational_anomaly");
-	public final static BlockGravitationalStabilizer gravitational_stabilizer = new BlockGravitationalStabilizer(tritanium, "gravitational_stabilizer");
-	public final static BlockFusionReactorController fusion_reactor_controller = new BlockFusionReactorController(tritanium, "fusion_reactor_controller");
-	public final static BlockFusionReactorCoil fusion_reactor_coil = new BlockFusionReactorCoil(tritanium, "fusion_reactor_coil");
-	public final static BlockMatterRecycler recycler = new BlockMatterRecycler(tritanium, "matter_recycler");
-	public final static BlockAndroidStation androidStation = new BlockAndroidStation(tritanium, "android_station");
-	public final static BlockStarMap starMap = new BlockStarMap(tritanium, "star_map");
-	public final static BlockChargingStation chargingStation = new BlockChargingStation(tritanium, "charging_station");
-	public final static BlockMatterPipe heavy_matter_pipe = new BlockHeavyMatterPipe(tritanium, "heavy_matter_pipe");
-	public final static BlockHoloSign holoSign = new BlockHoloSign(tritanium, "holo_sign");
-	public final static ForceGlass forceGlass = new ForceGlass(Material.GLASS, "force_glass");
-	public final static BlockFluidMatterPlasma blockMatterPlasma = (BlockFluidMatterPlasma)new BlockFluidMatterPlasma(MatterOverdriveFluids.matterPlasma, Material.WATER).setRegistryName(new ResourceLocation(Reference.MOD_ID, "matter_plasma"));
-	public final static BlockFluidFinite blockMoltenTritanium = (BlockFluidFinite)new BlockFluidFinite(MatterOverdriveFluids.moltenTritanium, Material.LAVA).setRegistryName(new ResourceLocation(Reference.MOD_ID, "molten_tritanium"));
-	public final static BlockBoundingBox boundingBox = new BlockBoundingBox(Material.AIR, "bounding_box");
-	public final static BlockFusionReactorIO fusionReactorIO = new BlockFusionReactorIO(tritanium, "fusion_reactor_io");
-	public final static BlockTritaniumCrate tritaniumCrate = new BlockTritaniumCrate(tritanium, "tritanium_crate");
-	public final static BlockTritaniumCrate tritaniumCrateYellow = new BlockTritaniumCrate(tritanium, "tritanium_crate_yellow");
-	public final static BlockInscriber inscriber = new BlockInscriber(tritanium, "inscriber");
-	public final static BlockContractMarket contractMarket = new BlockContractMarket(tritanium, "contract_market");
-	public final static BlockAndroidSpawner androidSpawner = new BlockAndroidSpawner(tritanium, "android_spawner");
-	public final static BlockSpacetimeAccelerator spacetimeAccelerator = new BlockSpacetimeAccelerator(tritanium, "spacetime_accelerator");
-	public final static BlockPylon pylon = new BlockPylon(tritanium, "pylon");
+	public final MaterialTritanium TRITANIUM = new MaterialTritanium(MapColor.CLAY);
 
-	public final static BlockDecorative decorative_stripes = new BlockDecorative(tritanium, "decorative.stripes", 5, 1, 8, 0xd4b108);
-	public final static BlockDecorative decorative_coils = new BlockDecorative(tritanium, "decorative.coils", 5, 1, 8, 0xb6621e);
-	public final static BlockDecorative decorative_clean = new BlockDecorative(tritanium, "decorative.clean", 5, 1, 8, 0x3b484b);
-	public final static BlockDecorative decorative_vent_dark = new BlockDecorative(tritanium, "decorative.vent.dark", 5, 1, 8, 0x32393c);
-	public final static BlockDecorative decorative_vent_bright = new BlockDecorative(tritanium, "decorative.vent.bright", 5, 1, 8, 0x3f4b4e);
-	public final static BlockDecorative decorative_holo_matrix = new BlockDecorative(tritanium, "decorative.holo_matrix", 3, 1, 4, 0x323b3a);
-	public final static BlockDecorative decorative_tritanium_plate = new BlockDecorative(tritanium, "decorative.tritanium_plate", 10, 1, 10, 0x475459);
-	public final static BlockDecorative decorative_carbon_fiber_plate = new BlockDecorative(tritanium, "decorative.carbon_fiber_plate", 10, 1, 12, 0x1c1f20);
-	public final static BlockDecorative decorative_matter_tube = new BlockDecorativeRotated(Material.GLASS, "decorative.matter_tube", 3, 1, 4, 0x5088a5);
-	public final static BlockDecorative decorative_beams = new BlockDecorativeRotated(tritanium, "decorative.beams", 8, 1, 8, 0x1e2220);
-	public final static BlockDecorative decorative_floor_tiles = new BlockDecorative(Material.CLAY, "decorative.floor_tiles", 4, 0, 4, 0x958d7c);
-	public final static BlockDecorative decorative_floor_tiles_green = new BlockDecorative(Material.CLAY, "decorative.floor_tiles_green", 4, 0, 4, 0x53593f);
-	public final static BlockDecorative decorative_floor_noise = new BlockDecorative(Material.CLAY, "decorative.floor_noise", 4, 0, 4, 0x7f7e7b);
-	public final static BlockDecorative decorative_tritanium_plate_stripe = new BlockDecorative(tritanium, "decorative.tritanium_plate_stripe", 10, 1, 10, 0x576468);
-	public final static BlockDecorative decorative_floot_tile_white = new BlockDecorative(Material.CLAY, "decorative.floor_tile_white", 4, 0, 4, 0xa3a49c);
-	public final static BlockDecorative decorative_white_plate = new BlockDecorative(tritanium, "decorative.white_plate", 8, 1, 8, 0xe3e3e3);
-	public final static BlockDecorative decorative_separator = new BlockDecorativeRotated(tritanium, "decorative.separator", 8, 1, 8, 0x303837);
-	public final static BlockDecorative decorative_tritanium_lamp = (BlockDecorative)new BlockDecorativeRotated(tritanium, "decorative.tritanium_lamp", 2, 1, 4, 0xd4f8f5).setLightLevel(1);
-	public final static BlockDecorative decorative_tritanium_plate_colored = new BlockDecorativeColored(tritanium, "decorative.tritanium_plate_colored", 10, 1, 10, 0x505050);
-	public final static BlockDecorative decorative_engine_exhaust_plasma = (BlockDecorative)new BlockDecorative(Material.CACTUS, "decorative.engine_exhaust_plasma", 1, 1, 1, 0x387c9e).setLightLevel(1);
+	private int registeredCount = 0;
 
-	// TODO: 3/26/2016 Find how to set block step sounds
-	public final static BlockTallGrassAlien alienTallGrass = (BlockTallGrassAlien)new BlockTallGrassAlien().setHardness(0).setUnlocalizedName("alien_tall_grass").setRegistryName(new ResourceLocation(Reference.MOD_ID, "alien_tall_grass"));
-	public final static BlockFlowerAlien alienFlower = (BlockFlowerAlien)new BlockFlowerAlien().setHardness(0).setUnlocalizedName("alien_flower").setRegistryName(new ResourceLocation(Reference.MOD_ID, "alien_flower"));
-	public final static BlockLogAlien alienLog = (BlockLogAlien)new BlockLogAlien().setUnlocalizedName("alien_log").setRegistryName(new ResourceLocation(Reference.MOD_ID, "alien_log"));
-	public final static BlockLeavesAlien alienLeaves = (BlockLeavesAlien)new BlockLeavesAlien().setUnlocalizedName("alien_leaves").setRegistryName(new ResourceLocation(Reference.MOD_ID, "alien_leaves"));
-	public final static BlockFalling alienSand = (BlockFalling)new BlockFalling(Material.SAND).setHardness(1).setUnlocalizedName("alien_sand").setCreativeTab(MatterOverdrive.tabMatterOverdrive_decorative).setRegistryName(new ResourceLocation(Reference.MOD_ID, "alien_sand"));
-	public final static BlockFalling alienGravel = (BlockFalling)new BlockFalling(Material.SAND).setHardness(1).setUnlocalizedName("alien_gravel").setCreativeTab(MatterOverdrive.tabMatterOverdrive_decorative).setRegistryName(new ResourceLocation(Reference.MOD_ID, "alien_gravel"));
-	public final static BlockStoneAlien alienStone = (BlockStoneAlien)new BlockStoneAlien(Material.ROCK).setHardness(1.5f).setResistance(10.0f).setCreativeTab(MatterOverdrive.tabMatterOverdrive_decorative).setUnlocalizedName("alien_stone").setRegistryName(new ResourceLocation(Reference.MOD_ID, "alien_stone"));
+//	Materials
+	public DilithiumOre dilithium_ore;
+	public MOBlockOre tritaniumOre;
+	public MOBlockOre tritanium_block;
+
+//	Crafting
+	public MOBlock machine_hull;
+
+//	Matter Network
+	public BlockDecomposer decomposer;
+	public BlockMatterRecycler recycler;
+	public BlockReplicator replicator;
+	public BlockMatterPipe matter_pipe;
+	public BlockMatterPipe heavy_matter_pipe;
+	public BlockNetworkPipe network_pipe;
+	public BlockNetworkRouter network_router;
+	public BlockMatterAnalyzer matter_analyzer;
+	public BlockPatternMonitor pattern_monitor;
+	public BlockPatternStorage pattern_storage;
+	public BlockNetworkSwitch network_switch;
+
+//	Energy Generation
+	public BlockSolarPanel solar_panel;
+
+//	Gravitational Anomaly / Fusion Reactor
+	public BlockGravitationalAnomaly gravitational_anomaly;
+	public BlockGravitationalStabilizer gravitational_stabilizer;
+	public BlockFusionReactorController fusion_reactor_controller;
+	public BlockFusionReactorCoil fusion_reactor_coil;
+	public BlockFusionReactorIO fusionReactorIO;
+
+//	Fluids
+	public BlockFluidMatterPlasma blockMatterPlasma;
+	public BlockFluidFinite blockMoltenTritanium;
+
+//	Storage
+	public BlockTritaniumCrate tritaniumCrate;
+	public BlockTritaniumCrate tritaniumCrateYellow;
+
+//	Machines
+	public BlockInscriber inscriber;
+	public BlockContractMarket contractMarket;
+	public BlockAndroidSpawner androidSpawner;
+	public BlockSpacetimeAccelerator spacetimeAccelerator;
+	public BlockPylon pylon;
+
+//	Misc
+	public BlockTransporter transporter;
+	public BlockStarMap starMap;
+	public BlockHoloSign holoSign;
+	public BlockWeaponStation weapon_station;
+	public BlockAndroidStation androidStation;
+	public BlockChargingStation chargingStation;
+
+//	Decorative
+	public ForceGlass forceGlass;
+	public BlockDecorative decorative_stripes;
+	public BlockDecorative decorative_coils;
+	public BlockDecorative decorative_clean;
+	public BlockDecorative decorative_vent_dark;
+	public BlockDecorative decorative_vent_bright;
+	public BlockDecorative decorative_holo_matrix;
+	public BlockDecorative decorative_tritanium_plate;
+	public BlockDecorative decorative_tritanium_plate_stripe;
+	public BlockDecorative decorative_carbon_fiber_plate;
+	public BlockDecorative decorative_matter_tube;
+	public BlockDecorative decorative_beams;
+	public BlockDecorative decorative_floor_tiles;
+	public BlockDecorative decorative_floor_tile_white;
+	public BlockDecorative decorative_floor_tiles_green;
+	public BlockDecorative decorative_floor_noise;
+	public BlockDecorative decorative_white_plate;
+	public BlockDecorative decorative_separator;
+	public BlockDecorative decorative_tritanium_lamp;
+	public BlockDecorative decorative_tritanium_plate_colored;
+	public BlockDecorative decorative_engine_exhaust_plasma;
+
+//	Alien world
+	public BlockTallGrassAlien alienTallGrass;
+	public BlockFlowerAlien alienFlower;
+	public BlockLogAlien alienLog;
+	public BlockLeavesAlien alienLeaves;
+	public BlockFalling alienSand;
+	public BlockFalling alienGravel;
+	public BlockStoneAlien alienStone;
+
+//	Internal
+	public BlockBoundingBox boundingBox;
 
 	public static final List<IRecipe> recipes = new ArrayList<>();
 
-	public static void init(FMLPreInitializationEvent event)
+	@Override
+	public void init()
 	{
-		tritaniumOre.setHarvestLevel("pickaxe", 2);
-		tritanium_block.setHarvestLevel("pickaxe", 2);
-		machine_hull.setHarvestLevel("pickaxe", 2);
+		MOLog.info("Registering blocks");
+
+//		Materials
+		dilithium_ore = register(new DilithiumOre(Material.ROCK, "dilithium_ore", "oreDilithium"));
+		tritaniumOre = register(new MOBlockOre(Material.ROCK, "tritanium_ore", "oreTritanium"));
+		tritaniumOre.setHardness(8f).setResistance(5.0F).setHarvestLevel("pickaxe", 2);
+		tritanium_block = register(new MOBlockOre(TRITANIUM, "tritanium_block", "blockTritanium"));
+		tritanium_block.setHardness(15.0F).setResistance(10.0F).setHarvestLevel("pickaxe", 2);
+
+//		Crafting
+		machine_hull = register(new MOBlock(TRITANIUM, "machine_hull"));
+		machine_hull.setHardness(15.0F).setResistance(8.0F).setHarvestLevel("pickaxe", 2);
+
+//		Matter Network
+		decomposer = register(new BlockDecomposer(TRITANIUM, "decomposer"));
+		recycler = register(new BlockMatterRecycler(TRITANIUM, "matter_recycler"));
+		replicator = register(new BlockReplicator(TRITANIUM, "replicator"));
+		matter_pipe = register(new BlockMatterPipe(TRITANIUM, "matter_pipe"));
+		heavy_matter_pipe = register(new BlockHeavyMatterPipe(TRITANIUM, "heavy_matter_pipe"));
+		network_pipe = register(new BlockNetworkPipe(TRITANIUM, "network_pipe"));
+		network_router = register(new BlockNetworkRouter(TRITANIUM, "network_router"));
+		matter_analyzer = register(new BlockMatterAnalyzer(TRITANIUM, "matter_analyzer"));
+		pattern_monitor = register(new BlockPatternMonitor(TRITANIUM, "pattern_monitor"));
+		pattern_storage = register(new BlockPatternStorage(TRITANIUM, "pattern_storage"));
+		network_switch = register(new BlockNetworkSwitch(TRITANIUM, "network_switch"));
+
+//		Energy Generation
+		solar_panel = register(new BlockSolarPanel(TRITANIUM, "solar_panel"));
+
+//		Gravitational Anomaly / Fusion Reactor
+		gravitational_anomaly = register(new BlockGravitationalAnomaly(Material.PORTAL, "gravitational_anomaly"));
+		gravitational_stabilizer = register(new BlockGravitationalStabilizer(TRITANIUM, "gravitational_stabilizer"));
+		fusion_reactor_controller = register(new BlockFusionReactorController(TRITANIUM, "fusion_reactor_controller"));
+		fusion_reactor_coil = register(new BlockFusionReactorCoil(TRITANIUM, "fusion_reactor_coil"));
+		fusionReactorIO = register(new BlockFusionReactorIO(TRITANIUM, "fusion_reactor_io"));
+
+//		Fluids
+		blockMatterPlasma = register(new BlockFluidMatterPlasma(MatterOverdriveFluids.matterPlasma, Material.WATER));
+		blockMoltenTritanium = register((BlockFluidFinite)new BlockFluidFinite(MatterOverdriveFluids.moltenTritanium, Material.LAVA).setRegistryName(new ResourceLocation(Reference.MOD_ID, "molten_tritanium")));
+
+//		Storage
+		tritaniumCrate = register(new BlockTritaniumCrate(TRITANIUM, "tritanium_crate"));
+		tritaniumCrateYellow = register(new BlockTritaniumCrate(TRITANIUM, "tritanium_crate_yellow"));
+
+//		Machines
+		inscriber = register(new BlockInscriber(TRITANIUM, "inscriber"));
+		contractMarket = register(new BlockContractMarket(TRITANIUM, "contract_market"));
+		androidSpawner = register(new BlockAndroidSpawner(TRITANIUM, "android_spawner"));
+		spacetimeAccelerator = register(new BlockSpacetimeAccelerator(TRITANIUM, "spacetime_accelerator"));
+		pylon = register(new BlockPylon(TRITANIUM, "pylon"));
+
+//		Misc
+		transporter = register(new BlockTransporter(TRITANIUM, "transporter"));
+		starMap = register(new BlockStarMap(TRITANIUM, "star_map"));
+		holoSign = register(new BlockHoloSign(TRITANIUM, "holo_sign"));
+		weapon_station = register(new BlockWeaponStation(TRITANIUM, "weapon_station"));
+		androidStation = register(new BlockAndroidStation(TRITANIUM, "android_station"));
+		chargingStation = register(new BlockChargingStation(TRITANIUM, "charging_station"));
+
+//		Decorative
+		forceGlass = register(new ForceGlass(Material.GLASS, "force_glass"));
+		decorative_stripes = register(new BlockDecorative(TRITANIUM, "decorative.stripes", 5, 1, 8, 0xd4b108));
+		decorative_coils = register(new BlockDecorative(TRITANIUM, "decorative.coils", 5, 1, 8, 0xb6621e));
+		decorative_clean = register(new BlockDecorative(TRITANIUM, "decorative.clean", 5, 1, 8, 0x3b484b));
+		decorative_vent_dark = register(new BlockDecorative(TRITANIUM, "decorative.vent.dark", 5, 1, 8, 0x32393c));
+		decorative_vent_bright = register(new BlockDecorative(TRITANIUM, "decorative.vent.bright", 5, 1, 8, 0x3f4b4e));
+		decorative_holo_matrix = register(new BlockDecorative(TRITANIUM, "decorative.holo_matrix", 3, 1, 4, 0x323b3a));
+		decorative_tritanium_plate = register(new BlockDecorative(TRITANIUM, "decorative.tritanium_plate", 10, 1, 10, 0x475459));
+		decorative_tritanium_plate_stripe = register(new BlockDecorative(TRITANIUM, "decorative.tritanium_plate_stripe", 10, 1, 10, 0x576468));
+		decorative_carbon_fiber_plate = register(new BlockDecorative(TRITANIUM, "decorative.carbon_fiber_plate", 10, 1, 12, 0x1c1f20));
+		decorative_matter_tube = register(new BlockDecorativeRotated(Material.GLASS, "decorative.matter_tube", 3, 1, 4, 0x5088a5));
+		decorative_beams = register(new BlockDecorativeRotated(TRITANIUM, "decorative.beams", 8, 1, 8, 0x1e2220));
+		decorative_floor_tiles = register(new BlockDecorative(Material.CLAY, "decorative.floor_tiles", 4, 0, 4, 0x958d7c));
+		decorative_floor_tile_white = register(new BlockDecorative(Material.CLAY, "decorative.floor_tile_white", 4, 0, 4, 0xa3a49c));
+		decorative_floor_tiles_green = register(new BlockDecorative(Material.CLAY, "decorative.floor_tiles_green", 4, 0, 4, 0x53593f));
+		decorative_floor_noise = register(new BlockDecorative(Material.CLAY, "decorative.floor_noise", 4, 0, 4, 0x7f7e7b));
+		decorative_white_plate = register(new BlockDecorative(TRITANIUM, "decorative.white_plate", 8, 1, 8, 0xe3e3e3));
+		decorative_separator = register(new BlockDecorativeRotated(TRITANIUM, "decorative.separator", 8, 1, 8, 0x303837));
+		decorative_tritanium_lamp = register(new BlockDecorativeRotated(TRITANIUM, "decorative.tritanium_lamp", 2, 1, 4, 0xd4f8f5));
+		decorative_tritanium_lamp.setLightLevel(1);
+		decorative_tritanium_plate_colored = register(new BlockDecorativeColored(TRITANIUM, "decorative.tritanium_plate_colored", 10, 1, 10, 0x505050));
+		decorative_engine_exhaust_plasma = register(new BlockDecorative(Material.CACTUS, "decorative.engine_exhaust_plasma", 1, 1, 1, 0x387c9e));
+		decorative_engine_exhaust_plasma.setLightLevel(1);
+
+//		Alien world
+		alienTallGrass = register(new BlockTallGrassAlien("alien_tall_grass"));
+		alienTallGrass.setHardness(0);
+		alienFlower = register(new BlockFlowerAlien("alien_flower"));
+		alienFlower.setHardness(0);
+		alienLog = register(new BlockLogAlien("alien_log"));
+		alienLeaves = register(new BlockLeavesAlien("alien_leaves"));
+		alienSand = register((BlockFalling)new BlockFalling(Material.SAND).setRegistryName(new ResourceLocation(Reference.MOD_ID, "alien_sand")));
+		alienSand.setHardness(1).setUnlocalizedName("alien_sand").setCreativeTab(MatterOverdrive.tabMatterOverdrive_decorative);
+		alienGravel = register((BlockFalling)new BlockFalling(Material.SAND).setRegistryName(new ResourceLocation(Reference.MOD_ID, "alien_gravel")));
+		alienGravel.setHardness(1).setUnlocalizedName("alien_gravel").setCreativeTab(MatterOverdrive.tabMatterOverdrive_decorative);
+		alienStone = register(new BlockStoneAlien("alien_stone", Material.ROCK));
+		alienStone.setHardness(1.5f).setResistance(10.0f).setCreativeTab(MatterOverdrive.tabMatterOverdrive_decorative);
+
+//		Internal
+		boundingBox = register(new BlockBoundingBox(Material.AIR, "bounding_box"));
+
+		MOLog.info("Finished registering blocks");
+		MOLog.info("Registered %d blocks", registeredCount);
 	}
 
-	public static void register()
+	@Override
+	protected <T extends Block> T register(T block)
 	{
-		for (Field field : MatterOverdriveBlocks.class.getFields())
+		ItemBlock itemBlock;
+
+		if (block instanceof MOBlockMachine)
 		{
-			if (Block.class.isAssignableFrom(field.getType()))
-			{
-				try
-				{
-					Block block = (Block)field.get(null);
-					GameRegistry.register(block);
-					if (block instanceof MOBlockMachine)
-					{
-						GameRegistry.register(new MOMachineBlockItem(block), block.getRegistryName());
-					}
-					else if (block instanceof BlockDecorativeColored)
-					{
-						GameRegistry.register(new ItemColored(block,false), block.getRegistryName());
-					}
-					else
-					{
-						GameRegistry.register(new ItemBlock(block), block.getRegistryName());
-					}
-
-					if (block instanceof MOBlockContainer) {
-						GameRegistry.registerTileEntity(((MOBlockContainer)block).getTileEntityClass(), block.getRegistryName().toString());
-					}
-				}
-				catch (IllegalAccessException e)
-				{
-					e.printStackTrace();
-				}
-			}
+			itemBlock = new MOMachineBlockItem(block);
 		}
+		else if (block instanceof BlockDecorativeColored)
+		{
+			itemBlock = new ItemColored(block, false);
+			itemBlock.setRegistryName(block.getRegistryName());
+		}
+		else
+		{
+			itemBlock = new ItemBlock(block);
+			itemBlock.setRegistryName(block.getRegistryName());
+		}
+		return register(block, itemBlock);
+	}
 
-		MatterOverdrive.configHandler.subscribe(replicator);
-		MatterOverdrive.configHandler.subscribe(transporter);
-		MatterOverdrive.configHandler.subscribe(decomposer);
-		MatterOverdrive.configHandler.subscribe(matter_analyzer);
-		MatterOverdrive.configHandler.subscribe(pattern_storage);
-		MatterOverdrive.configHandler.subscribe(solar_panel);
-		MatterOverdrive.configHandler.subscribe(pattern_monitor);
-		MatterOverdrive.configHandler.subscribe(network_switch);
-		MatterOverdrive.configHandler.subscribe(gravitational_anomaly);
-		MatterOverdrive.configHandler.subscribe(gravitational_stabilizer);
-		MatterOverdrive.configHandler.subscribe(fusion_reactor_controller);
-		MatterOverdrive.configHandler.subscribe(recycler);
-		MatterOverdrive.configHandler.subscribe(androidStation);
-		MatterOverdrive.configHandler.subscribe(starMap);
-		MatterOverdrive.configHandler.subscribe(chargingStation);
-		MatterOverdrive.configHandler.subscribe(spacetimeAccelerator);
-
-		OreDictionary.registerOre("oreTritanium", tritaniumOre);
-		OreDictionary.registerOre("oreDilithium", dilithium_ore);
-		OreDictionary.registerOre("blockTritanium", tritanium_block);
+	@Override
+	protected <T extends Block> T register(T block, ItemBlock itemBlock)
+	{
+		super.register(block, itemBlock);
+		if (block instanceof IConfigSubscriber) {
+			MatterOverdrive.configHandler.subscribe((IConfigSubscriber)block);
+		}
+		registeredCount++;
+		return block;
 	}
 }

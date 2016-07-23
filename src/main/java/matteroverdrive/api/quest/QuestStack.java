@@ -229,7 +229,7 @@ public class QuestStack
 
 	public ItemStack getContract()
 	{
-		ItemStack contract = new ItemStack(MatterOverdriveItems.contract);
+		ItemStack contract = new ItemStack(MatterOverdrive.items.contract);
 		NBTTagCompound questTag = new NBTTagCompound();
 		writeToNBT(questTag);
 		contract.setTagCompound(questTag);

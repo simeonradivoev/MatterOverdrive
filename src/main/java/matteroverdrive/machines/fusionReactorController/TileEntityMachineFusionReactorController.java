@@ -21,6 +21,7 @@ package matteroverdrive.machines.fusionReactorController;
 
 import cofh.api.energy.IEnergyConnection;
 import cofh.api.energy.IEnergyReceiver;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.blocks.includes.MOBlock;
 import matteroverdrive.init.MatterOverdriveBlocks;
@@ -278,7 +279,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
 						info = "INVALID\nSTRUCTURE";
 						break;
 					}
-					else if (block == MatterOverdriveBlocks.machine_hull)
+					else if (block == MatterOverdrive.blocks.machine_hull)
 					{
 						if (blocks[i] == 1)
 						{
@@ -287,7 +288,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
 							break;
 						}
 					}
-					else if (block == MatterOverdriveBlocks.fusion_reactor_coil || tileEntity instanceof IMultiBlockTile)
+					else if (block == MatterOverdrive.blocks.fusion_reactor_coil || tileEntity instanceof IMultiBlockTile)
 					{
 						if (blocks[i] == 0)
 						{
@@ -296,7 +297,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
 							break;
 						}
 					}
-					else if (block == MatterOverdriveBlocks.decomposer)
+					else if (block == MatterOverdrive.blocks.decomposer)
 					{
 						if (blocks[i] != 2)
 						{
@@ -461,7 +462,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
 		for (int i = -MAX_GRAVITATIONAL_ANOMALY_DISTANCE; i < MAX_GRAVITATIONAL_ANOMALY_DISTANCE + 1; i++)
 		{
 			Block block = worldObj.getBlockState(position.offset(up, i)).getBlock();
-			if (block != null && block == MatterOverdriveBlocks.gravitational_anomaly)
+			if (block != null && block == MatterOverdrive.blocks.gravitational_anomaly)
 			{
 				return new BlockPos(0, 0, 0).offset(up, i);
 			}

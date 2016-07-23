@@ -1,5 +1,6 @@
 package matteroverdrive.blocks.alien;
 
+import matteroverdrive.Reference;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.material.MapColor;
@@ -9,6 +10,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -20,8 +22,10 @@ import java.util.List;
  */
 public class BlockLogAlien extends BlockLog
 {
-	public BlockLogAlien()
+	public BlockLogAlien(String name)
 	{
+		setUnlocalizedName(name);
+		setRegistryName(new ResourceLocation(Reference.MOD_ID, name));
 		this.setDefaultState(this.blockState.getBaseState().withProperty(LOG_AXIS, BlockLog.EnumAxis.Y));
 	}
 

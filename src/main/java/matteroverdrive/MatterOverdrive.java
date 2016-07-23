@@ -42,6 +42,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.util.concurrent.ExecutorService;
@@ -50,6 +52,12 @@ import java.util.concurrent.Executors;
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, guiFactory = Reference.GUI_FACTORY_CLASS, dependencies = Reference.DEPEDNENCIES)
 public class MatterOverdrive
 {
+	@Mod.Instance(Reference.MOD_ID)
+	public static MatterOverdrive instance;
+
+	@SidedProxy(clientSide = Reference.CLIENT_PROXY_CLASS, serverSide = Reference.SERVER_PROXY_CLASS)
+	public static CommonProxy proxy;
+
 	public static final MatterOverdriveTab tabMatterOverdrive = new MatterOverdriveTab("tabMatterOverdrive");
 	public static final MatterOverdriveTab tabMatterOverdrive_modules = new MatterOverdriveTab("tabMatterOverdrive_modules");
 	public static final MatterOverdriveTab tabMatterOverdrive_upgrades = new MatterOverdriveTab("tabMatterOverdrive_upgrades");
@@ -58,17 +66,15 @@ public class MatterOverdrive
 	public static final MatterOverdriveTab tabMatterOverdrive_buildings = new MatterOverdriveTab("tabMatterOverdrive_buildings");
 	public static final MatterOverdriveTab tabMatterOverdrive_decorative = new MatterOverdriveTab("tabMatterOverdrive_decorative");
 	public static final MatterOverdriveTab tabMatterOverdrive_androidParts = new MatterOverdriveTab("tabMatterOverdrive_androidParts");
+
+
 	public static final ExecutorService threadPool = Executors.newFixedThreadPool(2);
-	@SidedProxy(clientSide = Reference.CLIENT_PROXY_CLASS, serverSide = Reference.SERVER_PROXY_CLASS)
-	public static CommonProxy proxy;
 	public static TickHandler tickHandler;
 	public static PlayerEventHandler playerEventHandler;
 	public static ConfigurationHandler configHandler;
 	public static GuiHandler guiHandler;
 	public static PacketPipeline packetPipeline;
 	public static BucketHandler bucketHandler;
-	@Mod.Instance(Reference.MOD_ID)
-	public static MatterOverdrive instance;
 	public static MatterOverdriveWorld moWorld;
 	public static EntityHandler entityHandler;
 	public static MatterRegistry matterRegistry;
@@ -85,6 +91,10 @@ public class MatterOverdrive
 	public static DialogAssembler dialogAssembler;
 	public static MatterNetworkHandler matterNetworkHandler;
 	public static FluidNetworkHandler fluidNetworkHandler;
+
+//	Content
+	public static final MatterOverdriveItems items = new MatterOverdriveItems();
+	public static final MatterOverdriveBlocks blocks = new MatterOverdriveBlocks();
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -114,6 +124,17 @@ public class MatterOverdrive
 		matterNetworkHandler = new MatterNetworkHandler();
 		fluidNetworkHandler = new FluidNetworkHandler();
 
+		items.init();
+		MatterOverdriveFluids.init(event);
+		blocks.init();
+		MatterOverdriveBioticStats.init();
+		MatterOverdriveDialogs.init(configHandler, dialogRegistry);
+		MatterOverdriveQuests.init();
+		MatterOverdriveQuests.register(quests);
+		MatterOverdriveSounds.register();
+		EntityVillagerMadScientist.registerDialogMessages(dialogRegistry, event.getSide());
+		MatterOverdriveCapabilities.init();
+
 		MinecraftForge.EVENT_BUS.register(matterRegistrationHandler);
 		MinecraftForge.EVENT_BUS.register(configHandler);
 		tickHandler = new TickHandler(configHandler, playerEventHandler);
@@ -122,16 +143,12 @@ public class MatterOverdrive
 		MinecraftForge.EVENT_BUS.register(playerEventHandler);
 		MinecraftForge.EVENT_BUS.register(bucketHandler);
 		MinecraftForge.EVENT_BUS.register(blockHandler);
-		MatterOverdriveFluids.init(event);
-		MatterOverdriveBlocks.init(event);
-		MatterOverdriveItems.init(event);
 		moWorld = new MatterOverdriveWorld(configHandler);
 		MatterOverdriveEntities.init(event, configHandler);
 		MatterOverdriveEnchantments.init(event, configHandler);
 		moWorld.register();
 		MatterNetworkRegistry.register();
 		packetPipeline.registerPackets();
-		MatterOverdriveBioticStats.init(event);
 		MatterOverdriveBioticStats.registerAll(configHandler, statRegistry);
 		matterRegistry.preInit(event, configHandler);
 		MinecraftForge.EVENT_BUS.register(matterNetworkHandler);
@@ -139,17 +156,6 @@ public class MatterOverdrive
 		UpdateTabs();
 
 		proxy.preInit(event);
-
-		MatterOverdriveBlocks.register();
-		MatterOverdriveItems.register();
-		MatterOverdriveFluids.register();
-		MatterOverdriveBioticStats.configure();
-		MatterOverdriveDialogs.init(configHandler, dialogRegistry);
-		MatterOverdriveQuests.init();
-		MatterOverdriveQuests.register(quests);
-		MatterOverdriveSounds.register();
-		EntityVillagerMadScientist.registerDialogMessages(dialogRegistry, event.getSide());
-		MatterOverdriveCapabilities.init();
 
 		MatterOverdriveCompat.preInit(event);
 	}
@@ -182,8 +188,7 @@ public class MatterOverdrive
 		proxy.postInit(event);
 		MatterOverdriveCompat.postInit(event);
 		MatterOverdriveEntities.register(event);
-		MatterOverdriveItems.addToDungons();
-		MatterOverdriveItems.addToMODungons();
+		items.addToDungons();
 
 		questAssembler.loadQuests(quests);
 		questAssembler.loadCustomQuests(quests);
@@ -230,14 +235,14 @@ public class MatterOverdrive
 
 	private void UpdateTabs()
 	{
-		tabMatterOverdrive.item = MatterOverdriveItems.matter_scanner;
-		tabMatterOverdrive_modules.item = MatterOverdriveItems.weapon_module_color;
-		tabMatterOverdrive_upgrades.item = MatterOverdriveItems.item_upgrade;
-		tabMatterOverdrive_food.item = MatterOverdriveItems.earl_gray_tea;
-		tabMatterOverdrive_ships.item = MatterOverdriveItems.colonizerShip;
-		tabMatterOverdrive_buildings.item = MatterOverdriveItems.buildingBase;
-		tabMatterOverdrive_decorative.item = new ItemBlock(MatterOverdriveBlocks.decorative_stripes);
-		tabMatterOverdrive_androidParts.item = MatterOverdriveItems.androidParts;
+		tabMatterOverdrive.item = items.matter_scanner;
+		tabMatterOverdrive_modules.item = items.weapon_module_color;
+		tabMatterOverdrive_upgrades.item = items.item_upgrade;
+		tabMatterOverdrive_food.item = items.earl_gray_tea;
+		tabMatterOverdrive_ships.item = items.colonizerShip;
+		tabMatterOverdrive_buildings.item = items.buildingBase;
+		tabMatterOverdrive_decorative.item = new ItemBlock(MatterOverdrive.blocks.decorative_stripes);
+		tabMatterOverdrive_androidParts.item = items.androidParts;
 	}
 
 	private void checkJavaVersion()

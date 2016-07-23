@@ -18,33 +18,26 @@
 
 package matteroverdrive.items.food;
 
-import matteroverdrive.MatterOverdrive;
-import matteroverdrive.Reference;
 import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
-import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 /**
  * @author shadowfacts
  */
-public class RomulanAle extends ItemFood
+public class RomulanAle extends MOItemFood
 {
 
 	public RomulanAle(String name)
 	{
-		super(4, 0.6f, false);
-		setUnlocalizedName(name);
-		setRegistryName(new ResourceLocation(Reference.MOD_ID, name));
+		super(name, 4, 0.6f, false);
 		setAlwaysEdible();
-		setCreativeTab(MatterOverdrive.tabMatterOverdrive_food);
 	}
 
 	@Override

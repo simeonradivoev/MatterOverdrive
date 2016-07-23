@@ -1,5 +1,6 @@
 package matteroverdrive.compat.modules.jei;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.container.ContainerInscriber;
 import matteroverdrive.gui.GuiInscriber;
 import matteroverdrive.handler.recipes.InscriberRecipes;
@@ -28,7 +29,7 @@ public class MOPlugin implements IModPlugin
 
 		registry.addRecipes(InscriberRecipes.getRecipes());
 
-		registry.addRecipeCategoryCraftingItem(new ItemStack(MatterOverdriveBlocks.inscriber), InscriberRecipeCategory.UID);
+		registry.addRecipeCategoryCraftingItem(new ItemStack(MatterOverdrive.blocks.inscriber), InscriberRecipeCategory.UID);
 
 		registry.getRecipeTransferRegistry().addRecipeTransferHandler(ContainerInscriber.class, InscriberRecipeCategory.UID, 0, 2, 8, 36);
 

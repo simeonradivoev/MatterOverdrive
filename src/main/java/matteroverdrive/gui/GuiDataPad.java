@@ -63,7 +63,7 @@ public class GuiDataPad extends MOGuiBase
 		background = new ScaleTexture(BG, 93, 115).setOffsets(46, 46, 40, 73);
 		dataPad = dataPadStack;
 		this.hand = hand;
-		setPage(MatterOverdriveItems.dataPad.getPage(dataPadStack));
+		setPage(MatterOverdrive.items.dataPad.getPage(dataPadStack));
 		guideEntries.setDataPadStack(hand, dataPadStack);
 		guideDescription.setDataPadStack(hand, dataPadStack);
 		activeQuests.setDataPadStack(hand, dataPadStack);
@@ -121,9 +121,9 @@ public class GuiDataPad extends MOGuiBase
 	@Override
 	public void onPageChange(int newPage)
 	{
-		if (newPage != MatterOverdriveItems.dataPad.getPage(dataPad))
+		if (newPage != MatterOverdrive.items.dataPad.getPage(dataPad))
 		{
-			MatterOverdriveItems.dataPad.setOpenPage(dataPad, newPage);
+			MatterOverdrive.items.dataPad.setOpenPage(dataPad, newPage);
 			MatterOverdrive.packetPipeline.sendToServer(new PacketDataPadCommands(hand, dataPad));
 		}
 	}

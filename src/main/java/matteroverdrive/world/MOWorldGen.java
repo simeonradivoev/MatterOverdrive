@@ -91,8 +91,8 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
 		//DimensionManager.registerDimension(SPACE_DIM_ID,SpaceDimension);
 		//DimensionManager.registerDimension(ALIEN_DIM_ID,AlienDimension);
 
-		tritaniumGen = new WorldGenMinable(MatterOverdriveBlocks.tritaniumOre.getDefaultState(), TRITANIUM_VEIN_SIZE);
-		dilithiumGen = new WorldGenMinable(MatterOverdriveBlocks.dilithium_ore.getDefaultState(), DILITHIUM_VEIN_SIZE);
+		tritaniumGen = new WorldGenMinable(MatterOverdrive.blocks.tritaniumOre.getDefaultState(), TRITANIUM_VEIN_SIZE);
+		dilithiumGen = new WorldGenMinable(MatterOverdrive.blocks.dilithium_ore.getDefaultState(), DILITHIUM_VEIN_SIZE);
 		buildings.add(new WeightedRandomMOWorldGenBuilding(new MOAndroidHouseBuilding("android_house"), 20));
 		buildings.add(new WeightedRandomMOWorldGenBuilding(new MOSandPit("sand_pit_house", 3), 100));
 		buildings.add(new WeightedRandomMOWorldGenBuilding(new MOWorldGenCrashedSpaceShip("crashed_ship"), 60));
@@ -304,11 +304,11 @@ public class MOWorldGen implements IWorldGenerator, IConfigSubscriber
 	{
 		Property shouldGenerateOres = config.config.get(ConfigurationHandler.CATEGORY_WORLD_GEN, ConfigurationHandler.CATEGORY_WORLD_SPAWN_ORES, true);
 		shouldGenerateOres.setComment("Should Matter Overdrive Ore Blocks be Generated ?");
-		generateTritanium = shouldGenerate(MatterOverdriveBlocks.tritaniumOre, config) && shouldGenerateOres.getBoolean(true);
-		generateDilithium = shouldGenerate(MatterOverdriveBlocks.dilithium_ore, config) && shouldGenerateOres.getBoolean(true);
+		generateTritanium = shouldGenerate(MatterOverdrive.blocks.tritaniumOre, config) && shouldGenerateOres.getBoolean(true);
+		generateDilithium = shouldGenerate(MatterOverdrive.blocks.dilithium_ore, config) && shouldGenerateOres.getBoolean(true);
 		Property shouldGenerateOthers = config.config.get(ConfigurationHandler.CATEGORY_WORLD_GEN, ConfigurationHandler.CATEGORY_WORLD_SPAWN_OTHER, true);
 		shouldGenerateOthers.setComment("Should other Matter Overdrive World Blocks be Generated?");
-		generateAnomalies = shouldGenerate(MatterOverdriveBlocks.gravitational_anomaly, config) && shouldGenerateOthers.getBoolean(true);
+		generateAnomalies = shouldGenerate(MatterOverdrive.blocks.gravitational_anomaly, config) && shouldGenerateOthers.getBoolean(true);
 		this.oreDimentionsBlacklist.clear();
 		Property oreDimentionBlacklistProp = config.config.get(ConfigurationHandler.CATEGORY_WORLD_GEN, "ore_gen_blacklist", new int[] {-1, 2});
 		oreDimentionBlacklistProp.setComment("A blacklist of all the Dimensions ores shouldn't spawn in");

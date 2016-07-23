@@ -18,17 +18,29 @@
 
 package matteroverdrive.items.tools;
 
+import matteroverdrive.MatterOverdrive;
+import matteroverdrive.Reference;
 import matteroverdrive.init.MatterOverdriveItems;
 import net.minecraft.item.ItemPickaxe;
+import net.minecraft.util.ResourceLocation;
+import net.shadowfacts.shadowmc.item.ItemModelProvider;
 
 /**
  * Created by Simeon on 11/1/2015.
  */
-public class TritaniumPickaxe extends ItemPickaxe
+public class TritaniumPickaxe extends ItemPickaxe implements ItemModelProvider
 {
 	public TritaniumPickaxe(String name)
 	{
-		super(MatterOverdriveItems.toolMaterialTritanium);
+		super(MatterOverdriveItems.TOOL_MATERIAL_TRITANIUM);
 		setUnlocalizedName(name);
+		setRegistryName(new ResourceLocation(Reference.MOD_ID, name));
 	}
+
+	@Override
+	public void initItemModel()
+	{
+		MatterOverdrive.proxy.registerItemModel(this, 0, getRegistryName().getResourcePath());
+	}
+
 }

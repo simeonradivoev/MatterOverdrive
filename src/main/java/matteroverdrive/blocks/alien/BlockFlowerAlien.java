@@ -1,5 +1,6 @@
 package matteroverdrive.blocks.alien;
 
+import matteroverdrive.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.properties.IProperty;
@@ -10,6 +11,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -23,8 +25,10 @@ public class BlockFlowerAlien extends BlockBush
 {
 	public static final PropertyEnum<EnumAlienFlowerType> TYPE = PropertyEnum.create("type", EnumAlienFlowerType.class);
 
-	public BlockFlowerAlien()
+	public BlockFlowerAlien(String name)
 	{
+		setUnlocalizedName(name);
+		setRegistryName(new ResourceLocation(Reference.MOD_ID, name));
 		this.setDefaultState(this.blockState.getBaseState().withProperty(TYPE, EnumAlienFlowerType.METAREX));
 	}
 

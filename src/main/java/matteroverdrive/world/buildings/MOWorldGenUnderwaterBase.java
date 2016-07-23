@@ -18,6 +18,7 @@
 
 package matteroverdrive.world.buildings;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.blocks.BlockDecorative;
 import matteroverdrive.entity.monster.EntityMutantScientist;
@@ -55,33 +56,33 @@ public class MOWorldGenUnderwaterBase extends MOWorldGenBuilding
 		}
 		addMapping(0xdc979c, Blocks.TALLGRASS);
 		addMapping(0x77d1b6, Blocks.RED_FLOWER);
-		addMapping(0xd2fb50, MatterOverdriveBlocks.forceGlass);
+		addMapping(0xd2fb50, MatterOverdrive.blocks.forceGlass);
 		addMapping(0xc1e4e, Blocks.FARMLAND);
-		addMapping(0xa7ac65, MatterOverdriveBlocks.tritaniumCrate); //orange crate
+		addMapping(0xa7ac65, MatterOverdrive.blocks.tritaniumCrate); //orange crate
 		addMapping(0xd6a714, Blocks.STAINED_GLASS);
-		addMapping(0x2c5ae9, MatterOverdriveBlocks.weapon_station);
-		addMapping(0xacd8c, MatterOverdriveBlocks.androidStation);
-		addMapping(0x7018f9, MatterOverdriveBlocks.tritaniumCrate); //light blue
-		addMapping(0x4657cc, MatterOverdriveBlocks.tritaniumCrate); //lime
-		addMapping(0x1f2312, MatterOverdriveBlocks.tritaniumCrate); //white
-		addMapping(0xd3371d, MatterOverdriveBlocks.machine_hull);
+		addMapping(0x2c5ae9, MatterOverdrive.blocks.weapon_station);
+		addMapping(0xacd8c, MatterOverdrive.blocks.androidStation);
+		addMapping(0x7018f9, MatterOverdrive.blocks.tritaniumCrate); //light blue
+		addMapping(0x4657cc, MatterOverdrive.blocks.tritaniumCrate); //lime
+		addMapping(0x1f2312, MatterOverdrive.blocks.tritaniumCrate); //white
+		addMapping(0xd3371d, MatterOverdrive.blocks.machine_hull);
 		addMapping(0x3640f9, Blocks.STONE_BUTTON);
-		addMapping(0xeff73d, MatterOverdriveBlocks.network_switch);
-		addMapping(0x5a6388, MatterOverdriveBlocks.boundingBox);
+		addMapping(0xeff73d, MatterOverdrive.blocks.network_switch);
+		addMapping(0x5a6388, MatterOverdrive.blocks.boundingBox);
 		addMapping(0xbf19a9, Blocks.GRASS);
 		addMapping(0xc05e5e, Blocks.FLOWER_POT);
-		addMapping(0x4d8dd3, MatterOverdriveBlocks.pattern_monitor);
-		addMapping(0xdb9c3a, MatterOverdriveBlocks.holoSign);
-		addMapping(0x68b68c, MatterOverdriveBlocks.matter_analyzer);
-		addMapping(0x2cb0c7, MatterOverdriveBlocks.starMap);
-		addMapping(0x1b2ff7, MatterOverdriveBlocks.network_pipe);
-		addMapping(0x5eaab, MatterOverdriveBlocks.tritaniumCrate);
-		addMapping(0x11003e, MatterOverdriveBlocks.chargingStation);
+		addMapping(0x4d8dd3, MatterOverdrive.blocks.pattern_monitor);
+		addMapping(0xdb9c3a, MatterOverdrive.blocks.holoSign);
+		addMapping(0x68b68c, MatterOverdrive.blocks.matter_analyzer);
+		addMapping(0x2cb0c7, MatterOverdrive.blocks.starMap);
+		addMapping(0x1b2ff7, MatterOverdrive.blocks.network_pipe);
+		addMapping(0x5eaab, MatterOverdrive.blocks.tritaniumCrate);
+		addMapping(0x11003e, MatterOverdrive.blocks.chargingStation);
 		addMapping(0xb31e83, Blocks.CARROTS);
-		addMapping(0xc78e77, MatterOverdriveBlocks.replicator);
+		addMapping(0xc78e77, MatterOverdrive.blocks.replicator);
 		addMapping(0x338a42, Blocks.POTATOES);
 		addMapping(0xbdea8f, Blocks.LADDER);
-		addMapping(0x4d12f4, MatterOverdriveBlocks.pattern_storage);
+		addMapping(0x4d12f4, MatterOverdrive.blocks.pattern_storage);
 		addMapping(0xf7d20b, Blocks.SAPLING);
 		addMapping(0x854b38, Blocks.IRON_DOOR);
 		addMapping(0xff00ff, Blocks.AIR);
@@ -160,7 +161,7 @@ public class MOWorldGenUnderwaterBase extends MOWorldGenBuilding
 	@Override
 	public void onBlockPlace(World world, IBlockState block, BlockPos pos, Random random, int color, MOImageGen.ImageGenWorker worker)
 	{
-		if (block == MatterOverdriveBlocks.starMap)
+		if (block == MatterOverdrive.blocks.starMap)
 		{
 			EntityMutantScientist mutantScientist = new EntityMutantScientist(world);
 			mutantScientist.enablePersistence();

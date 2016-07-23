@@ -1,5 +1,6 @@
 package matteroverdrive.world.dimensions.alien;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.blocks.alien.BlockTallGrassAlien;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import net.minecraft.block.state.IBlockState;
@@ -33,8 +34,8 @@ public class WorldGenTallGrassAlien extends WorldGenerator
 		{
 			BlockPos blockpos = position.add(rand.nextInt(8) - rand.nextInt(8), rand.nextInt(4) - rand.nextInt(4), rand.nextInt(8) - rand.nextInt(8));
 
-			IBlockState blockState = MatterOverdriveBlocks.alienTallGrass.getBlockState().getBaseState().withProperty(BlockTallGrassAlien.TYPE, rand.nextInt(5));
-			if (worldIn.isAirBlock(blockpos) && MatterOverdriveBlocks.alienTallGrass.canBlockStay(worldIn, blockpos, blockState))
+			IBlockState blockState = MatterOverdrive.blocks.alienTallGrass.getBlockState().getBaseState().withProperty(BlockTallGrassAlien.TYPE, rand.nextInt(5));
+			if (worldIn.isAirBlock(blockpos) && MatterOverdrive.blocks.alienTallGrass.canBlockStay(worldIn, blockpos, blockState))
 			{
 				worldIn.setBlockState(blockpos, blockState, 2);
 			}

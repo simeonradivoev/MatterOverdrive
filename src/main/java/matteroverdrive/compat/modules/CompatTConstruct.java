@@ -60,7 +60,7 @@ public class CompatTConstruct
 		tagCompound.setInteger("MaterialId", TRITANIUM_METAL_FLUID_ID);
 		tagCompound.setInteger("Value", 2);
 		NBTTagCompound itemTag = new NBTTagCompound();
-		(new ItemStack(MatterOverdriveItems.tritanium_ingot)).writeToNBT(itemTag);
+		(new ItemStack(MatterOverdrive.items.tritanium_ingot)).writeToNBT(itemTag);
 		tagCompound.setTag("Item", itemTag);
 		FMLInterModComms.sendMessage("TConstruct", "addMaterialItem", tagCompound);
 
@@ -77,7 +77,7 @@ public class CompatTConstruct
 
 		tagCompound = new NBTTagCompound();
 		itemTag = new NBTTagCompound();
-		(new ItemStack(MatterOverdriveBlocks.tritaniumOre)).writeToNBT(itemTag);
+		(new ItemStack(MatterOverdrive.blocks.tritaniumOre)).writeToNBT(itemTag);
 		tagCompound.setTag("Item", itemTag);
 		tagCompound.setTag("Block", itemTag);
 		tagCompound.setInteger("Temperature", 800);
@@ -86,16 +86,16 @@ public class CompatTConstruct
 
 		tagCompound = new NBTTagCompound();
 		itemTag = new NBTTagCompound();
-		(new ItemStack(MatterOverdriveItems.tritanium_ingot)).writeToNBT(itemTag);
+		(new ItemStack(MatterOverdrive.items.tritanium_ingot)).writeToNBT(itemTag);
 		tagCompound.setTag("Item", itemTag);
 		itemTag = new NBTTagCompound();
-		(new ItemStack(MatterOverdriveBlocks.tritanium_block)).writeToNBT(itemTag);
+		(new ItemStack(MatterOverdrive.blocks.tritanium_block)).writeToNBT(itemTag);
 		tagCompound.setTag("Block", itemTag);
 		tagCompound.setInteger("Temperature", 700);
 		(new FluidStack(MatterOverdriveFluids.moltenTritanium, 144)).writeToNBT(tagCompound);
 		FMLInterModComms.sendMessage("TConstruct", "addSmelteryMelting", tagCompound);
 
-		FMLInterModComms.sendMessage("TConstruct", "addFluxBattery", new ItemStack(MatterOverdriveItems.battery));
-		FMLInterModComms.sendMessage("TConstruct", "addFluxBattery", new ItemStack(MatterOverdriveItems.hc_battery));
+		FMLInterModComms.sendMessage("TConstruct", "addFluxBattery", new ItemStack(MatterOverdrive.items.battery));
+		FMLInterModComms.sendMessage("TConstruct", "addFluxBattery", new ItemStack(MatterOverdrive.items.hc_battery));
 	}
 }

@@ -207,18 +207,18 @@ public class MatterOverdriveMatter
 		//endregion
 
 		//region rouge android parts
-		reg(c, new ItemStack(MatterOverdriveItems.androidParts, 1, Reference.BIONIC_HEAD), 64 * 5);
-		reg(c, new ItemStack(MatterOverdriveItems.androidParts, 1, Reference.BIONIC_ARMS), 64 * 6);
-		reg(c, new ItemStack(MatterOverdriveItems.androidParts, 1, Reference.BIONIC_LEGS), 64 * 6);
-		reg(c, new ItemStack(MatterOverdriveItems.androidParts, 1, Reference.BIONIC_CHEST), 64 * 9);
+		reg(c, new ItemStack(MatterOverdrive.items.androidParts, 1, Reference.BIONIC_HEAD), 64 * 5);
+		reg(c, new ItemStack(MatterOverdrive.items.androidParts, 1, Reference.BIONIC_ARMS), 64 * 6);
+		reg(c, new ItemStack(MatterOverdrive.items.androidParts, 1, Reference.BIONIC_LEGS), 64 * 6);
+		reg(c, new ItemStack(MatterOverdrive.items.androidParts, 1, Reference.BIONIC_CHEST), 64 * 9);
 		//endregion
 
 		//region Matter Overdrive Basic Items
-		reg(c, MatterOverdriveItems.emergency_ration, 3);
-		reg(c, MatterOverdriveItems.earl_gray_tea, 2);
-		reg(c, MatterOverdriveItems.romulan_ale, 2);
-		reg(c, new ItemStack(MatterOverdriveItems.androidPill, 1, 1), 64);
-		reg(c, new ItemStack(MatterOverdriveItems.androidPill, 1, 2), 32);
+		reg(c, MatterOverdrive.items.emergency_ration, 3);
+		reg(c, MatterOverdrive.items.earl_gray_tea, 2);
+		reg(c, MatterOverdrive.items.romulan_ale, 2);
+		reg(c, new ItemStack(MatterOverdrive.items.androidPill, 1, 1), 64);
+		reg(c, new ItemStack(MatterOverdrive.items.androidPill, 1, 2), 32);
 		//endregion
 	}
 

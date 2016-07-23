@@ -39,9 +39,12 @@ import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.starmap.GalaxyClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -163,11 +166,11 @@ public class ClientProxy extends CommonProxy
 
 		MatterOverdrive.configHandler.subscribe(androidHud);
 
-		weaponHandler.registerWeapon(MatterOverdriveItems.phaserRifle);
-		weaponHandler.registerWeapon(MatterOverdriveItems.phaser);
-		weaponHandler.registerWeapon(MatterOverdriveItems.omniTool);
-		weaponHandler.registerWeapon(MatterOverdriveItems.plasmaShotgun);
-		weaponHandler.registerWeapon(MatterOverdriveItems.ionSniper);
+		weaponHandler.registerWeapon(MatterOverdrive.items.phaserRifle);
+		weaponHandler.registerWeapon(MatterOverdrive.items.phaser);
+		weaponHandler.registerWeapon(MatterOverdrive.items.omniTool);
+		weaponHandler.registerWeapon(MatterOverdrive.items.plasmaShotgun);
+		weaponHandler.registerWeapon(MatterOverdrive.items.ionSniper);
 
 		MatterOverdriveGuides.registerGuideElements(event);
 		moFontRender = new FontRenderer(Minecraft.getMinecraft().gameSettings, new ResourceLocation(Reference.MOD_ID, "textures/font/ascii.png"), Minecraft.getMinecraft().renderEngine, false);
@@ -189,5 +192,11 @@ public class ClientProxy extends CommonProxy
 	public CommonWeaponHandler getWeaponHandler()
 	{
 		return weaponHandler;
+	}
+
+	@Override
+	public void registerItemModel(Item item, int meta, String path)
+	{
+		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(Reference.MOD_ID + ":" + path, "inventory"));
 	}
 }

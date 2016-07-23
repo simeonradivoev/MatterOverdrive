@@ -47,7 +47,7 @@ public class TileEntityRendererInscriber extends TileEntitySpecialRenderer
 		/*if (item == null)
 		{
             item = new EntityItem(tileEntity.getWorldObj());
-            item.setEntityItemStack(new ItemStack(MatterOverdriveItems.isolinear_circuit,1,2));
+            item.setEntityItemStack(new ItemStack(MatterOverdrive.items.isolinear_circuit,1,2));
         }
 
         if (tileEntity instanceof TileEntityInscriber)

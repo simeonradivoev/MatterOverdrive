@@ -18,7 +18,7 @@
 
 package matteroverdrive.handler.village;
 
-import matteroverdrive.init.MatterOverdriveItems;
+import matteroverdrive.MatterOverdrive;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -42,14 +42,14 @@ public class TradeHandlerMadScientist //implements VillagerRegistry.VillagerProf
 			addSellPart(recipeList, random, 2, 0.3f, 20 * 2, 12 * 2);
 			addSellPart(recipeList, random, 3, 0.2f, 32 * 2, 8 * 2);
 
-			addSellItemStack(recipeList, random, new ItemStack(MatterOverdriveItems.androidPill, 1, 1), 1, 16, 16);
-			addSellItemStack(recipeList, random, new ItemStack(MatterOverdriveItems.androidPill, 1, 2), 1, 16, 16);
-			addSellItemStack(recipeList, random, new ItemStack(MatterOverdriveItems.h_compensator), 0.5f, 32, 18);
-			addBuyItemStack(recipeList, random, new ItemStack(MatterOverdriveItems.dilithium_ctystal), 1, 8, 8);
-			addSellItemStack(recipeList, random, new ItemStack(MatterOverdriveItems.weapon_module_barrel, 1, 0), 1, 8, 4);
-			addSellItemStack(recipeList, random, new ItemStack(MatterOverdriveItems.weapon_module_barrel, 1, 1), 1, 8, 4);
-			addSellItemStack(recipeList, random, new ItemStack(MatterOverdriveItems.weapon_module_barrel, 1, 2), 1, 16, 16);
-			addSellItemStack(recipeList, random, new ItemStack(MatterOverdriveItems.earl_gray_tea), 1, 3, 2);
+			addSellItemStack(recipeList, random, new ItemStack(MatterOverdrive.items.androidPill, 1, 1), 1, 16, 16);
+			addSellItemStack(recipeList, random, new ItemStack(MatterOverdrive.items.androidPill, 1, 2), 1, 16, 16);
+			addSellItemStack(recipeList, random, new ItemStack(MatterOverdrive.items.h_compensator), 0.5f, 32, 18);
+			addBuyItemStack(recipeList, random, new ItemStack(MatterOverdrive.items.dilithium_crystal), 1, 8, 8);
+			addSellItemStack(recipeList, random, new ItemStack(MatterOverdrive.items.weapon_module_barrel, 1, 0), 1, 8, 4);
+			addSellItemStack(recipeList, random, new ItemStack(MatterOverdrive.items.weapon_module_barrel, 1, 1), 1, 8, 4);
+			addSellItemStack(recipeList, random, new ItemStack(MatterOverdrive.items.weapon_module_barrel, 1, 2), 1, 16, 16);
+			addSellItemStack(recipeList, random, new ItemStack(MatterOverdrive.items.earl_gray_tea), 1, 3, 2);
 		}
 	}
 
@@ -57,7 +57,7 @@ public class TradeHandlerMadScientist //implements VillagerRegistry.VillagerProf
 	{
 		if (random.nextFloat() < chance)
 		{
-			MerchantRecipe recipe = new MerchantRecipe(new ItemStack(MatterOverdriveItems.androidParts, 1, part), null, new ItemStack(Items.EMERALD, price + random.nextInt(variation)));
+			MerchantRecipe recipe = new MerchantRecipe(new ItemStack(MatterOverdrive.items.androidParts, 1, part), null, new ItemStack(Items.EMERALD, price + random.nextInt(variation)));
 			recipeList.add(recipe);
 		}
 	}
@@ -66,7 +66,7 @@ public class TradeHandlerMadScientist //implements VillagerRegistry.VillagerProf
 	{
 		if (random.nextFloat() < chance)
 		{
-			MerchantRecipe recipe = new MerchantRecipe(new ItemStack(Items.EMERALD, price + random.nextInt(variation)), null, new ItemStack(MatterOverdriveItems.androidParts, 1, part));
+			MerchantRecipe recipe = new MerchantRecipe(new ItemStack(Items.EMERALD, price + random.nextInt(variation)), null, new ItemStack(MatterOverdrive.items.androidParts, 1, part));
 			recipeList.add(recipe);
 		}
 	}

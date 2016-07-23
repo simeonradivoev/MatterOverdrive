@@ -1,5 +1,6 @@
 package matteroverdrive.blocks.alien;
 
+import matteroverdrive.Reference;
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.material.MapColor;
@@ -16,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -33,8 +35,10 @@ public class BlockLeavesAlien extends BlockLeaves
 {
 	public static final PropertyEnum<BlockLeavesAlien.EnumType> VARIANT = PropertyEnum.<BlockLeavesAlien.EnumType>create("variant", BlockLeavesAlien.EnumType.class);
 
-	public BlockLeavesAlien()
+	public BlockLeavesAlien(String name)
 	{
+		setUnlocalizedName(name);
+		setRegistryName(new ResourceLocation(Reference.MOD_ID, name));
 		this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, EnumType.OAK).withProperty(CHECK_DECAY, Boolean.valueOf(true)).withProperty(DECAYABLE, Boolean.valueOf(true)));
 	}
 

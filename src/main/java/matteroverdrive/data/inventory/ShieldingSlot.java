@@ -18,6 +18,7 @@
 
 package matteroverdrive.data.inventory;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.client.render.HoloIcon;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.proxy.ClientProxy;
@@ -42,7 +43,7 @@ public class ShieldingSlot extends Slot
 		{
 			if (itemStack != null && itemStack.getItem() != null)
 			{
-				return itemStack.getItem() == MatterOverdriveItems.tritanium_plate;
+				return itemStack.getItem() == MatterOverdrive.items.tritanium_plate;
 			}
 		}
 		return false;

@@ -54,28 +54,28 @@ public class MOWorldGenCrashedSpaceShip extends MOWorldGenBuilding
 		super(name, new ResourceLocation(Reference.PATH_WORLD_TEXTURES + "crashed_space_ship.png"), 11, 35);
 		holoTexts = new String[] {"Critical\nError", "Contacting\nSection 9", "System\nFailure", "Emergency\nPower\nOffline", "System\nReboot\nFailure", "Help Me", "I Need\nWater"};
 		setyOffset(-1);
-		addMapping(0x38c8df, MatterOverdriveBlocks.decorative_clean);
-		addMapping(0x187b8b, MatterOverdriveBlocks.decorative_vent_bright);
-		addMapping(0xaa38df, MatterOverdriveBlocks.forceGlass);
+		addMapping(0x38c8df, MatterOverdrive.blocks.decorative_clean);
+		addMapping(0x187b8b, MatterOverdrive.blocks.decorative_vent_bright);
+		addMapping(0xaa38df, MatterOverdrive.blocks.forceGlass);
 		addMapping(0x00ff78, Blocks.GRASS);
-		addMapping(0xd8ff00, MatterOverdriveBlocks.holoSign);
-		addMapping(0xaccb00, MatterOverdriveBlocks.holoSign);
-		addMapping(0x3896df, MatterOverdriveBlocks.decorative_tritanium_plate);
-		addMapping(0xdfd938, MatterOverdriveBlocks.decorative_tritanium_plate_stripe);
-		addMapping(0x5d89ab, MatterOverdriveBlocks.decorative_holo_matrix);
-		addMapping(0x77147d, MatterOverdriveBlocks.weapon_station);
-		addMapping(0xb04a90, MatterOverdriveBlocks.tritaniumCrate);
-		addMapping(0x94deea, MatterOverdriveBlocks.decorative_separator);
-		addMapping(0xff9c00, MatterOverdriveBlocks.decorative_coils);
-		addMapping(0xaca847, MatterOverdriveBlocks.decorative_matter_tube);
-		addMapping(0x0c3b60, MatterOverdriveBlocks.decorative_carbon_fiber_plate);
+		addMapping(0xd8ff00, MatterOverdrive.blocks.holoSign);
+		addMapping(0xaccb00, MatterOverdrive.blocks.holoSign);
+		addMapping(0x3896df, MatterOverdrive.blocks.decorative_tritanium_plate);
+		addMapping(0xdfd938, MatterOverdrive.blocks.decorative_tritanium_plate_stripe);
+		addMapping(0x5d89ab, MatterOverdrive.blocks.decorative_holo_matrix);
+		addMapping(0x77147d, MatterOverdrive.blocks.weapon_station);
+		addMapping(0xb04a90, MatterOverdrive.blocks.tritaniumCrate);
+		addMapping(0x94deea, MatterOverdrive.blocks.decorative_separator);
+		addMapping(0xff9c00, MatterOverdrive.blocks.decorative_coils);
+		addMapping(0xaca847, MatterOverdrive.blocks.decorative_matter_tube);
+		addMapping(0x0c3b60, MatterOverdrive.blocks.decorative_carbon_fiber_plate);
 		addMapping(0xc5ced0, Blocks.AIR);
 	}
 
 	@Override
 	public void onBlockPlace(World world, IBlockState state, BlockPos pos, Random random, int color, MOImageGen.ImageGenWorker worker)
 	{
-		if (state.getBlock() == MatterOverdriveBlocks.holoSign)
+		if (state.getBlock() == MatterOverdrive.blocks.holoSign)
 		{
 			if (colorsMatch(color, 0xd8ff00))
 			{

@@ -1,7 +1,7 @@
 package matteroverdrive.blocks.world;
 
-import matteroverdrive.blocks.includes.MOBlock;
-import matteroverdrive.init.MatterOverdriveItems;
+import matteroverdrive.MatterOverdrive;
+import matteroverdrive.blocks.includes.MOBlockOre;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
@@ -14,14 +14,14 @@ import java.util.Random;
 /**
  * Created by Simeon on 3/23/2015.
  */
-public class DilithiumOre extends MOBlock
+public class DilithiumOre extends MOBlockOre
 {
 
 	private final Random rand = new Random();
 
-	public DilithiumOre(Material material, String name)
+	public DilithiumOre(Material material, String name, String oreDict)
 	{
-		super(material, name);
+		super(material, name, oreDict);
 		this.setHardness(4.0f);
 		this.setResistance(5.0f);
 		this.setHarvestLevel("pickaxe", 3);
@@ -30,7 +30,7 @@ public class DilithiumOre extends MOBlock
 
 	public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_)
 	{
-		return MatterOverdriveItems.dilithium_ctystal;
+		return MatterOverdrive.items.dilithium_crystal;
 	}
 
 	public int quantityDroppedWithBonus(int fortune, Random random)

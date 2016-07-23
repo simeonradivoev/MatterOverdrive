@@ -1,5 +1,6 @@
 package matteroverdrive.blocks.alien;
 
+import matteroverdrive.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.material.Material;
@@ -13,6 +14,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ColorizerGrass;
 import net.minecraft.world.IBlockAccess;
@@ -31,10 +33,12 @@ public class BlockTallGrassAlien extends BlockBush implements net.minecraftforge
 {
 	public static final PropertyInteger TYPE = PropertyInteger.create("type", 0, 4);
 
-	public BlockTallGrassAlien()
+	public BlockTallGrassAlien(String name)
 	{
 		super(Material.VINE);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(TYPE, 0));
+		setUnlocalizedName(name);
+		setRegistryName(new ResourceLocation(Reference.MOD_ID, name));
 		float f = 0.4F;
 		// TODO: 3/26/2016 Find how to set block bounds
 		//this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, 0.8F, 0.5F + f);

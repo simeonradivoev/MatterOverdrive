@@ -42,15 +42,13 @@ import java.util.List;
 /**
  * Created by Simeon on 7/12/2015.
  */
-public class AndroidPill extends ItemFood
+public class AndroidPill extends MOItemFood
 {
 	public static final String[] names = new String[] {"red", "blue", "yellow"};
 
 	public AndroidPill(String name)
 	{
-		super(0, 0, false);
-		setRegistryName(new ResourceLocation(Reference.MOD_ID, name));
-		setUnlocalizedName(name);
+		super(name, 0, 0, false);
 		setAlwaysEdible();
 		hasSubtypes = true;
 	}

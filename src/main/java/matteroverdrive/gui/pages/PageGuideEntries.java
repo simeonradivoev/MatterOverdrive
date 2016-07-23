@@ -117,7 +117,7 @@ public class PageGuideEntries extends ElementBaseGroup implements ITextHandler
 		elements.add(orderButtonElement);
 		elements.add(searchField);
 		searchField.setText(searchFilter);
-		orderButtonElement.setSelectedState(MatterOverdriveItems.dataPad.getOrdering(dataPadStack));
+		orderButtonElement.setSelectedState(MatterOverdrive.items.dataPad.getOrdering(dataPadStack));
 		for (ElementGuideEntry entry : guideEntries)
 		{
 			elements.add(entry);
@@ -359,7 +359,7 @@ public class PageGuideEntries extends ElementBaseGroup implements ITextHandler
 		}
 		else if (element.equals(orderButtonElement))
 		{
-			MatterOverdriveItems.dataPad.setOrdering(dataPadStack, orderButtonElement.getSelectedState());
+			MatterOverdrive.items.dataPad.setOrdering(dataPadStack, orderButtonElement.getSelectedState());
 			MatterOverdrive.packetPipeline.sendToServer(new PacketDataPadCommands(hand, dataPadStack));
 		}
 		else if (element instanceof ElementGuideCategory)
@@ -382,7 +382,7 @@ public class PageGuideEntries extends ElementBaseGroup implements ITextHandler
 
 	public GuideCategory getActiveCategory()
 	{
-		String category = MatterOverdriveItems.dataPad.getCategory(dataPadStack);
+		String category = MatterOverdrive.items.dataPad.getCategory(dataPadStack);
 		GuideCategory cat = MatterOverdriveGuide.getCategory(category);
 		if (cat == null)
 		{
@@ -393,7 +393,7 @@ public class PageGuideEntries extends ElementBaseGroup implements ITextHandler
 
 	public void setActiveCategory(String category)
 	{
-		MatterOverdriveItems.dataPad.setCategory(dataPadStack, category);
+		MatterOverdrive.items.dataPad.setCategory(dataPadStack, category);
 		MatterOverdrive.packetPipeline.sendToServer(new PacketDataPadCommands(hand, dataPadStack));
 		gui.setPage(0);
 		groups.clear();

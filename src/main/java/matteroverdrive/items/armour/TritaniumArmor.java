@@ -18,6 +18,7 @@
 
 package matteroverdrive.items.armour;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.client.model.ModelTritaniumArmor;
 import matteroverdrive.proxy.ClientProxy;
@@ -30,17 +31,21 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.shadowfacts.shadowmc.item.ItemModelProvider;
 
 /**
  * Created by Simeon on 11/1/2015.
  */
-public class TritaniumArmor extends ItemArmor
+public class TritaniumArmor extends ItemArmor implements ItemModelProvider
 {
-	public TritaniumArmor(ArmorMaterial armorMaterial, int renderIndex, EntityEquipmentSlot slot)
+	public TritaniumArmor(String name, ArmorMaterial armorMaterial, int renderIndex, EntityEquipmentSlot slot)
 	{
 		super(armorMaterial, renderIndex, slot);
+		setUnlocalizedName(name);
+		setRegistryName(new ResourceLocation(Reference.MOD_ID, name));
 	}
 
 	@Override
@@ -84,4 +89,11 @@ public class TritaniumArmor extends ItemArmor
 
 		return armorModel;
 	}
+
+	@Override
+	public void initItemModel()
+	{
+		MatterOverdrive.proxy.registerItemModel(this, 0, getRegistryName().getResourcePath());
+	}
+
 }

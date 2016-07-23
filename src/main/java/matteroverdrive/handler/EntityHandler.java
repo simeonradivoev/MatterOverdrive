@@ -18,6 +18,7 @@
 
 package matteroverdrive.handler;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.events.MOEventTransport;
 import matteroverdrive.api.events.anomaly.MOEventGravitationalAnomalyConsume;
@@ -159,9 +160,9 @@ public class EntityHandler
 			{
 				for (int i = 0; i < 9; i++)
 				{
-					if (event.getEntityPlayer().inventory.getStackInSlot(i) != null && event.getEntityPlayer().inventory.getStackInSlot(i).getItem() == MatterOverdriveItems.portableDecomposer)
+					if (event.getEntityPlayer().inventory.getStackInSlot(i) != null && event.getEntityPlayer().inventory.getStackInSlot(i).getItem() == MatterOverdrive.items.portableDecomposer)
 					{
-						MatterOverdriveItems.portableDecomposer.decomposeItem(event.getEntityPlayer().inventory.getStackInSlot(i), event.getItem().getEntityItem());
+						MatterOverdrive.items.portableDecomposer.decomposeItem(event.getEntityPlayer().inventory.getStackInSlot(i), event.getItem().getEntityItem());
 					}
 				}
 			}

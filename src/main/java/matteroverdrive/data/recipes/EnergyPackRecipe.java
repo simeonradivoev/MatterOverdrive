@@ -19,6 +19,7 @@
 package matteroverdrive.data.recipes;
 
 import cofh.api.energy.IEnergyContainerItem;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.init.MatterOverdriveCapabilities;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.items.Battery;
@@ -35,14 +36,14 @@ public class EnergyPackRecipe extends ShapelessRecipes
 {
 	public EnergyPackRecipe(ItemStack... recipeitems)
 	{
-		super(new ItemStack(MatterOverdriveItems.energyPack), Arrays.asList(recipeitems));
+		super(new ItemStack(MatterOverdrive.items.energyPack), Arrays.asList(recipeitems));
 		for (ItemStack stack : recipeItems)
 		{
 			if (stack != null && stack.getItem() instanceof Battery)
 			{
 
 				((Battery)stack.getItem()).setEnergyStored(stack, ((Battery)stack.getItem()).getMaxEnergyStored(stack));
-				getRecipeOutput().stackSize = ((Battery)stack.getItem()).getEnergyStored(stack) / MatterOverdriveItems.energyPack.getEnergyAmount(getRecipeOutput());
+				getRecipeOutput().stackSize = ((Battery)stack.getItem()).getEnergyStored(stack) / MatterOverdrive.items.energyPack.getEnergyAmount(getRecipeOutput());
 			}
 		}
 	}
@@ -56,7 +57,7 @@ public class EnergyPackRecipe extends ShapelessRecipes
 			if (inventoryCrafting.getStackInSlot(i) != null && inventoryCrafting.getStackInSlot(i).getItem() instanceof IEnergyContainerItem)
 			{
 				int energyStored = ((IEnergyContainerItem)inventoryCrafting.getStackInSlot(i).getItem()).getEnergyStored(inventoryCrafting.getStackInSlot(i));
-				int packEnergy = MatterOverdriveItems.energyPack.getEnergyAmount(inventoryCrafting.getStackInSlot(i));
+				int packEnergy = MatterOverdrive.items.energyPack.getEnergyAmount(inventoryCrafting.getStackInSlot(i));
 				if (energyStored > 0)
 				{
 					stack.stackSize = energyStored / packEnergy;

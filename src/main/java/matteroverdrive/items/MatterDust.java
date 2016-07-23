@@ -1,9 +1,11 @@
 package matteroverdrive.items;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.matter.IMatterItem;
 import matteroverdrive.api.matter.IRecyclable;
 import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.items.includes.MOBaseItem;
+import matteroverdrive.items.includes.MOItemOre;
 import matteroverdrive.util.MatterHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -11,13 +13,13 @@ import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
 
-public class MatterDust extends MOBaseItem implements IRecyclable, IMatterItem
+public class MatterDust extends MOItemOre implements IRecyclable, IMatterItem
 {
 	final boolean isRefined;
 
-	public MatterDust(String name, boolean refined)
+	public MatterDust(String name, String oreDict, boolean refined)
 	{
-		super(name);
+		super(name, oreDict);
 		isRefined = refined;
 	}
 
@@ -51,8 +53,8 @@ public class MatterDust extends MOBaseItem implements IRecyclable, IMatterItem
 	@Override
 	public ItemStack getOutput(ItemStack from)
 	{
-		ItemStack newItemStack = new ItemStack(MatterOverdriveItems.matter_dust_refined);
-		MatterOverdriveItems.matter_dust_refined.setMatter(newItemStack, from.getItemDamage());
+		ItemStack newItemStack = new ItemStack(MatterOverdrive.items.matter_dust_refined);
+		MatterOverdrive.items.matter_dust_refined.setMatter(newItemStack, from.getItemDamage());
 		return newItemStack;
 	}
 

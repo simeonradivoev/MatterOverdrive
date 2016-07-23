@@ -1,5 +1,6 @@
 package matteroverdrive.util;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.data.WeightedRandomItemStack;
 import matteroverdrive.entity.android_player.AndroidAttributes;
@@ -33,11 +34,11 @@ public class AndroidPartsFactory
 
 	public void initParts()
 	{
-		parts.add(new WeightedRandomItemStack(new ItemStack(MatterOverdriveItems.androidParts, 1, 0), 100));
-		parts.add(new WeightedRandomItemStack(new ItemStack(MatterOverdriveItems.androidParts, 1, 1), 100));
-		parts.add(new WeightedRandomItemStack(new ItemStack(MatterOverdriveItems.androidParts, 1, 2), 100));
-		parts.add(new WeightedRandomItemStack(new ItemStack(MatterOverdriveItems.androidParts, 1, 3), 100));
-		parts.add(new WeightedRandomItemStack(new ItemStack(MatterOverdriveItems.tritaniumSpine), 20));
+		parts.add(new WeightedRandomItemStack(new ItemStack(MatterOverdrive.items.androidParts, 1, 0), 100));
+		parts.add(new WeightedRandomItemStack(new ItemStack(MatterOverdrive.items.androidParts, 1, 1), 100));
+		parts.add(new WeightedRandomItemStack(new ItemStack(MatterOverdrive.items.androidParts, 1, 2), 100));
+		parts.add(new WeightedRandomItemStack(new ItemStack(MatterOverdrive.items.androidParts, 1, 3), 100));
+		parts.add(new WeightedRandomItemStack(new ItemStack(MatterOverdrive.items.tritaniumSpine), 20));
 	}
 
 	public ItemStack generateRandomDecoratedPart(AndroidPartFactoryContext context)

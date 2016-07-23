@@ -1,5 +1,6 @@
 package matteroverdrive.world.dimensions.alien;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.blocks.alien.BlockLeavesAlien;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import net.minecraft.block.BlockLeaves;
@@ -27,8 +28,8 @@ public class WorldGenAlienBush extends WorldGenerator
 
 			if (worldIn.isAirBlock(blockpos) && (!worldIn.provider.getHasNoSky() || blockpos.getY() < 254) && Blocks.DOUBLE_PLANT.canPlaceBlockAt(worldIn, blockpos))
 			{
-				worldIn.setBlockState(blockpos, MatterOverdriveBlocks.alienLeaves.getDefaultState().withProperty(BlockLeavesAlien.VARIANT, BlockLeavesAlien.EnumType.BUSH).withProperty(BlockLeaves.DECAYABLE, false), 2);
-				worldIn.setBlockState(blockpos.offset(EnumFacing.UP), MatterOverdriveBlocks.alienLeaves.getDefaultState().withProperty(BlockLeavesAlien.VARIANT, BlockLeavesAlien.EnumType.BUSH).withProperty(BlockLeaves.DECAYABLE, false), 2);
+				worldIn.setBlockState(blockpos, MatterOverdrive.blocks.alienLeaves.getDefaultState().withProperty(BlockLeavesAlien.VARIANT, BlockLeavesAlien.EnumType.BUSH).withProperty(BlockLeaves.DECAYABLE, false), 2);
+				worldIn.setBlockState(blockpos.offset(EnumFacing.UP), MatterOverdrive.blocks.alienLeaves.getDefaultState().withProperty(BlockLeavesAlien.VARIANT, BlockLeavesAlien.EnumType.BUSH).withProperty(BlockLeaves.DECAYABLE, false), 2);
 				flag = true;
 			}
 		}

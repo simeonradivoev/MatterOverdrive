@@ -1,8 +1,7 @@
 package matteroverdrive.compat.modules;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.compat.Compat;
-import matteroverdrive.init.MatterOverdriveBlocks;
-import matteroverdrive.init.MatterOverdriveItems;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -66,10 +65,10 @@ public class CompatEnderIO
 		sb.append("<SAGMillRecipes>");
 		sb.append("<recipeGroup name=\"MatterOverdrive\">");
 
-		addSagMillRecipe("DilithiumOre", 3000, MatterOverdriveBlocks.dilithium_ore, MatterOverdriveItems.dilithium_ctystal, 1, MatterOverdriveItems.dilithium_ctystal, 0.25f);
-		addSagMillRecipe("TritaniumOre", 3600, MatterOverdriveBlocks.tritaniumOre, new ItemStack(MatterOverdriveItems.tritanium_dust, 2), 1, Blocks.COBBLESTONE, 0.15f);
-		addSagMillRecipe("TirtaniumIngot", 1000, MatterOverdriveItems.tritanium_ingot, MatterOverdriveItems.tritanium_dust, 1);
-		addSagMillRecipe("TritaniumPlate", 3000, MatterOverdriveItems.tritanium_plate, new ItemStack(MatterOverdriveItems.tritanium_dust, 2), 1);
+		addSagMillRecipe("DilithiumOre", 3000, MatterOverdrive.blocks.dilithium_ore, MatterOverdrive.items.dilithium_crystal, 1, MatterOverdrive.items.dilithium_crystal, 0.25f);
+		addSagMillRecipe("TritaniumOre", 3600, MatterOverdrive.blocks.tritaniumOre, new ItemStack(MatterOverdrive.items.tritanium_dust, 2), 1, Blocks.COBBLESTONE, 0.15f);
+		addSagMillRecipe("TirtaniumIngot", 1000, MatterOverdrive.items.tritanium_ingot, MatterOverdrive.items.tritanium_dust, 1);
+		addSagMillRecipe("TritaniumPlate", 3000, MatterOverdrive.items.tritanium_plate, new ItemStack(MatterOverdrive.items.tritanium_dust, 2), 1);
 
 		sb.append("</recipeGroup>");
 		sb.append("</SAGMillRecipes>");

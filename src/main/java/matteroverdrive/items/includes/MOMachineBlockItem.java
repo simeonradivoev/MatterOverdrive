@@ -31,6 +31,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.shadowfacts.shadowmc.item.ItemModelProvider;
 import org.lwjgl.input.Keyboard;
 
 import java.util.List;
@@ -40,6 +41,7 @@ public class MOMachineBlockItem extends ItemBlock
 	public MOMachineBlockItem(Block block)
 	{
 		super(block);
+		setRegistryName(block.getRegistryName());
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -144,4 +146,5 @@ public class MOMachineBlockItem extends ItemBlock
 	{
 		return getDamage(stack) > 0;
 	}
+
 }

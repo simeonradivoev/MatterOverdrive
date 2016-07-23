@@ -14,14 +14,11 @@ import net.minecraft.world.World;
 /**
  * Created by Simeon on 4/24/2015.
  */
-public class EarlGrayTea extends ItemFood
+public class EarlGrayTea extends MOItemFood
 {
 	public EarlGrayTea(String name)
 	{
-		super(4, 0.8F, false);
-		setUnlocalizedName(name);
-		setRegistryName(new ResourceLocation(Reference.MOD_ID, name));
-		setCreativeTab(MatterOverdrive.tabMatterOverdrive_food);
+		super(name, 4, 0.8F, false);
 		setAlwaysEdible();
 	}
 

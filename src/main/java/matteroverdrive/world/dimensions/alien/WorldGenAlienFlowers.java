@@ -1,5 +1,6 @@
 package matteroverdrive.world.dimensions.alien;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.blocks.alien.BlockFlowerAlien;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import net.minecraft.block.state.IBlockState;
@@ -23,7 +24,7 @@ public class WorldGenAlienFlowers extends WorldGenerator
 
 	public void setGeneratedBlock(BlockFlowerAlien.EnumAlienFlowerType alienFlowerType)
 	{
-		this.flowerBlockState = MatterOverdriveBlocks.alienFlower.getDefaultState().withProperty(BlockFlowerAlien.TYPE, alienFlowerType);
+		this.flowerBlockState = MatterOverdrive.blocks.alienFlower.getDefaultState().withProperty(BlockFlowerAlien.TYPE, alienFlowerType);
 	}
 
 	public boolean generate(World worldIn, Random rand, BlockPos position)
@@ -32,7 +33,7 @@ public class WorldGenAlienFlowers extends WorldGenerator
 		{
 			BlockPos blockpos = position.add(rand.nextInt(8) - rand.nextInt(8), rand.nextInt(4) - rand.nextInt(4), rand.nextInt(8) - rand.nextInt(8));
 
-			if (worldIn.isAirBlock(blockpos) && (!worldIn.provider.getHasNoSky() || blockpos.getY() < 255) && MatterOverdriveBlocks.alienFlower.canBlockStay(worldIn, blockpos, this.flowerBlockState))
+			if (worldIn.isAirBlock(blockpos) && (!worldIn.provider.getHasNoSky() || blockpos.getY() < 255) && MatterOverdrive.blocks.alienFlower.canBlockStay(worldIn, blockpos, this.flowerBlockState))
 			{
 				worldIn.setBlockState(blockpos, this.flowerBlockState, 2);
 			}

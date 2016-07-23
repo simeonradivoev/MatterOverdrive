@@ -1,5 +1,6 @@
 package matteroverdrive.world.dimensions.alien;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.blocks.alien.BlockFlowerAlien;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import net.minecraft.block.BlockFlower;
@@ -34,7 +35,7 @@ public class BiomeGeneratorAlien extends Biome
 	public BiomeGeneratorAlien(Biome.BiomeProperties properties)
 	{
 		super(properties);
-		this.fillerBlock = MatterOverdriveBlocks.alienStone.getDefaultState();
+		this.fillerBlock = MatterOverdrive.blocks.alienStone.getDefaultState();
 		this.theBiomeDecorator.treesPerChunk = 8;
 		this.theBiomeDecorator.grassPerChunk = 10;
 		this.theBiomeDecorator.flowersPerChunk = 0;
@@ -184,7 +185,7 @@ public class BiomeGeneratorAlien extends Biome
 					}
 					else
 					{
-						chunkPrimerIn.setBlockState(i1, j1, l, MatterOverdriveBlocks.alienStone.getDefaultState());
+						chunkPrimerIn.setBlockState(i1, j1, l, MatterOverdrive.blocks.alienStone.getDefaultState());
 					}
 				}
 			}
@@ -221,7 +222,7 @@ public class BiomeGeneratorAlien extends Biome
 	{
 		for (BlockFlowerAlien.EnumAlienFlowerType type : BlockFlowerAlien.EnumAlienFlowerType.values())
 		{
-			addFlower(MatterOverdriveBlocks.alienFlower.getDefaultState().withProperty(BlockFlowerAlien.TYPE, type), 10);
+			addFlower(MatterOverdrive.blocks.alienFlower.getDefaultState().withProperty(BlockFlowerAlien.TYPE, type), 10);
 		}
 	}
 

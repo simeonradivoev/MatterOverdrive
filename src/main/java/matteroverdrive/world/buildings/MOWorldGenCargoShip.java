@@ -50,25 +50,25 @@ public class MOWorldGenCargoShip extends MOWorldGenBuilding<MOWorldGenCargoShip.
 		{
 			addMapping(blockDecorative.getBlockColor(0), blockDecorative);
 		}
-		addMapping(0xdb9c3a, MatterOverdriveBlocks.holoSign);
-		addMapping(0x5fffbe, MatterOverdriveBlocks.transporter);
-		addMapping(0xd2fb50, MatterOverdriveBlocks.forceGlass);
+		addMapping(0xdb9c3a, MatterOverdrive.blocks.holoSign);
+		addMapping(0x5fffbe, MatterOverdrive.blocks.transporter);
+		addMapping(0xd2fb50, MatterOverdrive.blocks.forceGlass);
 		addMapping(0xdc01d8, Blocks.WOODEN_PRESSURE_PLATE);
-		addMapping(0xfc6b34, new BlockMapping(true, Blocks.GOLD_ORE, Blocks.IRON_ORE, Blocks.COAL_ORE, MatterOverdriveBlocks.tritaniumOre));
-		addMapping(0xd1626, MatterOverdriveBlocks.fusionReactorIO);
-		addMapping(0x1b2ff7, MatterOverdriveBlocks.network_pipe);
-		addMapping(0x1f2312, MatterOverdriveBlocks.tritaniumCrate);
+		addMapping(0xfc6b34, new BlockMapping(true, Blocks.GOLD_ORE, Blocks.IRON_ORE, Blocks.COAL_ORE, MatterOverdrive.blocks.tritaniumOre));
+		addMapping(0xd1626, MatterOverdrive.blocks.fusionReactorIO);
+		addMapping(0x1b2ff7, MatterOverdrive.blocks.network_pipe);
+		addMapping(0x1f2312, MatterOverdrive.blocks.tritaniumCrate);
 		addMapping(0xab4824, Blocks.OAK_FENCE);
 		addMapping(0x68d738, Blocks.CARPET);
 		addMapping(0xbdea8f, Blocks.LADDER);
-		addMapping(0xeff73d, MatterOverdriveBlocks.network_switch);
-		addMapping(0xa8ed1c, MatterOverdriveBlocks.heavy_matter_pipe);
+		addMapping(0xeff73d, MatterOverdrive.blocks.network_switch);
+		addMapping(0xa8ed1c, MatterOverdrive.blocks.heavy_matter_pipe);
 		addMapping(0x4b285d, Blocks.OAK_STAIRS);
-		addMapping(0xcfd752, MatterOverdriveBlocks.network_router);
-		addMapping(0x4d8dd3, MatterOverdriveBlocks.pattern_monitor);
+		addMapping(0xcfd752, MatterOverdrive.blocks.network_router);
+		addMapping(0x4d8dd3, MatterOverdrive.blocks.pattern_monitor);
 		addMapping(0x6b3534, Blocks.BED);
 		addMapping(0xff00ff, Blocks.AIR);
-		addMapping(0x69960c, MatterOverdriveBlocks.tritaniumCrate);
+		addMapping(0x69960c, MatterOverdrive.blocks.tritaniumCrate);
 	}
 
 	@Override
@@ -133,7 +133,7 @@ public class MOWorldGenCargoShip extends MOWorldGenBuilding<MOWorldGenCargoShip.
 			if (tritaniumCrate instanceof TileEntityTritaniumCrate)
 			{
 				worker.setQuestPos(pos);
-				ItemStack itemStack = new ItemStack(MatterOverdriveItems.isolinear_circuit).setStackDisplayName("Trade Route Agreement");
+				ItemStack itemStack = new ItemStack(MatterOverdrive.items.isolinear_circuit).setStackDisplayName("Trade Route Agreement");
 				((TileEntityTritaniumCrate)tritaniumCrate).getInventory().addItem(itemStack);
 			}
 		}

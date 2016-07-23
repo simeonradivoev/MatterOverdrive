@@ -1,6 +1,7 @@
 package matteroverdrive.data.quest.logic;
 
 import com.google.gson.JsonObject;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.api.quest.IQuestReward;
 import matteroverdrive.api.quest.QuestLogicState;
 import matteroverdrive.api.quest.QuestStack;
@@ -55,7 +56,7 @@ public class QuestLogicBecomeAndroid extends AbstractQuestLogic
 
 			for (int i = 0; i < entityPlayer.inventory.getSizeInventory(); i++)
 			{
-				if (entityPlayer.inventory.getStackInSlot(i) != null && entityPlayer.inventory.getStackInSlot(i).getItem() == MatterOverdriveItems.androidParts)
+				if (entityPlayer.inventory.getStackInSlot(i) != null && entityPlayer.inventory.getStackInSlot(i).getItem() == MatterOverdrive.items.androidParts)
 				{
 					int damage = entityPlayer.inventory.getStackInSlot(i).getItemDamage();
 					if (damage < hasParts.length)
@@ -111,7 +112,7 @@ public class QuestLogicBecomeAndroid extends AbstractQuestLogic
 
 		for (int i = 0; i < entityPlayer.inventory.getSizeInventory(); i++)
 		{
-			if (entityPlayer.inventory.getStackInSlot(i) != null && entityPlayer.inventory.getStackInSlot(i).getItem() == MatterOverdriveItems.androidParts)
+			if (entityPlayer.inventory.getStackInSlot(i) != null && entityPlayer.inventory.getStackInSlot(i).getItem() == MatterOverdrive.items.androidParts)
 			{
 				int damage = entityPlayer.inventory.getStackInSlot(i).getItemDamage();
 				if (damage < hasParts.length)

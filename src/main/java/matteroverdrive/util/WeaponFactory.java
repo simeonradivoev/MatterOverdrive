@@ -19,6 +19,7 @@
 package matteroverdrive.util;
 
 import cofh.api.energy.IEnergyContainerItem;
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.api.weapon.IWeaponModule;
@@ -103,23 +104,23 @@ public class WeaponFactory
 	public void initModules()
 	{
 		barrelModules.add(new WeightedRandomWeaponModule(null, 200, 0, MAX_LOOT_LEVEL));
-		barrelModules.add(new WeightedRandomWeaponModule(new ItemStack(MatterOverdriveItems.weapon_module_barrel, 1, WeaponModuleBarrel.DAMAGE_BARREL_ID), 100, 1, MAX_LOOT_LEVEL));
-		barrelModules.add(new WeightedRandomWeaponModule(new ItemStack(MatterOverdriveItems.weapon_module_barrel, 1, WeaponModuleBarrel.FIRE_BARREL_ID), 10, 1, MAX_LOOT_LEVEL));
-		barrelModules.add(new WeightedRandomWeaponModule(new ItemStack(MatterOverdriveItems.weapon_module_barrel, 1, WeaponModuleBarrel.EXPLOSION_BARREL_ID), 5, 2, MAX_LOOT_LEVEL));
+		barrelModules.add(new WeightedRandomWeaponModule(new ItemStack(MatterOverdrive.items.weapon_module_barrel, 1, WeaponModuleBarrel.DAMAGE_BARREL_ID), 100, 1, MAX_LOOT_LEVEL));
+		barrelModules.add(new WeightedRandomWeaponModule(new ItemStack(MatterOverdrive.items.weapon_module_barrel, 1, WeaponModuleBarrel.FIRE_BARREL_ID), 10, 1, MAX_LOOT_LEVEL));
+		barrelModules.add(new WeightedRandomWeaponModule(new ItemStack(MatterOverdrive.items.weapon_module_barrel, 1, WeaponModuleBarrel.EXPLOSION_BARREL_ID), 5, 2, MAX_LOOT_LEVEL));
 
-		batteryModules.add(new WeightedRandomWeaponModule(new ItemStack(MatterOverdriveItems.battery), 100, 1, MAX_LOOT_LEVEL));
-		batteryModules.add(new WeightedRandomWeaponModule(new ItemStack(MatterOverdriveItems.hc_battery), 20, 1, MAX_LOOT_LEVEL));
+		batteryModules.add(new WeightedRandomWeaponModule(new ItemStack(MatterOverdrive.items.battery), 100, 1, MAX_LOOT_LEVEL));
+		batteryModules.add(new WeightedRandomWeaponModule(new ItemStack(MatterOverdrive.items.hc_battery), 20, 1, MAX_LOOT_LEVEL));
 
 		otherModules.add(new WeightedRandomWeaponModule(null, 300, 0, MAX_LOOT_LEVEL));
-		otherModules.add(new WeightedRandomWeaponModule(new ItemStack(MatterOverdriveItems.sniperScope), 10, 1, MAX_LOOT_LEVEL));
+		otherModules.add(new WeightedRandomWeaponModule(new ItemStack(MatterOverdrive.items.sniperScope), 10, 1, MAX_LOOT_LEVEL));
 	}
 
 	public void initWeapons()
 	{
-		weapons.add(new WeightedRandomItemStack(new ItemStack(MatterOverdriveItems.phaserRifle), 70));
-		weapons.add(new WeightedRandomItemStack(new ItemStack(MatterOverdriveItems.omniTool), 30));
-		weapons.add(new WeightedRandomItemStack(new ItemStack(MatterOverdriveItems.plasmaShotgun), 10));
-		weapons.add(new WeightedRandomItemStack(new ItemStack(MatterOverdriveItems.ionSniper), 5));
+		weapons.add(new WeightedRandomItemStack(new ItemStack(MatterOverdrive.items.phaserRifle), 70));
+		weapons.add(new WeightedRandomItemStack(new ItemStack(MatterOverdrive.items.omniTool), 30));
+		weapons.add(new WeightedRandomItemStack(new ItemStack(MatterOverdrive.items.plasmaShotgun), 10));
+		weapons.add(new WeightedRandomItemStack(new ItemStack(MatterOverdrive.items.ionSniper), 5));
 	}
 
 	public ItemStack getRandomDecoratedEnergyWeapon(WeaponGenerationContext context)
@@ -198,17 +199,17 @@ public class WeaponFactory
 			if (barrel.getItemDamage() == WeaponModuleBarrel.EXPLOSION_BARREL_ID)
 			{
 				//gold
-				WeaponHelper.setModuleAtSlot(1, weapon, new ItemStack(MatterOverdriveItems.weapon_module_color, 1, 6));
+				WeaponHelper.setModuleAtSlot(1, weapon, new ItemStack(MatterOverdrive.items.weapon_module_color, 1, 6));
 			}
 			else if (barrel.getItemDamage() == WeaponModuleBarrel.FIRE_BARREL_ID)
 			{
 				//red
-				WeaponHelper.setModuleAtSlot(1, weapon, new ItemStack(MatterOverdriveItems.weapon_module_color, 1));
+				WeaponHelper.setModuleAtSlot(1, weapon, new ItemStack(MatterOverdrive.items.weapon_module_color, 1));
 			}
 			else if (barrel.getItemDamage() == WeaponModuleBarrel.DAMAGE_BARREL_ID)
 			{
 				//blue
-				WeaponHelper.setModuleAtSlot(1, weapon, new ItemStack(MatterOverdriveItems.weapon_module_color, 1, 2));
+				WeaponHelper.setModuleAtSlot(1, weapon, new ItemStack(MatterOverdrive.items.weapon_module_color, 1, 2));
 			}
 		}
 	}

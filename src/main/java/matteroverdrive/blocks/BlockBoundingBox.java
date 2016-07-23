@@ -18,6 +18,7 @@
 
 package matteroverdrive.blocks;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.blocks.includes.MOBlockContainer;
 import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.tile.TileEntityBoundingBox;
@@ -46,7 +47,7 @@ public class BlockBoundingBox extends MOBlockContainer<TileEntityBoundingBox>
 
 	public static void createBoundingBox(World world, BlockPos pos, BlockPos ownerPos, Block ownerBlock)
 	{
-		world.setBlockState(pos, MatterOverdriveBlocks.boundingBox.getDefaultState());
+		world.setBlockState(pos, MatterOverdrive.blocks.boundingBox.getDefaultState());
 		TileEntity te = world.getTileEntity(pos);
 		if (te != null && te instanceof TileEntityBoundingBox)
 		{

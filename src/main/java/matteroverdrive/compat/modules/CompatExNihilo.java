@@ -1,7 +1,7 @@
 package matteroverdrive.compat.modules;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.compat.Compat;
-import matteroverdrive.init.MatterOverdriveItems;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -45,8 +45,8 @@ public class CompatExNihilo
 
 //		Register Sieve Rewards
 //		Percent = 100 / rarity
-		register(Blocks.GRAVEL, MatterOverdriveItems.dilithium_ctystal, 0, 50); // 2%
-		register(Blocks.GRAVEL, MatterOverdriveItems.tritanium_dust, 0, 25); // 4%
+		register(Blocks.GRAVEL, MatterOverdrive.items.dilithium_crystal, 0, 50); // 2%
+		register(Blocks.GRAVEL, MatterOverdrive.items.tritanium_dust, 0, 25); // 4%
 	}
 
 	private static void register(Block source, Item output, int outputMeta, int rarity)

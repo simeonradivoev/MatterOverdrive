@@ -18,6 +18,7 @@
 
 package matteroverdrive.world;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.data.world.GenPositionWorldData;
 import matteroverdrive.data.world.WorldPosition2D;
 import matteroverdrive.handler.ConfigurationHandler;
@@ -59,7 +60,7 @@ public class WorldGenGravitationalAnomaly extends WorldGenerator implements ICon
 	{
 		if (isWorldValid(world) && random.nextFloat() < chance)
 		{
-			if (world.setBlockState(pos, MatterOverdriveBlocks.gravitational_anomaly.getDefaultState()))
+			if (world.setBlockState(pos, MatterOverdrive.blocks.gravitational_anomaly.getDefaultState()))
 			{
 				TileEntityGravitationalAnomaly anomaly = new TileEntityGravitationalAnomaly(minMatter + random.nextInt(maxMatter - minMatter));
 				world.setTileEntity(pos, anomaly);

@@ -18,6 +18,7 @@
 
 package matteroverdrive.items.weapon;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.weapon.IWeapon;
 import matteroverdrive.api.weapon.WeaponShot;
@@ -421,7 +422,7 @@ public class Phaser extends EnergyWeapon implements IWeapon
 	{
 		if (module != null)
 		{
-			return module.getItem() == MatterOverdriveItems.weapon_module_barrel || module.getItem() == MatterOverdriveItems.weapon_module_color;
+			return module.getItem() == MatterOverdrive.items.weapon_module_barrel || module.getItem() == MatterOverdrive.items.weapon_module_color;
 		}
 		return false;
 	}

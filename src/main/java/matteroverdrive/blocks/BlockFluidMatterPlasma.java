@@ -18,8 +18,10 @@
 
 package matteroverdrive.blocks;
 
+import matteroverdrive.Reference;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -34,6 +36,7 @@ public class BlockFluidMatterPlasma extends BlockFluidClassic
 	public BlockFluidMatterPlasma(Fluid fluid, Material material)
 	{
 		super(fluid, material);
+		setRegistryName(new ResourceLocation(Reference.MOD_ID, "matter_plasma"));
 	}
 
     /*@Override

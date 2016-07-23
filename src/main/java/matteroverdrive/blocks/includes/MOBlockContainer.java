@@ -23,8 +23,9 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.shadowfacts.shadowmc.block.TileEntityProvider;
 
-public abstract class MOBlockContainer<TE extends TileEntity> extends MOBlock
+public abstract class MOBlockContainer<TE extends TileEntity> extends MOBlock implements TileEntityProvider<TE>
 {
 	public MOBlockContainer(Material material, String name)
 	{
@@ -32,18 +33,13 @@ public abstract class MOBlockContainer<TE extends TileEntity> extends MOBlock
 		this.isBlockContainer = true;
 	}
 
+	@Override
 	public abstract Class<TE> getTileEntityClass();
 
 	@Override
 	public boolean hasTileEntity(IBlockState state)
 	{
 		return true;
-	}
-
-	@SuppressWarnings("unchecked")
-	public TE getTileEntity(IBlockAccess world, BlockPos pos)
-	{
-		return (TE)world.getTileEntity(pos);
 	}
 
 }
