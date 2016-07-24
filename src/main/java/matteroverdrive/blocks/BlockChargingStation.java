@@ -45,6 +45,7 @@ public class BlockChargingStation extends MOBlockMachine<TileEntityMachineChargi
 		this.setHarvestLevel("pickaxe", 2);
 		lightValue = 10;
 		setHasGui(true);
+		setHasRotation();
 	}
 
 
