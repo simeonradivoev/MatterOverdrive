@@ -24,12 +24,15 @@ import matteroverdrive.tile.TileEntityMachineChargingStation;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 
 /**
  * Created by Simeon on 7/8/2015.
@@ -48,6 +51,12 @@ public class BlockChargingStation extends MOBlockMachine<TileEntityMachineChargi
 		setHasRotation();
 	}
 
+	@Override
+	public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, BlockPos pos, boolean returnDrops)
+	{
+		getTileEntity(world, pos).getBoundingBlocks().forEach(world::setBlockToAir);
+		return super.dismantleBlock(player, world, pos, returnDrops);
+	}
 
 	//	Multiblock
 	@Override
@@ -74,7 +83,7 @@ public class BlockChargingStation extends MOBlockMachine<TileEntityMachineChargi
 		if (te instanceof TileEntityMachineChargingStation)
 		{
 			TileEntityMachineChargingStation chargingStation = (TileEntityMachineChargingStation)te;
-			chargingStation.getBoundingBlocks().forEach(coord -> world.setBlockToAir(pos));
+			chargingStation.getBoundingBlocks().forEach(world::setBlockToAir);
 		}
 
 		super.breakBlock(world, pos, blockState);

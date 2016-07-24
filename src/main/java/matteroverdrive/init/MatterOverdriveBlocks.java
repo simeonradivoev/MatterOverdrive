@@ -242,7 +242,7 @@ public class MatterOverdriveBlocks extends ModBlocks
 		alienStone.setHardness(1.5f).setResistance(10.0f).setCreativeTab(MatterOverdrive.tabMatterOverdrive_decorative);
 
 //		Internal
-		boundingBox = register(new BlockBoundingBox(Material.AIR, "bounding_box"));
+		boundingBox = register(new BlockBoundingBox("bounding_box"));
 
 		MOLog.info("Finished registering blocks");
 		MOLog.info("Registered %d blocks", registeredCount);
