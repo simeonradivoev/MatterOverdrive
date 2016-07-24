@@ -174,7 +174,7 @@ public class Phaser extends EnergyWeapon implements IWeapon
 				{
 					BlockPos pos = hit.getBlockPos();
 
-					if (player.worldObj.getBlockState(pos).getBlock().isFlammable(player.worldObj, pos, hit.sideHit))
+					if (hit.typeOfHit == RayTraceResult.Type.BLOCK && player.worldObj.getBlockState(pos).getBlock().isFlammable(player.worldObj, pos, hit.sideHit))
 					{
 						pos.offset(hit.sideHit);
 
