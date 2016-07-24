@@ -48,7 +48,7 @@ import static matteroverdrive.util.MOBlockHelper.SIDE_LEFT;
  */
 public class MOBlock extends Block implements ItemModelProvider
 {
-	public static final PropertyDirection PROPERTY_DIRECTION = PropertyDirection.create("facing");
+	public static final PropertyDirection PROPERTY_DIRECTION = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 	private BlockStateContainer blockState;
 	private boolean hasRotation;
 	private int rotationType;
