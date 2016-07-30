@@ -51,6 +51,22 @@ minecraft {
     mappings = config.mcp_mappings
 
     makeObfSourceJar = false
+
+    replaceIn "Reference.java"
+    replace "@VERSION@", config.mod_version
+}
+
+processResources {
+    inputs.property "version", config.mod_version
+    inputs.property "mcversion", config.mc_version
+
+    from (sourceSets.main.resources.srcDirs) {
+        include "mcmod.info"
+        expand "version": config.mod_version, "mcversion": config.mc_version
+    }
+    from (sourceSets.main.resources.srcDirs) {
+        exclude "mcmod.info"
+    }
 }
 
 bintray {
