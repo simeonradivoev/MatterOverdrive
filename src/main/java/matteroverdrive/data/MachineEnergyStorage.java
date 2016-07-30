@@ -21,7 +21,7 @@ package matteroverdrive.data;
 import cofh.api.energy.IEnergyStorage;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.machines.MOTileEntityMachine;
-import net.darkhax.tesla.api.BaseTeslaContainer;
+import net.darkhax.tesla.api.implementation.BaseTeslaContainer;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**

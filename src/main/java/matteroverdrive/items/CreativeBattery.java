@@ -20,8 +20,7 @@ package matteroverdrive.items;
 
 import matteroverdrive.init.MatterOverdriveCapabilities;
 import matteroverdrive.util.MOEnergyHelper;
-import net.darkhax.tesla.api.BaseTeslaContainer;
-import net.darkhax.tesla.api.InfiniteTeslaProducer;
+import net.darkhax.tesla.api.implementation.BaseTeslaContainer;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
