@@ -108,6 +108,7 @@ public abstract class WeaponItemRenderer implements IPerspectiveAwareModel
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public void bakeModel()
 	{
 		List<String> visibleGroups = new ArrayList<>();

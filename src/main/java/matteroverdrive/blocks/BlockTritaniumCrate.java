@@ -66,6 +66,7 @@ public class BlockTritaniumCrate extends MOBlockMachine<TileEntityTritaniumCrate
 
 	@Nonnull
 	@Override
+	@Deprecated
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
 	{
 		EnumFacing dir = state.getValue(MOBlock.PROPERTY_DIRECTION);

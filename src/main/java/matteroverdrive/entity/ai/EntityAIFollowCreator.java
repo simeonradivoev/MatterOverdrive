@@ -93,9 +93,8 @@ public class EntityAIFollowCreator<T extends EntityLiving & IEntityOwnable> exte
 
 	private boolean func_181065_a(BlockPos pos)
 	{
-		IBlockState iblockstate = this.theWorld.getBlockState(pos);
-		Block block = iblockstate.getBlock();
-		return block == Blocks.AIR ? true : !block.isFullCube(iblockstate);
+		IBlockState state = this.theWorld.getBlockState(pos);
+		return state.getBlock() == Blocks.AIR || !state.isFullCube();
 	}
 
 	/**

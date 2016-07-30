@@ -133,8 +133,7 @@ public class TileEntityMachineGravitationalStabilizer extends MOTileEntityMachin
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox()
 	{
-		Block type = getBlockType();
-		AxisAlignedBB bb = type.getCollisionBoundingBox(worldObj.getBlockState(getPos()), worldObj, getPos());
+		AxisAlignedBB bb = worldObj.getBlockState(getPos()).getCollisionBoundingBox(worldObj, getPos());
 		if (hit != null)
 		{
 			return bb.expand(hit.getBlockPos().getX() - getPos().getX(), hit.getBlockPos().getY() - getPos().getY(), hit.getBlockPos().getZ() - getPos().getZ());
