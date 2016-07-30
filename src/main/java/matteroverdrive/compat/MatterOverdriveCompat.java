@@ -44,7 +44,6 @@ public class MatterOverdriveCompat
 	//	Add additional modules that need to run on the Server and/or Client here
 	public static void registerModules()
 	{
-		register(CompatExNihilo.class);
 		register(CompatTConstruct.class);
 		register(CompatEnderIO.class);
 	}
