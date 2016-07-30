@@ -18,7 +18,7 @@
 
 package matteroverdrive.data.inventory;
 
-import matteroverdrive.handler.recipes.InscriberRecipes;
+import matteroverdrive.init.MatterOverdriveRecipes;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -34,9 +34,10 @@ public class InscriberSlot extends Slot
 		this.isSecSlot = isSecSlot;
 	}
 
-	public boolean isValidForSlot(ItemStack item)
+	@Override
+	public boolean isValidForSlot(ItemStack stack)
 	{
-		return InscriberRecipes.containedInRecipe(item, !isSecSlot);
+		return isSecSlot ? MatterOverdriveRecipes.INSCRIBER.isSecondaryInput(stack) : MatterOverdriveRecipes.INSCRIBER.isPrimaryInput(stack);
 	}
 
 	public int getMaxStackSize()

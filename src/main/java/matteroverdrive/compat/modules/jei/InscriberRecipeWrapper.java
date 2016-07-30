@@ -34,8 +34,8 @@ public class InscriberRecipeWrapper implements IRecipeWrapper
 
 	public InscriberRecipeWrapper(InscriberRecipe recipe)
 	{
-		inputs = ImmutableList.of(recipe.getMain(), recipe.getSec());
-		outputs = ImmutableList.of(recipe.getRecipeOutput());
+		inputs = ImmutableList.of(recipe.getPrimary(), recipe.getSecondary());
+		outputs = ImmutableList.of(recipe.getOutput());
 		energy = recipe.getEnergy();
 		time = recipe.getTime();
 	}

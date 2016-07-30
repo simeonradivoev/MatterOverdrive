@@ -24,13 +24,21 @@ import matteroverdrive.data.matter.DamageAwareStackHandler;
 import matteroverdrive.data.matter.ItemHandler;
 import matteroverdrive.data.matter.OreHandler;
 import matteroverdrive.data.recipes.InscriberRecipe;
-import matteroverdrive.handler.recipes.InscriberRecipes;
+import matteroverdrive.init.MatterOverdriveRecipes;
 import matteroverdrive.util.MOLog;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 import org.apache.logging.log4j.Level;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.ByteArrayInputStream;
 
 /**
  * @author shadowfacts
@@ -150,25 +158,26 @@ public class MOIMCHandler
 
 	private static void handleInscriberRecipeRegistration(FMLInterModComms.IMCMessage msg)
 	{
-		if (!msg.isNBTMessage())
+		if (!msg.isStringMessage())
 		{
-			MOLog.error("Invalid message format for Inscriber Recipe registration. Message needs to be of type NBT");
+			MOLog.error("Invalid message format for Inscriber Recipe registration. Message must be a String message");
 			return;
 		}
 		try
 		{
-			NBTTagCompound data = msg.getNBTValue();
-			if (containsAllTags(data, "Main", "Sec", "Output", "Energy", "Time"))
-			{
-				ItemStack mainStack = ItemStack.loadItemStackFromNBT(data.getCompoundTag("Main"));
-				ItemStack secStack = ItemStack.loadItemStackFromNBT(data.getCompoundTag("Sec"));
-				ItemStack output = ItemStack.loadItemStackFromNBT(data.getCompoundTag("Output"));
-				int energy = data.getInteger("Energy");
-				int time = data.getInteger("Time");
-				if (mainStack != null && secStack != null && output != null)
-				{
-					InscriberRecipe recipe = new InscriberRecipe(mainStack, secStack, output, energy, time);
-					InscriberRecipes.registerRecipe(recipe);
+
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			Document document = builder.parse(new ByteArrayInputStream(msg.getStringValue().getBytes()));
+
+			NodeList nodes = document.getElementsByTagName("recipe");
+			for (int i = 0; i < nodes.getLength(); i++) {
+				Node node = nodes.item(i);
+				if (node instanceof Element) {
+					Element e = (Element)node;
+					InscriberRecipe recipe = new InscriberRecipe();
+					recipe.fromXML(e);
+					MatterOverdriveRecipes.INSCRIBER.register(recipe);
 				}
 			}
 		}

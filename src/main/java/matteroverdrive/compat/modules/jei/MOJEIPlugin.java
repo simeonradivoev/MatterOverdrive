@@ -3,8 +3,7 @@ package matteroverdrive.compat.modules.jei;
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.container.ContainerInscriber;
 import matteroverdrive.gui.GuiInscriber;
-import matteroverdrive.handler.recipes.InscriberRecipes;
-import matteroverdrive.init.MatterOverdriveBlocks;
+import matteroverdrive.init.MatterOverdriveRecipes;
 import mezz.jei.api.IJeiRuntime;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
@@ -27,7 +26,7 @@ public class MOJEIPlugin implements IModPlugin
 
 		registry.addRecipeHandlers(new InscriberRecipeHandler());
 
-		registry.addRecipes(InscriberRecipes.getRecipes());
+		registry.addRecipes(MatterOverdriveRecipes.INSCRIBER.getRecipes());
 
 		registry.addRecipeCategoryCraftingItem(new ItemStack(MatterOverdrive.blocks.inscriber), InscriberRecipeCategory.UID);
 

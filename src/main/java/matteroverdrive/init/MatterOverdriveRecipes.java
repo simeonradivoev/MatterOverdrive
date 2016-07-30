@@ -20,8 +20,7 @@ package matteroverdrive.init;
 
 import matteroverdrive.MatterOverdrive;
 import matteroverdrive.data.recipes.EnergyPackRecipe;
-import matteroverdrive.data.recipes.InscriberRecipe;
-import matteroverdrive.handler.recipes.InscriberRecipes;
+import matteroverdrive.data.recipes.InscriberRecipeManager;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
@@ -33,7 +32,11 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import net.shadowfacts.shadowlib.util.IOUtils;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +47,7 @@ public class MatterOverdriveRecipes
 {
 	public static final List<IRecipe> recipes = new ArrayList<>();
 
+	public static final InscriberRecipeManager INSCRIBER = new InscriberRecipeManager();
 
 	public static void registerBlockRecipes(FMLInitializationEvent event)
 	{
@@ -171,9 +175,20 @@ public class MatterOverdriveRecipes
 
 	public static void registerInscriberRecipes(FMLInitializationEvent event)
 	{
-		InscriberRecipes.registerRecipe(new InscriberRecipe(new ItemStack(MatterOverdrive.items.isolinear_circuit), new ItemStack(Items.GOLD_INGOT), new ItemStack(MatterOverdrive.items.isolinear_circuit, 1, 1), 64000, 300));
-		InscriberRecipes.registerRecipe(new InscriberRecipe(new ItemStack(MatterOverdrive.items.isolinear_circuit, 1, 1), new ItemStack(Items.DIAMOND), new ItemStack(MatterOverdrive.items.isolinear_circuit, 1, 2), 88000, 600));
-		InscriberRecipes.registerRecipe(new InscriberRecipe(new ItemStack(MatterOverdrive.items.isolinear_circuit, 1, 2), new ItemStack(Items.EMERALD), new ItemStack(MatterOverdrive.items.isolinear_circuit, 1, 3), 114000, 1200));
+		File file = new File(MatterOverdrive.configHandler.configDir, "MatterOverdrive/recipes/Inscriber.xml");
+		if (!file.exists()) {
+			try {
+				file.getParentFile().mkdirs();
+				file.createNewFile();
+				IOUtils.copy(MatterOverdriveRecipes.class.getResourceAsStream("/assets/mo/recipes/Inscriber.xml"), new FileOutputStream(file));
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		INSCRIBER.load(file);
+//		InscriberRecipes.registerRecipe(new InscriberRecipe(new ItemStack(MatterOverdrive.items.isolinear_circuit), new ItemStack(Items.GOLD_INGOT), new ItemStack(MatterOverdrive.items.isolinear_circuit, 1, 1), 64000, 300));
+//		InscriberRecipes.registerRecipe(new InscriberRecipe(new ItemStack(MatterOverdrive.items.isolinear_circuit, 1, 1), new ItemStack(Items.DIAMOND), new ItemStack(MatterOverdrive.items.isolinear_circuit, 1, 2), 88000, 600));
+//		InscriberRecipes.registerRecipe(new InscriberRecipe(new ItemStack(MatterOverdrive.items.isolinear_circuit, 1, 2), new ItemStack(Items.EMERALD), new ItemStack(MatterOverdrive.items.isolinear_circuit, 1, 3), 114000, 1200));
 	}
 
 	public static void addShapedRecipe(ItemStack output, Object... params)
