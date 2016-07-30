@@ -1,76 +1,77 @@
-/*
- * This file is part of Matter Overdrive
- * Copyright (c) 2015., Simeon Radivoev, All rights reserved.
- *
- * Matter Overdrive is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Matter Overdrive is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Matter Overdrive.  If not, see <http://www.gnu.org/licenses>.
- */
-
 package matteroverdrive.data.recipes;
 
+import com.google.common.collect.ImmutableList;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import matteroverdrive.tile.TileEntityInscriber;
 import net.minecraft.item.ItemStack;
+import net.shadowfacts.shadowmc.recipe.Recipe;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import java.util.List;
 
 /**
- * Created by Simeon on 11/12/2015.
+ * @author shadowfacts
  */
-public class InscriberRecipe
+@Getter
+@NoArgsConstructor
+public class InscriberRecipe extends Recipe<TileEntityInscriber>
 {
-	private final ItemStack main, sec;
-	private final ItemStack recipeOutput;
-	private final int energy;
-	private final int time;
 
-	public InscriberRecipe(ItemStack main, ItemStack sec, ItemStack recipeOutput, int energy, int time)
+	private ItemStack primary;
+	private ItemStack secondary;
+
+	private ItemStack output;
+
+	private int energy;
+	private int time;
+
+	@Override
+	public boolean matches(TileEntityInscriber machine)
 	{
-		this.main = main;
-		this.sec = sec;
-		this.recipeOutput = recipeOutput;
-		this.energy = energy;
-		this.time = time;
+		ItemStack primary = machine.getStackInSlot(TileEntityInscriber.MAIN_INPUT_SLOT_ID);
+		ItemStack secondary = machine.getStackInSlot(TileEntityInscriber.SEC_INPUT_SLOT_ID);
+		return ItemStack.areItemsEqual(primary, this.primary) &&
+				ItemStack.areItemsEqual(secondary, this.secondary);
 	}
 
-	public boolean matches(ItemStack main, ItemStack sec)
+	@Override
+	public ItemStack getOutput(TileEntityInscriber machine)
 	{
-		return this.main.isItemEqual(main) && main.stackSize > 0 && this.sec.isItemEqual(sec) && sec.stackSize > 0;
+		return output.copy();
 	}
 
-	public ItemStack getCraftingResult(ItemStack main, ItemStack sec)
+	@Override
+	public List<ItemStack> getInputs()
 	{
-		return recipeOutput.copy();
+		return ImmutableList.of(primary, secondary);
 	}
 
-	public ItemStack getRecipeOutput()
-	{
-		return recipeOutput;
+	@Override
+	public void fromXML(Element element) {
+		energy = getIntAttr(element, "energy");
+		time = getIntAttr(element, "time");
+
+		NodeList nodes = element.getChildNodes();
+		for (int i = 0; i < nodes.getLength(); i++) {
+			Node node = nodes.item(i);
+			if (node instanceof Element) {
+				switch (node.getNodeName()) {
+					case "primary":
+						primary = getStack((Element)node);
+						break;
+					case "secondary":
+						secondary = getStack((Element)node);
+						break;
+					case "output":
+						output = getStack((Element)node);
+						break;
+				}
+			}
+		}
 	}
 
-	public ItemStack getMain()
-	{
-		return main;
-	}
-
-	public ItemStack getSec()
-	{
-		return sec;
-	}
-
-	public int getEnergy()
-	{
-		return energy;
-	}
-
-	public int getTime()
-	{
-		return this.time;
-	}
 }

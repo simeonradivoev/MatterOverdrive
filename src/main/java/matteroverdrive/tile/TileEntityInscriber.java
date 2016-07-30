@@ -23,7 +23,7 @@ import matteroverdrive.data.Inventory;
 import matteroverdrive.data.inventory.InscriberSlot;
 import matteroverdrive.data.inventory.RemoveOnlySlot;
 import matteroverdrive.data.recipes.InscriberRecipe;
-import matteroverdrive.handler.recipes.InscriberRecipes;
+import matteroverdrive.init.MatterOverdriveRecipes;
 import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.machines.MachineNBTCategory;
 import matteroverdrive.machines.events.MachineEvent;
@@ -37,6 +37,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.EnumSet;
+import java.util.Optional;
 
 /**
  * Created by Simeon on 11/9/2015.
@@ -117,7 +118,7 @@ public class TileEntityInscriber extends MOTileEntityMachineEnergy
 			}
 			else
 			{
-				inventory.setInventorySlotContents(OUTPUT_SLOT_ID, cachedRecipe.getCraftingResult(inventory.getStackInSlot(MAIN_INPUT_SLOT_ID), inventory.getStackInSlot(SEC_INPUT_SLOT_ID)));
+				inventory.setInventorySlotContents(OUTPUT_SLOT_ID, cachedRecipe.getOutput(this));
 			}
 
 			inventory.decrStackSize(MAIN_INPUT_SLOT_ID, 1);
@@ -261,7 +262,6 @@ public class TileEntityInscriber extends MOTileEntityMachineEnergy
 		}
 
 		headAnimationTime += 0.05f;
-		//MatterOverdrive.log.info("Time: " + headAnimationTime);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -282,7 +282,8 @@ public class TileEntityInscriber extends MOTileEntityMachineEnergy
 		ItemStack secStack = inventory.getStackInSlot(SEC_INPUT_SLOT_ID);
 		if (mainStack != null && secStack != null)
 		{
-			cachedRecipe = InscriberRecipes.getRecipe(mainStack, secStack);
+			Optional<InscriberRecipe> recipe = MatterOverdriveRecipes.INSCRIBER.get(this);
+			cachedRecipe = recipe.isPresent() ? recipe.get() : null;
 			return;
 		}
 		cachedRecipe = null;

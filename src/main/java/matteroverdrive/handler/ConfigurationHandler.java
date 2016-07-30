@@ -70,12 +70,16 @@ public class ConfigurationHandler
 	public static final String KEY_ANDROID_ENERGY_WATCH_ID = "android energy watch id";
 	public static final String KEY_MATTER_REGISTRATION_DEBUG = "matter registation";
 	public static final String KEY_MATTER_CALCULATION_DEBUG = "matter calculation";
+
+	public final File configDir;
+
 	public final Configuration config;
 	private final Set<IConfigSubscriber> subscribers;
 
-	public ConfigurationHandler(File file)
+	public ConfigurationHandler(File configDir)
 	{
-		config = new Configuration(file, Reference.VERSION);
+		this.configDir = configDir;
+		config = new Configuration(new File(configDir, "MatterOverdrive" + File.separator + Reference.MOD_NAME + ".cfg"), Reference.VERSION);
 		subscribers = new HashSet<>();
 	}
 
