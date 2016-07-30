@@ -169,12 +169,11 @@ public class PlasmaBolt extends Entity implements IProjectile, IGravityEntity, I
 		}
 
 		IBlockState blockState = worldObj.getBlockState(blockPos);
-		Block block = blockState.getBlock();
 
-		if (block != null && blockState.getMaterial() != Material.AIR)
+		if (blockState.getMaterial() != Material.AIR)
 		{
 			//block.setBlockBoundsBasedOnState(this.worldObj,blockPos);
-			AxisAlignedBB axisalignedbb = block.getCollisionBoundingBox(blockState, this.worldObj, blockPos);
+			AxisAlignedBB axisalignedbb = blockState.getCollisionBoundingBox(this.worldObj, blockPos);
 
 			if (axisalignedbb != null && axisalignedbb.isVecInside(new Vec3d(this.posX, this.posY, this.posZ)))
 			{

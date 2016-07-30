@@ -20,6 +20,7 @@ public class InscriberRecipeHandler implements IRecipeHandler<InscriberRecipe>
 
 	@Nonnull
 	@Override
+	@Deprecated
 	public String getRecipeCategoryUid()
 	{
 		return InscriberRecipeCategory.UID;

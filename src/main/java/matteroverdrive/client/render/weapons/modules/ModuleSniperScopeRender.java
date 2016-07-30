@@ -61,6 +61,7 @@ public class ModuleSniperScopeRender extends ModuleRenderAbstract
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public void onModelBake(TextureMap textureMap, RenderHandler renderHandler)
 	{
 		List<String> visibleGroups = new ArrayList<>();

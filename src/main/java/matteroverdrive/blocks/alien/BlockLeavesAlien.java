@@ -55,7 +55,7 @@ public class BlockLeavesAlien extends BlockLeaves
 		{
 			return 15;
 		}
-		return getLightValue(blockState);
+		return this.lightValue;
 	}
 
 	@SideOnly(Side.CLIENT)
