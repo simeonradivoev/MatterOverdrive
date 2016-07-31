@@ -27,7 +27,7 @@ public class MOPlayerCapabilityProvider implements ICapabilitySerializable<NBTTa
 
 	public static AndroidPlayer GetAndroidCapability(Entity entity)
 	{
-		return entity.getCapability(AndroidPlayer.CAPIBILITY, EnumFacing.DOWN);
+		return entity.getCapability(AndroidPlayer.CAPABILITY, null);
 	}
 
 	public static MOExtendedProperties GetExtendedCapability(Entity entity)
@@ -38,13 +38,13 @@ public class MOPlayerCapabilityProvider implements ICapabilitySerializable<NBTTa
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
 	{
-		return capability == AndroidPlayer.CAPIBILITY || capability == MOExtendedProperties.CAPIBILITY;
+		return capability == AndroidPlayer.CAPABILITY || capability == MOExtendedProperties.CAPIBILITY;
 	}
 
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
 	{
-		if (capability == AndroidPlayer.CAPIBILITY)
+		if (capability == AndroidPlayer.CAPABILITY)
 		{
 			return (T)androidPlayer;
 		}

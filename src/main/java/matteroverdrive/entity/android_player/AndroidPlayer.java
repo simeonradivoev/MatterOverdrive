@@ -112,8 +112,8 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
 	private final static AttributeModifier outOfPowerSpeedModifier = new AttributeModifier(UUID.fromString("ec778ddc-9711-498b-b9aa-8e5adc436e00"), "Android Out of Power", -0.5, 2).setSaved(false);
 	private static final List<IBioticStat> wheelStats = new ArrayList<>();
 	private static final Map<Integer, MinimapEntityInfo> entityInfoMap = new HashMap<>();
-	@CapabilityInject(value = AndroidPlayer.class)
-	public static Capability<AndroidPlayer> CAPIBILITY;
+	@CapabilityInject(AndroidPlayer.class)
+	public static Capability<AndroidPlayer> CAPABILITY;
 	private static int RECHARGE_AMOUNT_ON_RESPAWN = 64000;
 	private static boolean HURT_GLITCHING = true;
 	private static DataParameter<Integer> ENERGY;
@@ -149,10 +149,10 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
 
 	public static void register()
 	{
-		CapabilityManager.INSTANCE.register(IAndroid.class, new Capability.IStorage<IAndroid>()
+		CapabilityManager.INSTANCE.register(AndroidPlayer.class, new Capability.IStorage<AndroidPlayer>()
 		{
 			@Override
-			public NBTBase writeNBT(Capability<IAndroid> capability, IAndroid instance, EnumFacing side)
+			public NBTBase writeNBT(Capability<AndroidPlayer> capability, AndroidPlayer instance, EnumFacing side)
 			{
 				NBTTagCompound data = new NBTTagCompound();
 				instance.writeToNBT(data, EnumSet.allOf(IAndroid.DataType.class));
@@ -160,7 +160,7 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
 			}
 
 			@Override
-			public void readNBT(Capability<IAndroid> capability, IAndroid instance, EnumFacing side, NBTBase nbt)
+			public void readNBT(Capability<AndroidPlayer> capability, AndroidPlayer instance, EnumFacing side, NBTBase nbt)
 			{
 				instance.readFromNBT((NBTTagCompound)nbt, EnumSet.allOf(IAndroid.DataType.class));
 			}
