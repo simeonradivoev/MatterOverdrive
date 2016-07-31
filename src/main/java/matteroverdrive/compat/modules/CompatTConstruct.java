@@ -18,84 +18,30 @@
 
 package matteroverdrive.compat.modules;
 
-import matteroverdrive.MatterOverdrive;
-import matteroverdrive.Reference;
 import matteroverdrive.compat.Compat;
-import matteroverdrive.handler.ConfigurationHandler;
-import matteroverdrive.init.MatterOverdriveBlocks;
 import matteroverdrive.init.MatterOverdriveFluids;
-import matteroverdrive.init.MatterOverdriveItems;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 /**
  * Created by Simeon on 11/1/2015.
  */
-@Compat("TConstruct")
+@Compat(CompatTConstruct.ID)
 public class CompatTConstruct
 {
-	private static int TRITANIUM_METAL_FLUID_ID = 201;
 
-	@Compat.PostInit
-	public static void postInit(FMLPostInitializationEvent event)
+	public static final String ID = "tconstruct";
+
+	@Compat.PreInit
+	public static void preInit(FMLPreInitializationEvent event)
 	{
-		TRITANIUM_METAL_FLUID_ID = MatterOverdrive.configHandler.getInt("TConstruct molten tritanium ID", ConfigurationHandler.CATEGORY_COMPATIBILITY, 201, "The ID of Molten Tritanium");
-		NBTTagCompound tagCompound = new NBTTagCompound();
-		tagCompound.setInteger("Id", TRITANIUM_METAL_FLUID_ID);
-		tagCompound.setString("Name", "Tritanium");
-		tagCompound.setInteger("HarvestLevel", 3);
-		tagCompound.setInteger("Durability", 2048);
-		tagCompound.setInteger("MiningSpeed", 100);
-		tagCompound.setInteger("Attack", 3);
-		tagCompound.setFloat("HandleModifier", 1f);
-		tagCompound.setInteger("Reinforced", 3);
-		tagCompound.setInteger("Color", Reference.COLOR_GUI_NORMAL.getColor());
+		NBTTagCompound tag = new NBTTagCompound();
+		tag.setString("fluid", MatterOverdriveFluids.moltenTritanium.getName());
+		tag.setString("ore", "Tritanium");
+		tag.setBoolean("toolforge", true);
 
-		FMLInterModComms.sendMessage("TConstruct", "addMaterial", tagCompound);
-
-		tagCompound = new NBTTagCompound();
-		tagCompound.setInteger("MaterialId", TRITANIUM_METAL_FLUID_ID);
-		tagCompound.setInteger("Value", 2);
-		NBTTagCompound itemTag = new NBTTagCompound();
-		(new ItemStack(MatterOverdrive.items.tritanium_ingot)).writeToNBT(itemTag);
-		tagCompound.setTag("Item", itemTag);
-		FMLInterModComms.sendMessage("TConstruct", "addMaterialItem", tagCompound);
-
-		tagCompound = new NBTTagCompound();
-		tagCompound.setString("FluidName", MatterOverdriveFluids.moltenTritanium.getName());
-		//(new FluidStack(MatterOverdriveFluids.moltenTritanium,1)).writeToNBT(tagCompound);
-		tagCompound.setInteger("MaterialId", TRITANIUM_METAL_FLUID_ID);
-		FMLInterModComms.sendMessage("TConstruct", "addPartCastingMaterial", tagCompound);
-
-		tagCompound = new NBTTagCompound();
-		tagCompound.setInteger("MaterialId", TRITANIUM_METAL_FLUID_ID);
-		tagCompound.setInteger("Value", 1);
-
-
-		tagCompound = new NBTTagCompound();
-		itemTag = new NBTTagCompound();
-		(new ItemStack(MatterOverdrive.blocks.tritaniumOre)).writeToNBT(itemTag);
-		tagCompound.setTag("Item", itemTag);
-		tagCompound.setTag("Block", itemTag);
-		tagCompound.setInteger("Temperature", 800);
-		(new FluidStack(MatterOverdriveFluids.moltenTritanium, 288)).writeToNBT(tagCompound);
-		FMLInterModComms.sendMessage("TConstruct", "addSmelteryMelting", tagCompound);
-
-		tagCompound = new NBTTagCompound();
-		itemTag = new NBTTagCompound();
-		(new ItemStack(MatterOverdrive.items.tritanium_ingot)).writeToNBT(itemTag);
-		tagCompound.setTag("Item", itemTag);
-		itemTag = new NBTTagCompound();
-		(new ItemStack(MatterOverdrive.blocks.tritanium_block)).writeToNBT(itemTag);
-		tagCompound.setTag("Block", itemTag);
-		tagCompound.setInteger("Temperature", 700);
-		(new FluidStack(MatterOverdriveFluids.moltenTritanium, 144)).writeToNBT(tagCompound);
-		FMLInterModComms.sendMessage("TConstruct", "addSmelteryMelting", tagCompound);
-
-		FMLInterModComms.sendMessage("TConstruct", "addFluxBattery", new ItemStack(MatterOverdrive.items.battery));
-		FMLInterModComms.sendMessage("TConstruct", "addFluxBattery", new ItemStack(MatterOverdrive.items.hc_battery));
+		FMLInterModComms.sendMessage(ID, "integrateSmeltery", tag);
 	}
+
 }
