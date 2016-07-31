@@ -34,4 +34,7 @@ dependencies {
 	
 	deobfCompile group: 'com.enderio.core', name: 'EnderCore', version: config.mc_version + "-" + config.endercore_version
 	deobfCompile group: 'com.enderio', name: 'EnderIO', version: config.mc_version + "-" + config.enderio_version
+
+	deobfCompile group: "slimeknights.mantle", name: "Mantle", version: config.mc_version + "-" + config.mantle_version
+	deobfCompile group: "slimeknights", name: "TConstruct", version: "1.10-" + config.tico_version
 }
