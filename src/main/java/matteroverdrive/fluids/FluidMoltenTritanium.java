@@ -29,6 +29,10 @@ public class FluidMoltenTritanium extends Fluid
 {
 	public FluidMoltenTritanium(String fluidName)
 	{
-		super(fluidName, new ResourceLocation(Reference.PATH_BLOCKS + "molten_tritanium_flowing.png"), new ResourceLocation(Reference.PATH_BLOCKS + "molten_tritanium_still.png"));
+		super(fluidName, new ResourceLocation(Reference.MOD_ID, "textures/fluids/molten_tritanium/flowing"), new ResourceLocation(Reference.MOD_ID, "textures/fluids/molten_tritanium/still.png"));
+		setViscosity(6000);
+		setLuminosity(15);
+		setTemperature(2000);
 	}
+
 }

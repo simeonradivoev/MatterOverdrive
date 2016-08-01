@@ -38,15 +38,11 @@ public class MatterOverdriveFluids
 	public static void init(FMLPreInitializationEvent event)
 	{
 		matterPlasma = new FluidMatterPlasma("matter_plasma");
-		matterPlasma.setViscosity(8000);
-		matterPlasma.setLuminosity(15);
 		FluidRegistry.registerFluid(matterPlasma);
 
 		moltenTritanium = new FluidMoltenTritanium("molten_tritanium");
-		moltenTritanium.setViscosity(6000);
-		moltenTritanium.setLuminosity(15);
-		moltenTritanium.setTemperature(2000);
 		FluidRegistry.registerFluid(moltenTritanium);
+		FluidRegistry.addBucketForFluid(moltenTritanium);
 
 		registerFluidContainers();
 	}

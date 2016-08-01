@@ -38,6 +38,8 @@ import matteroverdrive.proxy.CommonProxy;
 import matteroverdrive.util.*;
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.UniversalBucket;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
@@ -95,6 +97,10 @@ public class MatterOverdrive
 //	Content
 	public static final MatterOverdriveItems items = new MatterOverdriveItems();
 	public static final MatterOverdriveBlocks blocks = new MatterOverdriveBlocks();
+
+	static {
+		FluidRegistry.enableUniversalBucket();
+	}
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event)

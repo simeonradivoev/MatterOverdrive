@@ -29,6 +29,8 @@ public class FluidMatterPlasma extends Fluid
 {
 	public FluidMatterPlasma(String fluidName)
 	{
-		super(fluidName, new ResourceLocation(Reference.PATH_BLOCKS + "matter_plasma_flowing.png"), new ResourceLocation(Reference.PATH_BLOCKS + "matter_plasma_still.png"));
+		super(fluidName, new ResourceLocation(Reference.MOD_ID, "fluids/matter_plasma/flowing"), new ResourceLocation(Reference.MOD_ID, "fluids/matter_plasma/still"));
+		setViscosity(8000);
+		setLuminosity(15);
 	}
 }
