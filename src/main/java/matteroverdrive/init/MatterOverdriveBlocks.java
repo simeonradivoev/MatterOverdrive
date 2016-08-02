@@ -37,6 +37,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemColored;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.BlockFluidFinite;
 import net.shadowfacts.shadowmc.block.ModBlocks;
 
@@ -82,7 +83,7 @@ public class MatterOverdriveBlocks extends ModBlocks
 
 //	Fluids
 	public BlockFluidMatterPlasma blockMatterPlasma;
-	public BlockFluidFinite blockMoltenTritanium;
+	public BlockFluidClassic blockMoltenTritanium;
 
 //	Storage
 	public BlockTritaniumCrate tritaniumCrate;
@@ -181,7 +182,7 @@ public class MatterOverdriveBlocks extends ModBlocks
 
 //		Fluids
 		blockMatterPlasma = register(new BlockFluidMatterPlasma(MatterOverdriveFluids.matterPlasma, Material.WATER));
-		blockMoltenTritanium = register((BlockFluidFinite)new BlockFluidFinite(MatterOverdriveFluids.moltenTritanium, Material.LAVA).setRegistryName(new ResourceLocation(Reference.MOD_ID, "molten_tritanium")));
+		blockMoltenTritanium = register((BlockFluidClassic)new BlockFluidClassic(MatterOverdriveFluids.moltenTritanium, Material.LAVA).setRegistryName(new ResourceLocation(Reference.MOD_ID, "molten_tritanium")));
 
 //		Storage
 		tritaniumCrate = register(new BlockTritaniumCrate(TRITANIUM, "tritanium_crate"));
