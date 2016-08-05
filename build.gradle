@@ -42,6 +42,12 @@ if (System.getenv('TRAVIS_BUILD_NUMBER') != null) {
     version += "-build-" + System.getenv('TRAVIS_BUILD_NUMBER')
 }
 
+def getDate() {
+    def date = new Date()
+    def formattedDate = date.format('dd.MM.yyyy')
+    return formattedDate
+}
+
 group= "${config.mo_group}"
 archivesBaseName = "${config.mo_base_name}"
 
@@ -54,6 +60,7 @@ minecraft {
 
     replaceIn "Reference.java"
     replace "@VERSION@", config.mod_version
+	replace "@DATE@", getDate()
 }
 
 processResources {

@@ -109,7 +109,7 @@ public class AndroidPartsFactory
 		attributeList.appendTag(attributeTag);
 
 
-		part.getTagCompound().setTag("CustomAttributes", attributeList);
+		part.setTagInfo("CustomAttributes", attributeList);
 		return part;
 	}
 
