@@ -144,28 +144,6 @@ public class AndroidPill extends MOItemFood
     }*/
 
    /* @Override
-    @SideOnly(Side.CLIENT)
-    public int getColorFromItemStack(ItemStack itemStack, int pass)
-    {
-        if (pass == 1)
-        {
-            if (itemStack.getItemDamage() == 0)
-            {
-                return 0xd00000;
-            }
-            else if (itemStack.getItemDamage() == 1)
-            {
-                return 0x019fea;
-            }
-            else if (itemStack.getItemDamage() == 2)
-            {
-                return 0xffe400;
-            }
-        }
-        return super.getColorFromItemStack(itemStack,pass);
-    }
-
-    @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player)
     {
         AndroidPlayer androidPlayer = AndroidPlayer.get(player);
@@ -185,8 +163,6 @@ public class AndroidPill extends MOItemFood
         }
         return itemStack;
     }*/
-
-	//// TODO: 3/24/2016 Find New Way to color Items Dynamically
 
 	public void register()
 	{

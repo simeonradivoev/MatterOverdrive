@@ -619,6 +619,12 @@ public class RenderHandler
 				return -1;
 			}
 		}, Item.getItemFromBlock(MatterOverdrive.blocks.decorative_tritanium_plate_colored));
+		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack, tintIndex) -> {
+			if (stack.getItemDamage() == 0) return 0xd00000;
+			else if (stack.getItemDamage() == 1) return 0x019fea;
+			else if (stack.getItemDamage() == 2) return 0xffe400;
+			return 0xffffff;
+		}, MatterOverdrive.items.androidPill);
 	}
 
 	private <T extends Item> void regItemRender(T item, String name, String[] subNames)
