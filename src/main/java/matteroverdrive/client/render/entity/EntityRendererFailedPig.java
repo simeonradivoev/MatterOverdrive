@@ -1,7 +1,6 @@
 package matteroverdrive.client.render.entity;
 
 import matteroverdrive.Reference;
-import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelPig;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPig;
@@ -13,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
  */
 public class EntityRendererFailedPig extends RenderPig
 {
-	public static final ResourceLocation pig_texture = new ResourceLocation(Reference.PATH_ENTETIES + "failed_pig.png");
+	public static final ResourceLocation pig_texture = new ResourceLocation(Reference.PATH_ENTITIES + "failed_pig.png");
 
 	public EntityRendererFailedPig(RenderManager renderManager)
 	{

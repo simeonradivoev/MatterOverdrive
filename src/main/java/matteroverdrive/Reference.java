@@ -49,7 +49,7 @@ public class Reference
 	public static final String PATH_SHADERS			= "mo:shaders/";
 	public static final String PATH_ELEMENTS		= PATH_GUI + "elements/";
 	public static final String PATH_ICON			= PATH_GUI + "icons/";
-	public static final String PATH_ENTETIES		= PATH_GFX + "entities/";
+	public static final String PATH_ENTITIES = PATH_GFX + "entities/";
 	public static final String PATH_ITEM			= PATH_GFX + "items/";
 	public static final String PATH_GUI_ITEM		= PATH_GUI + "items/";
 	public static final String PATH_MODEL			= "mo:models/";

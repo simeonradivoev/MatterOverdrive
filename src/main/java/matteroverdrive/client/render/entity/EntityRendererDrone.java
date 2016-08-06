@@ -15,7 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class EntityRendererDrone extends RenderLiving<EntityDrone>
 {
-	private final ResourceLocation texture = new ResourceLocation(Reference.PATH_ENTETIES + "drone_default.png");
+	private final ResourceLocation texture = new ResourceLocation(Reference.PATH_ENTITIES + "drone_default.png");
 
 	public EntityRendererDrone(RenderManager rendermanagerIn)
 	{

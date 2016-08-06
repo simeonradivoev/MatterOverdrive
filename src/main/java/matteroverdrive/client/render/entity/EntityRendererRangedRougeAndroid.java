@@ -34,7 +34,7 @@ import net.minecraft.util.ResourceLocation;
  */
 public class EntityRendererRangedRougeAndroid extends EntityRendererRougeAndroid<EntityRangedRogueAndroidMob>
 {
-	public static final ResourceLocation texture = new ResourceLocation(Reference.PATH_ENTETIES + "android_ranged.png");
+	public static final ResourceLocation texture = new ResourceLocation(Reference.PATH_ENTITIES + "android_ranged.png");
 	final MOModelRenderColored visorModel;
 
 	public EntityRendererRangedRougeAndroid(RenderManager renderManager)

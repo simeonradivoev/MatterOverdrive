@@ -38,7 +38,7 @@ import org.lwjgl.opengl.GL11;
  */
 public class EntityRendererPhaserFire extends Render
 {
-	private static final ResourceLocation arrowTextures = new ResourceLocation(Reference.PATH_ENTETIES + "PlasmaFire.png");
+	private static final ResourceLocation arrowTextures = new ResourceLocation(Reference.PATH_ENTITIES + "PlasmaFire.png");
 
 	public EntityRendererPhaserFire(RenderManager renderManager)
 	{

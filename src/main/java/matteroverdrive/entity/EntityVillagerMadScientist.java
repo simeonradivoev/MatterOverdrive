@@ -33,6 +33,7 @@ import matteroverdrive.entity.player.MOPlayerCapabilityProvider;
 import matteroverdrive.entity.tasks.EntityAITalkToPlayer;
 import matteroverdrive.entity.tasks.EntityAIWatchDialogPlayer;
 import matteroverdrive.init.MatterOverdriveDialogs;
+import matteroverdrive.init.MatterOverdriveEntities;
 import matteroverdrive.init.MatterOverdriveQuests;
 import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.network.packet.server.PacketManageConversation;
@@ -54,6 +55,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
@@ -72,7 +74,7 @@ public class EntityVillagerMadScientist extends EntityVillager implements IDialo
 
 	public EntityVillagerMadScientist(World world)
 	{
-		super(world, 666);
+		super(world, VillagerRegistry.getId(MatterOverdriveEntities.MAD_SCIENTIST_PROFESSION));
 		this.tasks.addTask(1, new EntityAITalkToPlayer(this));
 		this.tasks.addTask(1, new EntityAIWatchDialogPlayer(this));
 	}

@@ -1,8 +1,6 @@
 package matteroverdrive.client.render.entity;
 
 import matteroverdrive.Reference;
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelSheep1;
 import net.minecraft.client.model.ModelSheep2;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderSheep;
@@ -15,7 +13,7 @@ import net.minecraft.util.ResourceLocation;
 public class EntityRendererFailedSheep extends RenderSheep
 {
 
-	private static final ResourceLocation shearedSheepTextures = new ResourceLocation(Reference.PATH_ENTETIES + "failed_sheep.png");
+	private static final ResourceLocation shearedSheepTextures = new ResourceLocation(Reference.PATH_ENTITIES + "failed_sheep.png");
 
 	public EntityRendererFailedSheep(RenderManager renderManager)
 	{

@@ -19,6 +19,7 @@
 package matteroverdrive.init;
 
 import matteroverdrive.MatterOverdrive;
+import matteroverdrive.Reference;
 import matteroverdrive.entity.*;
 import matteroverdrive.entity.monster.EntityMeleeRougeAndroidMob;
 import matteroverdrive.entity.monster.EntityMutantScientist;
@@ -39,6 +40,8 @@ public class MatterOverdriveEntities
 {
 	public static final int ENTITY_STARTING_ID = 171;
 	public static EntityRogueAndroid rogueandroid;
+
+	public static VillagerRegistry.VillagerProfession MAD_SCIENTIST_PROFESSION;
 
 	public static void init(FMLPreInitializationEvent event, ConfigurationHandler configurationHandler)
 	{
@@ -69,6 +72,9 @@ public class MatterOverdriveEntities
 		//int phaserFireID = loadIDFromConfig(PlasmaBolt.class,"phaser_fire",170);
 		//EntityRegistry.registerGlobalEntityID(PlasmaBolt.class, "phaser_fire", phaserFireID);
 		MatterOverdrive.configHandler.save();
+
+		MAD_SCIENTIST_PROFESSION = new VillagerRegistry.VillagerProfession("mo.mad_scientist", Reference.PATH_ENTITIES + "mad_scientist.png", Reference.PATH_ENTITIES + "hulking_scinetist.png");
+		VillagerRegistry.instance().register(MAD_SCIENTIST_PROFESSION);
 	}
 
 	public static int addEntity(Class<? extends Entity> enityClass, String name, int mainColor, int spotsColor, int id)

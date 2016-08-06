@@ -38,8 +38,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class EntityRendererRougeAndroid<T extends EntityRougeAndroidMob> extends RenderBiped
 {
-	public static final ResourceLocation texture = new ResourceLocation(Reference.PATH_ENTETIES + "android.png");
-	public static final ResourceLocation texture_hologram = new ResourceLocation(Reference.PATH_ENTETIES + "android_holo.png");
+	public static final ResourceLocation texture = new ResourceLocation(Reference.PATH_ENTITIES + "android.png");
+	public static final ResourceLocation texture_hologram = new ResourceLocation(Reference.PATH_ENTITIES + "android_holo.png");
 	private final boolean hologram;
 
 	public EntityRendererRougeAndroid(RenderManager renderManager, ModelBiped modelBiped, float f, boolean hologram) {

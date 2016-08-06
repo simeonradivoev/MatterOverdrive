@@ -20,7 +20,6 @@ package matteroverdrive.client.render.entity;
 
 import matteroverdrive.Reference;
 import matteroverdrive.client.model.ModelHulkingScientist;
-import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
@@ -33,7 +32,7 @@ import net.minecraft.util.ResourceLocation;
 public class EntityRendererMutantScientist extends RenderBiped
 {
 
-	private final ResourceLocation texture = new ResourceLocation(Reference.PATH_ENTETIES + "hulking_scinetist.png");
+	private final ResourceLocation texture = new ResourceLocation(Reference.PATH_ENTITIES + "hulking_scinetist.png");
 
 	public EntityRendererMutantScientist(RenderManager renderManager)
 	{
