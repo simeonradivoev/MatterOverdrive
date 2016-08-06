@@ -49,6 +49,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
@@ -649,10 +650,7 @@ public abstract class EnergyWeapon extends MOItemEnergyContainer implements IWea
 
 	public void setHeat(ItemStack item, float amount)
 	{
-		if (item.hasTagCompound())
-		{
-			item.getTagCompound().setFloat("heat", Math.min(amount, getMaxHeat(item) + 1));
-		}
+		item.setTagInfo("heat", new NBTTagFloat(Math.min(amount, getMaxHeat(item) + 1)));
 	}
 
 	@Override

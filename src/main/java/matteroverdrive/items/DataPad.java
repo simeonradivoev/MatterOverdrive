@@ -36,9 +36,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
+import net.minecraft.nbt.*;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -288,32 +286,27 @@ public class DataPad extends MOBaseItem implements IBlockScanner
 	//region Setters
 	public void setOrdering(ItemStack stack, int order)
 	{
-		TagCompountCheck(stack);
-		stack.getTagCompound().setInteger("Ordering", order);
+		stack.setTagInfo("Ordering", new NBTTagInt(order));
 	}
 
 	public void setOpenGuide(ItemStack stack, int guideID)
 	{
-		TagCompountCheck(stack);
-		stack.getTagCompound().setInteger("guideID", guideID);
+		stack.setTagInfo("guideID", new NBTTagInt(guideID));
 	}
 
 	public void setOpenPage(ItemStack stack, int page)
 	{
-		TagCompountCheck(stack);
-		stack.getTagCompound().setInteger("page", page);
+		stack.setTagInfo("page", new NBTTagInt(page));
 	}
 
 	public void setCategory(ItemStack stack, String category)
 	{
-		TagCompountCheck(stack);
-		stack.getTagCompound().setString("Category", category);
+		stack.setTagInfo("Category", new NBTTagString(category));
 	}
 
 	public void setSelectedActiveQuest(ItemStack itemStack, int quest)
 	{
-		TagCompountCheck(itemStack);
-		itemStack.getTagCompound().setShort("SelectedActiveQuest", (short)quest);
+		itemStack.setTagInfo("SelectedActiveQuest", new NBTTagShort((short)quest));
 	}
 	//endregion
 

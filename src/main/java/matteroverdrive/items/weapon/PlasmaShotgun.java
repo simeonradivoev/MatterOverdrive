@@ -35,6 +35,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagLong;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
@@ -320,7 +321,7 @@ public class PlasmaShotgun extends EnergyWeapon
 		{
 			if (canFire(itemStack, world, entityPlayer))
 			{
-				itemStack.getTagCompound().setLong("LastShot", world.getTotalWorldTime());
+				itemStack.setTagInfo("LastShot", new NBTTagLong(world.getTotalWorldTime()));
 				Vec3d dir = entityPlayer.getLook(1);
 				Vec3d pos = getFirePosition(entityPlayer, dir, Mouse.isButtonDown(1));
 				WeaponShot shot = createShot(itemStack, entityPlayer, Mouse.isButtonDown(1));
