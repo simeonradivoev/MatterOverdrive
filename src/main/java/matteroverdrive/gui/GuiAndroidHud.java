@@ -396,6 +396,7 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
 						GlStateManager.popMatrix();
 					}
 				}
+				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 				GlStateManager.popMatrix();
 
 				renderHurt(android, event);
