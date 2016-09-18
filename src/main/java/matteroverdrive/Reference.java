@@ -34,8 +34,8 @@ public class Reference
 	public static final String CHANNEL_NAME = MOD_ID + "_channel";
 	public static final String CHANNEL_WEAPONS_NAME = MOD_ID + "_channel:weapons";
 	public static final String CHANNEL_GUI_NAME = MOD_ID + "_channel:gui";
-	public static final String VERSIONS_CHECK_URL = "http://simeon.co.vu/Mods/MatterOverdrive/wp-json/posts?type[]=mo_download&filter[posts_per_page]=1";
-	public static final String DOWNLOAD_URL = "http://simeon.co.vu/Mods/MatterOverdrive/download_category/downloads/";
+	public static final String VERSIONS_CHECK_URL = "http://simeonradivoev.com/Mods/MatterOverdrive/wp-json/posts?type[]=mo_download&filter[posts_per_page]=1";
+	public static final String DOWNLOAD_URL = "http://simeonradivoev.com/Mods/MatterOverdrive/download_category/downloads/";
 
 
 	//region GUI
