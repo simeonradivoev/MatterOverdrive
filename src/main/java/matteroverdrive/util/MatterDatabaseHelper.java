@@ -22,14 +22,19 @@ import matteroverdrive.api.matter.IMatterDatabase;
 import matteroverdrive.api.matter.IMatterPatternStorage;
 import matteroverdrive.data.ItemPattern;
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+
+import java.util.Random;
 
 public class MatterDatabaseHelper
 {
@@ -215,13 +220,17 @@ public class MatterDatabaseHelper
 	{
 		Block b = world.getBlock(x, y, z);
 
-		if(b != null && Item.getItemFromBlock(b) != null)
+		if(b != null)
 		{
-			//Item bi = Item.getItemFromBlock(b);
-			//List subBlocks = new ArrayList();
-			//b.getSubBlocks(bi, null, subBlocks);
 			int meta = world.getBlockMetadata(x, y, z);
-			return new ItemStack(b,1,b.damageDropped(meta));
+
+			if (b == Blocks.skull) {
+				TileEntity te = world.getTileEntity(x, y, z);
+				meta = ((TileEntitySkull)te).func_145904_a();
+				return new ItemStack(b.getItemDropped(meta, new Random(), 0), 1, meta);
+			}
+
+			return new ItemStack(b, 1, b.damageDropped(meta));
 
 		}
 

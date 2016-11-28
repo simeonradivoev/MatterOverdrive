@@ -67,7 +67,7 @@ public class BioticStatHighJump extends AbstractBioticStat implements IConfigSub
     {
         if (event instanceof LivingEvent.LivingJumpEvent)
         {
-            if (event.entityLiving.isSneaking() && !MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this, level, androidPlayer)))
+            if (!MinecraftForge.EVENT_BUS.post(new MOEventBionicStat(this, level, androidPlayer)))
             {
                 if (!event.entity.worldObj.isRemote)
                     androidPlayer.extractEnergyScaled(ENERGY_PER_JUMP);

@@ -349,6 +349,7 @@ public class TileEntityMachineFusionReactorController extends MOTileEntityMachin
                     matterStorage.modifyMatterStored(-MathHelper.floor_float(matterDrain));
                     matterDrain -= MathHelper.floor_float(matterDrain);
                 }
+                UpdateClientPower();
             }
         }
     }

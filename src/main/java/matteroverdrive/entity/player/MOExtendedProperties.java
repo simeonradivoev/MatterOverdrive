@@ -159,9 +159,8 @@ public class MOExtendedProperties implements IExtendedEntityProperties
                 MatterOverdrive.proxy.getGoogleAnalytics().sendEventHit(GoogleAnalyticsCommon.EVENT_CATEGORY_QUESTS,GoogleAnalyticsCommon.EVENT_ACTION_QUEST_COMPLETE,event.questStack.getTitle(),player);
                 questData.addQuestToCompleted(questStack);
                 getPlayer().addExperience(event.xp);
-                questStack.addRewards(rewards, getPlayer());
                 InventoryPlayer inventoryPlayer = getPlayer().inventory;
-                for (IQuestReward reward : rewards)
+                for (IQuestReward reward : event.rewards)
                 {
                     reward.giveReward(questStack,getPlayer());
                 }

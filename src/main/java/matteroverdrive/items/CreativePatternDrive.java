@@ -38,12 +38,6 @@ public class CreativePatternDrive extends PatternDrive
         super(name, capacity);
     }
 
-    @Override
-    public ItemPattern[] getPatterns(ItemStack patternStorage)
-    {
-        return MatterDatabaseHelper.getPatternsFromStorage(patternStorage);
-    }
-
     private void loadAllPatterns(ItemStack patternStorage)
     {
 

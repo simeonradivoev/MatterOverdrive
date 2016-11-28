@@ -113,6 +113,11 @@ public class TileEntityFusionReactorPart extends MOTileEntityMachineMatter imple
     }
 
     @Override
+    public boolean isMultiblockInvalid() {
+        return isInvalid();
+    }
+
+    @Override
     public IMultiBlockTileStructure getMultiBlockHandler() {
         return structure;
     }

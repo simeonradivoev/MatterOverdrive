@@ -113,7 +113,7 @@ public class MOAndroidHouseBuilding extends MOWorldGenBuilding
         {
             EntityMeleeRougeAndroidMob androidMob = new EntityMeleeRougeAndroidMob(world);
             androidMob.setPosition(x+0.5, y+0.5, z+0.5);
-            world.spawnEntityInWorld(null);
+            world.spawnEntityInWorld(androidMob);
             androidMob.onSpawnWithEgg(null);
             androidMob.func_110163_bv();
         }

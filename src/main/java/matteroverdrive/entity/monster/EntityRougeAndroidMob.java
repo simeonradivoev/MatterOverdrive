@@ -84,30 +84,7 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
 
     private void init()
     {
-        String name;
-        if (getIsLegendary())
-        {
-            name = EnumChatFormatting.GOLD.toString();
-        }
-        else
-        {
-           switch (getAndroidLevel())
-           {
-               case 0:
-                   name = EnumChatFormatting.GRAY.toString();
-                   break;
-               case 1:
-                   name = EnumChatFormatting.DARK_AQUA.toString();
-                   break;
-               case 2:
-                   name = EnumChatFormatting.DARK_PURPLE.toString();
-                   break;
-               default:
-                   name = "";
-           }
-
-        }
-        name += getIsLegendary() ? EnumChatFormatting.GOLD + String.format("%s %s ",Reference.UNICODE_LEGENDARY,MOStringHelper.translateToLocal("rarity.legendary")) : "";
+        String name = getIsLegendary() ? EnumChatFormatting.GOLD + String.format("%s %s ",Reference.UNICODE_LEGENDARY,MOStringHelper.translateToLocal("rarity.legendary")) : "";
         name += String.format("[%s] ",getAndroidLevel());
         name += names[rand.nextInt(names.length)];
         setCustomNameTag(name);
@@ -141,6 +118,29 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
                 default:
                     setVisorColor(0xFFFFFFFF);
             }
+        }
+    }
+
+    public EnumChatFormatting getNameColor()
+    {
+        if (getIsLegendary())
+        {
+           return EnumChatFormatting.GOLD;
+        }
+        else
+        {
+            switch (getAndroidLevel())
+            {
+                case 0:
+                    return EnumChatFormatting.GRAY;
+                case 1:
+                    return EnumChatFormatting.DARK_AQUA;
+                case 2:
+                    return EnumChatFormatting.DARK_PURPLE;
+                default:
+                    return null;
+            }
+
         }
     }
 
@@ -232,7 +232,7 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
         int androidCount = 0;
         for (int i = 0;i < chunk.entityLists.length;i++)
         {
-            for (int c = 0;i < chunk.entityLists[i].size();i++)
+            for (int c = 0;c < chunk.entityLists[i].size();c++)
             {
                 if (chunk.entityLists[i].get(c) instanceof EntityRougeAndroidMob)
                 {
@@ -406,6 +406,13 @@ public class EntityRougeAndroidMob extends EntityMob implements IEntityAdditiona
         if(hasTeam())
         {
             return getTeam().formatString(this.dataWatcher.getWatchableObjectString(10));
+        }else
+        {
+            EnumChatFormatting color = getNameColor();
+            if (color != null)
+            {
+                return color + this.dataWatcher.getWatchableObjectString(10);
+            }
         }
         return this.dataWatcher.getWatchableObjectString(10);
     }

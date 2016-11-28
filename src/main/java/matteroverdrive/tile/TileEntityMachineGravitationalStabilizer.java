@@ -121,12 +121,16 @@ public class TileEntityMachineGravitationalStabilizer extends MOTileEntityMachin
     public AxisAlignedBB getRenderBoundingBox()
     {
         Block type = getBlockType();
-        AxisAlignedBB bb = type.getCollisionBoundingBoxFromPool(worldObj, xCoord, yCoord, zCoord);
-        if (hit != null)
+        if(type != null)
         {
-            return bb.expand(hit.blockX - xCoord,hit.blockY - yCoord,hit.blockZ - zCoord);
+            AxisAlignedBB bb = type.getCollisionBoundingBoxFromPool(worldObj, xCoord, yCoord, zCoord);
+            if (hit != null)
+            {
+                return bb.expand(hit.blockX - xCoord, hit.blockY - yCoord, hit.blockZ - zCoord);
+            }
+            return bb;
         }
-        return bb;
+        return AxisAlignedBB.getBoundingBox(xCoord,yCoord,zCoord,xCoord + 1,yCoord + 1,zCoord + 1);
     }
 
     @Override

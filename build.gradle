@@ -10,11 +10,13 @@ configFile.withReader {
 
 apply plugin: 'forge'
 apply plugin: 'maven'
+apply plugin: 'com.jfrog.bintray'
 apply from: 'gradle/scripts/dependencies.gradle'
 apply from: 'gradle/scripts/artifacts.gradle'
 
 buildscript {
     repositories {
+        jcenter()
         mavenCentral()
         maven {
             name = "ForgeFS"
@@ -27,6 +29,7 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
     }
 }
 
@@ -35,8 +38,8 @@ targetCompatibility = JavaVersion.VERSION_1_8
 
 version = "${config.mc_version}-${config.mod_version}"
 
-if (System.getenv().BUILD_NUMBER != null) {
-    version += "-build-" + System.getenv().BUILD_NUMBER
+if (System.getenv('TRAVIS_BUILD_NUMBER') != null) {
+    version += "-build-" + System.getenv('TRAVIS_BUILD_NUMBER')
 }
 
 group= "${config.mo_group}"
@@ -47,19 +50,22 @@ minecraft {
     runDir = "run"
 }
 
-processResources
-{
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-                
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
-        
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
+bintray {
+    user = 'simeonradivoev'
+    key = System.getenv('BINTRAY_KEY')
+    pkg {
+        repo = 'MatterOverdrive'
+        name = 'mo'
+        userOrg = 'simeonradivoev'
+        version {
+            name = config.mc_version + '-' + config.mod_version
+            released  = new Date()
+            desc = System.getenv('TRAVIS_COMMIT')
+        }
+        filesSpec {
+            from 'build/libs'
+            into 'builds'
+        }
+        publish = true
     }
 }
-
