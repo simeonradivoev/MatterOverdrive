@@ -68,7 +68,7 @@ public class EntityDrone extends EntityCreature implements IEntityOwnable
 		this.moveHelper = new DroneMoveHelper(this);
 
 		this.tasks.addTask(2, new EntityAIWatchClosest(this, EntityLivingBase.class, 8.0F));
-		this.tasks.addTask(3, new EntityAIFollowCreator(this, 0.2f, 5f, 3.0F));
+		this.tasks.addTask(3, new EntityAIFollowCreator<>(this, 0.2f, 5f, 3.0F));
 	}
 
 	@Override
