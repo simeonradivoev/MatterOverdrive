@@ -32,7 +32,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class PacketDigBlock extends PacketAbstract
 {
-	int typeOfDig;
+	Type type;
 	BlockPos pos;
 	EnumFacing side;
 
@@ -41,7 +41,7 @@ public class PacketDigBlock extends PacketAbstract
 		pos = new BlockPos(0, 0, 0);
 	}
 
-	public PacketDigBlock(BlockPos pos, int typeOfDig, EnumFacing side)
+	public PacketDigBlock(BlockPos pos, Type type, EnumFacing side)
 	{
 		if (pos == null)
 		{
@@ -49,7 +49,7 @@ public class PacketDigBlock extends PacketAbstract
 		}
 		this.pos = pos;
 		this.side = side;
-		this.typeOfDig = typeOfDig;
+		this.type = type;
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class PacketDigBlock extends PacketAbstract
 	{
 		pos = BlockPos.fromLong(buf.readLong());
 		side = EnumFacing.VALUES[buf.readByte()];
-		typeOfDig = buf.readByte();
+		type = Type.values()[buf.readByte()];
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class PacketDigBlock extends PacketAbstract
 	{
 		buf.writeLong(pos.toLong());
 		buf.writeByte(side.ordinal());
-		buf.writeByte(typeOfDig);
+		buf.writeByte(type.ordinal());
 	}
 
 	public static class ServerHandler extends AbstractServerPacketHandler<PacketDigBlock>
@@ -73,40 +73,45 @@ public class PacketDigBlock extends PacketAbstract
 		@Override
 		public void handleServerMessage(EntityPlayerMP player, PacketDigBlock message, MessageContext ctx)
 		{
-			WorldServer worldserver = player.getServer().worldServerForDimension(player.dimension);
-			EntityPlayerMP playerMP = player;
+			WorldServer world = player.getServer().worldServerForDimension(player.dimension);
+			IBlockState state = world.getBlockState(message.pos);
 
-			if (message.typeOfDig == 0)
+			switch (message.type)
 			{
-				if (!player.getServer().isBlockProtected(worldserver, message.pos, player))
-				{
-					playerMP.interactionManager.onBlockClicked(message.pos, message.side);
-				}
-				else
-				{
-					playerMP.connection.sendPacket(new SPacketBlockChange(worldserver, message.pos));
-				}
-			}
-			else if (message.typeOfDig == 2)
-			{
-				playerMP.interactionManager.tryHarvestBlock(message.pos);
+				case CLICK:
+					if (!player.getServer().isBlockProtected(world, message.pos, player))
+					{
+						player.interactionManager.onBlockClicked(message.pos, message.side);
+					}
+					else
+					{
+						player.connection.sendPacket(new SPacketBlockChange(world, message.pos));
+					}
+					break;
+				case HARVEST:
+					player.interactionManager.tryHarvestBlock(message.pos);
 
-				IBlockState state = worldserver.getBlockState(message.pos);
-				if (state.getMaterial() != Material.AIR)
-				{
-					playerMP.connection.sendPacket(new SPacketBlockChange(worldserver, message.pos));
-				}
-			}
-			else if (message.typeOfDig == 1)
-			{
-				playerMP.interactionManager.cancelDestroyingBlock();
+					if (state.getMaterial() != Material.AIR)
+					{
+						player.connection.sendPacket(new SPacketBlockChange(world, message.pos));
+					}
+					break;
+				case CANCEL:
+					player.interactionManager.cancelDestroyingBlock();
 
-				IBlockState state = worldserver.getBlockState(message.pos);
-				if (state.getMaterial() != Material.AIR)
-				{
-					playerMP.connection.sendPacket(new SPacketBlockChange(worldserver, message.pos));
-				}
+					if (state.getMaterial() != Material.AIR)
+					{
+						player.connection.sendPacket(new SPacketBlockChange(world, message.pos));
+					}
+					break;
 			}
 		}
 	}
+
+	public enum Type {
+		CLICK,
+		CANCEL,
+		HARVEST
+	}
+
 }

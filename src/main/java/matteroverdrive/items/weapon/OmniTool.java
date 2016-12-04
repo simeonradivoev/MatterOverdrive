@@ -26,7 +26,6 @@ import matteroverdrive.client.sound.MOPositionedSound;
 import matteroverdrive.client.sound.WeaponSound;
 import matteroverdrive.entity.weapon.PlasmaBolt;
 import matteroverdrive.fx.PhaserBoltRecoil;
-import matteroverdrive.init.MatterOverdriveItems;
 import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.items.weapon.module.WeaponModuleBarrel;
 import matteroverdrive.network.packet.server.PacketDigBlock;
@@ -36,7 +35,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -133,7 +131,7 @@ public class OmniTool extends EnergyWeapon
 							if (BLOCK_DAMAGE >= 1.0F)
 							{
 								//this.isHittingBlock = false;
-								MatterOverdrive.packetPipeline.sendToServer(new PacketDigBlock(hit.getBlockPos(), 2, hit.sideHit));
+								MatterOverdrive.packetPipeline.sendToServer(new PacketDigBlock(hit.getBlockPos(), PacketDigBlock.Type.HARVEST, hit.sideHit));
 								Minecraft.getMinecraft().playerController.onPlayerDestroyBlock(hit.getBlockPos());
 								BLOCK_DAMAGE = 0.0F;
 								STEP_SOUND_COUNTER = 0.0F;
@@ -141,7 +139,7 @@ public class OmniTool extends EnergyWeapon
 							}
 							else if (BLOCK_DAMAGE == 0)
 							{
-								MatterOverdrive.packetPipeline.sendToServer(new PacketDigBlock(hit.getBlockPos(), 0, hit.sideHit));
+								MatterOverdrive.packetPipeline.sendToServer(new PacketDigBlock(hit.getBlockPos(), PacketDigBlock.Type.CLICK, hit.sideHit));
 							}
 
 							BLOCK_DAMAGE = MathHelper.clamp_float(modifyStatFromModules(Reference.WS_DAMAGE, stack, BLOCK_DAMAGE + state.getPlayerRelativeBlockHardness((EntityPlayer)player, player.worldObj, hit.getBlockPos())), 0, 1);
@@ -200,7 +198,7 @@ public class OmniTool extends EnergyWeapon
 		{
 			BLOCK_DAMAGE = 0;
 			STEP_SOUND_COUNTER = 0.0F;
-			MatterOverdrive.packetPipeline.sendToServer(new PacketDigBlock(CURRENT_BLOCK, 1, LAST_SIDE));
+			MatterOverdrive.packetPipeline.sendToServer(new PacketDigBlock(CURRENT_BLOCK, PacketDigBlock.Type.CANCEL, LAST_SIDE));
 			world.sendBlockBreakProgress(player.getEntityId(), CURRENT_BLOCK, -1);
 		}
 	}
