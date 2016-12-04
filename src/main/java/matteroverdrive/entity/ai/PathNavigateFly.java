@@ -12,11 +12,12 @@ import net.minecraft.world.World;
  */
 public class PathNavigateFly extends PathNavigate
 {
-	public PathNavigateFly(EntityLiving entitylivingIn, World worldIn)
+	public PathNavigateFly(EntityLiving entity, World world)
 	{
-		super(entitylivingIn, worldIn);
+		super(entity, world);
 	}
 
+	@Override
 	protected PathFinder getPathFinder()
 	{
 		return new PathFinder(new FlyNodeProcessor());
@@ -25,16 +26,19 @@ public class PathNavigateFly extends PathNavigate
 	/**
 	 * If on ground or swimming and can swim
 	 */
+	@Override
 	protected boolean canNavigate()
 	{
 		return true;
 	}
 
+	@Override
 	protected Vec3d getEntityPosition()
 	{
 		return new Vec3d(this.theEntity.posX, this.theEntity.posY, this.theEntity.posZ);
 	}
 
+	@Override
 	protected void pathFollow()
 	{
 		Vec3d vec3 = this.getEntityPosition();
@@ -63,6 +67,7 @@ public class PathNavigateFly extends PathNavigate
 	/**
 	 * Trims path data from the end to the first sun covered block
 	 */
+	@Override
 	protected void removeSunnyPath()
 	{
 		super.removeSunnyPath();
@@ -72,9 +77,10 @@ public class PathNavigateFly extends PathNavigate
 	 * Returns true when an entity of specified size could safely walk in a straight line between the two points. Args:
 	 * pos1, pos2, entityXSize, entityYSize, entityZSize
 	 */
-	protected boolean isDirectPathBetweenPoints(Vec3d posVec31, Vec3d posVec32, int sizeX, int sizeY, int sizeZ)
+	@Override
+	protected boolean isDirectPathBetweenPoints(Vec3d pos1, Vec3d pos2, int sizeX, int sizeY, int sizeZ)
 	{
-		RayTraceResult movingobjectposition = this.worldObj.rayTraceBlocks(posVec31, new Vec3d(posVec32.xCoord, posVec32.yCoord + (double)this.theEntity.height * 0.5D, posVec32.zCoord), false, true, false);
+		RayTraceResult movingobjectposition = this.worldObj.rayTraceBlocks(pos1, new Vec3d(pos2.xCoord, pos2.yCoord + (double)this.theEntity.height * 0.5D, pos2.zCoord), false, true, false);
 		return movingobjectposition == null || movingobjectposition.typeOfHit == RayTraceResult.Type.MISS;
 	}
 }

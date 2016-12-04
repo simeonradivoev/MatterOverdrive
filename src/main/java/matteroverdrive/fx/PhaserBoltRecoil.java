@@ -46,9 +46,9 @@ public class PhaserBoltRecoil extends Particle
 		this.setParticleTextureIndex(rand.nextInt(2));
 	}
 
-	public PhaserBoltRecoil(World p_i1215_1_, double x, double y, double z, Color color)
+	public PhaserBoltRecoil(World world, double x, double y, double z, Color color)
 	{
-		this(p_i1215_1_, x, y, z, color, 0, 0, 0);
+		this(world, x, y, z, color, 0, 0, 0);
 	}
 
 	public int getBrightnessForRender(float f)
@@ -80,11 +80,11 @@ public class PhaserBoltRecoil extends Particle
 	}
 
 	@Override
-	public void renderParticle(VertexBuffer worldRenderer, Entity entity, float p_70539_2_, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_)
+	public void renderParticle(VertexBuffer buffer, Entity entity, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)
 	{
-		float f6 = ((float)this.particleAge + p_70539_2_) / (float)this.particleMaxAge;
+		float f6 = ((float)this.particleAge + partialTicks) / (float)this.particleMaxAge;
 		this.particleScale = this.lavaParticleScale * (1.0F - f6 * f6);
-		super.renderParticle(worldRenderer, entity, p_70539_2_, p_70539_3_, p_70539_4_, p_70539_5_, p_70539_6_, p_70539_7_);
+		super.renderParticle(buffer, entity, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
 	}
 
 	/**

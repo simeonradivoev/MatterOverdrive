@@ -33,16 +33,16 @@ public class AndroidEffects
 
 	static
 	{
-		typeMap.put(Byte.class, Integer.valueOf(0));
-		typeMap.put(Short.class, Integer.valueOf(1));
-		typeMap.put(Integer.class, Integer.valueOf(2));
-		typeMap.put(Long.class, Integer.valueOf(3));
-		typeMap.put(Float.class, Integer.valueOf(4));
-		typeMap.put(Boolean.class, Integer.valueOf(5));
-		typeMap.put(String.class, Integer.valueOf(6));
-		typeMap.put(ItemStack.class, Integer.valueOf(7));
-		typeMap.put(BlockPos.class, Integer.valueOf(8));
-		typeMap.put(Rotations.class, Integer.valueOf(9));
+		typeMap.put(Byte.class, 0);
+		typeMap.put(Short.class, 1);
+		typeMap.put(Integer.class, 2);
+		typeMap.put(Long.class, 3);
+		typeMap.put(Float.class, 4);
+		typeMap.put(Boolean.class, 5);
+		typeMap.put(String.class, 6);
+		typeMap.put(ItemStack.class, 7);
+		typeMap.put(BlockPos.class, 8);
+		typeMap.put(Rotations.class, 9);
 	}
 
 	private final AndroidPlayer androidPlayer;
@@ -76,22 +76,22 @@ public class AndroidEffects
 		switch (effect.typeId)
 		{
 			case 0:
-				buf.writeByte(((Byte)effect.value).byteValue());
+				buf.writeByte((Byte)effect.value);
 				break;
 			case 1:
-				buf.writeShort(((Short)effect.value).shortValue());
+				buf.writeShort((Short)effect.value);
 				break;
 			case 2:
-				buf.writeInt(((Integer)effect.value).intValue());
+				buf.writeInt((Integer)effect.value);
 				break;
 			case 3:
-				buf.writeLong(((Long)effect.value).longValue());
+				buf.writeLong((Long)effect.value);
 				break;
 			case 4:
-				buf.writeFloat(((Float)effect.value).floatValue());
+				buf.writeFloat((Float)effect.value);
 				break;
 			case 5:
-				buf.writeBoolean(((Boolean)effect.value).booleanValue());
+				buf.writeBoolean((Boolean)effect.value);
 				break;
 			case 6:
 				ByteBufUtils.writeUTF8String(buf, (String)effect.value);
@@ -119,22 +119,22 @@ public class AndroidEffects
 		switch (effect.typeId)
 		{
 			case 0:
-				tagCompound.setByte("value", ((Byte)effect.value).byteValue());
+				tagCompound.setByte("value", (Byte)effect.value);
 				break;
 			case 1:
-				tagCompound.setShort("value", ((Short)effect.value).shortValue());
+				tagCompound.setShort("value", (Short)effect.value);
 				break;
 			case 2:
-				tagCompound.setInteger("value", ((Integer)effect.value).intValue());
+				tagCompound.setInteger("value", (Integer)effect.value);
 				break;
 			case 3:
-				tagCompound.setLong("value", ((Long)effect.value).longValue());
+				tagCompound.setLong("value", (Long)effect.value);
 				break;
 			case 4:
-				tagCompound.setFloat("value", ((Float)effect.value).floatValue());
+				tagCompound.setFloat("value", (Float)effect.value);
 				break;
 			case 5:
-				tagCompound.setBoolean("value", ((Boolean)effect.value).booleanValue());
+				tagCompound.setBoolean("value", (Boolean)effect.value);
 				break;
 			case 6:
 				tagCompound.setString("value", (String)effect.value);
@@ -177,22 +177,22 @@ public class AndroidEffects
 			switch (typeId)
 			{
 				case 0:
-					effect = new Effect(id, Byte.valueOf(buf.readByte()), typeId);
+					effect = new Effect(id, buf.readByte(), typeId);
 					break;
 				case 1:
-					effect = new Effect(id, Short.valueOf(buf.readShort()), typeId);
+					effect = new Effect(id, buf.readShort(), typeId);
 					break;
 				case 2:
-					effect = new Effect(id, Integer.valueOf(buf.readInt()), typeId);
+					effect = new Effect(id, buf.readInt(), typeId);
 					break;
 				case 3:
-					effect = new Effect(id, Long.valueOf(buf.readLong()), typeId);
+					effect = new Effect(id, buf.readLong(), typeId);
 					break;
 				case 4:
-					effect = new Effect(id, Float.valueOf(buf.readFloat()), typeId);
+					effect = new Effect(id, buf.readFloat(), typeId);
 					break;
 				case 5:
-					effect = new Effect(id, Boolean.valueOf(buf.readBoolean()), typeId);
+					effect = new Effect(id, buf.readBoolean(), typeId);
 					break;
 				case 6:
 					effect = new Effect(id, ByteBufUtils.readUTF8String(buf), typeId);
@@ -224,22 +224,22 @@ public class AndroidEffects
 		switch (effect.typeId)
 		{
 			case 0:
-				effect.value = Byte.valueOf(tagCompound.getByte("value"));
+				effect.value = tagCompound.getByte("value");
 				break;
 			case 1:
-				effect.value = Short.valueOf(tagCompound.getShort("value"));
+				effect.value = tagCompound.getShort("value");
 				break;
 			case 2:
-				effect.value = Integer.valueOf(tagCompound.getInteger("value"));
+				effect.value = tagCompound.getInteger("value");
 				break;
 			case 3:
-				effect.value = Long.valueOf(tagCompound.getLong("value"));
+				effect.value = tagCompound.getLong("value");
 				break;
 			case 4:
-				effect.value = Float.valueOf(tagCompound.getFloat("value"));
+				effect.value = tagCompound.getFloat("value");
 				break;
 			case 5:
-				effect.value = Boolean.valueOf(tagCompound.getBoolean("value"));
+				effect.value = tagCompound.getBoolean("value");
 				break;
 			case 6:
 				effect.value = tagCompound.getString("value");
@@ -273,7 +273,7 @@ public class AndroidEffects
 		{
 			throw new IllegalArgumentException("Data value id is too big with " + id + "! (Max is " + 31 + ")");
 		}
-		else if (this.effectMap.containsKey(Integer.valueOf(id)))
+		else if (this.effectMap.containsKey(id))
 		{
 			throw new IllegalArgumentException("Duplicate id value for " + id + "!");
 		}
@@ -282,32 +282,32 @@ public class AndroidEffects
 
 	public byte getEffectByte(int id)
 	{
-		return ((Byte)this.getEffect(id).value).byteValue();
+		return (Byte)this.getEffect(id).value;
 	}
 
 	public short getEffectShort(int id)
 	{
-		return ((Short)this.getEffect(id).value).shortValue();
+		return (Short)this.getEffect(id).value;
 	}
 
 	public int getEffectInt(int id)
 	{
-		return ((Integer)this.getEffect(id).value).intValue();
+		return (Integer)this.getEffect(id).value;
 	}
 
 	public boolean getEffectBool(int id)
 	{
-		return ((Boolean)this.getEffect(id).value).booleanValue();
+		return (Boolean)this.getEffect(id).value;
 	}
 
 	public float getEffectFloat(int id)
 	{
-		return ((Float)this.getEffect(id).value).floatValue();
+		return (Float)this.getEffect(id).value;
 	}
 
 	public long getEffectLong(int id)
 	{
-		return ((Long)this.getEffect(id).value).longValue();
+		return (Long)this.getEffect(id).value;
 	}
 
 	public String getEffectString(int id)
@@ -335,13 +335,13 @@ public class AndroidEffects
 
 		try
 		{
-			effect = this.effectMap.get(Integer.valueOf(id));
+			effect = this.effectMap.get(id);
 		}
 		catch (Throwable throwable)
 		{
 			CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Getting synched android effects data");
 			CrashReportCategory crashreportcategory = crashreport.makeCategory("Synched android effects data");
-			crashreportcategory.addCrashSection("Data ID", Integer.valueOf(id));
+			crashreportcategory.addCrashSection("Data ID", id);
 			throw new ReportedException(crashreport);
 		}
 
@@ -469,7 +469,7 @@ public class AndroidEffects
 
 		for (Effect effect : effects)
 		{
-			Effect existingEffect = this.effectMap.get(Integer.valueOf(effect.id));
+			Effect existingEffect = this.effectMap.get(effect.id);
 
 			if (existingEffect != null)
 			{

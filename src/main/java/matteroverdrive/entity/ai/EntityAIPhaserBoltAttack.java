@@ -54,11 +54,6 @@ public class EntityAIPhaserBoltAttack extends EntityAIBase
 
 	public EntityAIPhaserBoltAttack(IRangedEnergyWeaponAttackMob rangedAttackEntityHost, double entityMoveSpeed, int maxRangedAttackDelay, float maxChaseDistance)
 	{
-		this(rangedAttackEntityHost, entityMoveSpeed, maxRangedAttackDelay, maxRangedAttackDelay, maxChaseDistance);
-	}
-
-	public EntityAIPhaserBoltAttack(IRangedEnergyWeaponAttackMob rangedAttackEntityHost, double entityMoveSpeed, int p_i1650_4_, int maxRangedAttackDelay, float maxChaseDistance)
-	{
 		this.rangedAttackDelayTime = -1;
 
 		if (!(rangedAttackEntityHost instanceof EntityLivingBase))

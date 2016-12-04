@@ -26,9 +26,9 @@ import net.minecraft.entity.ai.EntityAIAttackMelee;
  */
 public class EntityAIAndroidAttackOnCollide extends EntityAIAttackMelee
 {
-	public EntityAIAndroidAttackOnCollide(EntityCreature p_i1635_1_, double p_i1635_3_, boolean p_i1635_5_)
+	public EntityAIAndroidAttackOnCollide(EntityCreature creature, double speed, boolean useLongMemory)
 	{
-		super(p_i1635_1_, p_i1635_3_, p_i1635_5_);
+		super(creature, speed, useLongMemory);
 	}
 
 	@Override

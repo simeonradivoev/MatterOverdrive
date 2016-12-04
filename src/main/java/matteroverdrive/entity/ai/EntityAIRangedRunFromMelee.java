@@ -30,12 +30,12 @@ public class EntityAIRangedRunFromMelee extends EntityAIBase
 {
 	Vec3d destinaton;
 	private double minDistanceSq;
-	private EntityCreature theEntity;
+	private EntityCreature entity;
 	private double moveSpeed;
 
-	public EntityAIRangedRunFromMelee(EntityCreature theEntity, double moveSpeed)
+	public EntityAIRangedRunFromMelee(EntityCreature entity, double moveSpeed)
 	{
-		this.theEntity = theEntity;
+		this.entity = entity;
 		this.moveSpeed = moveSpeed;
 		//setMutexBits(1);
 	}
@@ -43,13 +43,13 @@ public class EntityAIRangedRunFromMelee extends EntityAIBase
 	@Override
 	public boolean shouldExecute()
 	{
-		if (this.theEntity.getAttackTarget() != null && this.theEntity.getNavigator().noPath())
+		if (this.entity.getAttackTarget() != null && this.entity.getNavigator().noPath())
 		{
-			double sqDistanceToTargetSq = this.theEntity.getDistanceSqToEntity(this.theEntity.getAttackTarget());
+			double sqDistanceToTargetSq = this.entity.getDistanceSqToEntity(this.entity.getAttackTarget());
 			if (sqDistanceToTargetSq + 4 < minDistanceSq)
 			{
 				int distanceToRun = (int)Math.sqrt(minDistanceSq - sqDistanceToTargetSq);
-				destinaton = RandomPositionGenerator.findRandomTargetBlockAwayFrom(this.theEntity, distanceToRun, 4, new Vec3d(this.theEntity.getAttackTarget().posX, this.theEntity.getAttackTarget().posY, this.theEntity.getAttackTarget().posZ));
+				destinaton = RandomPositionGenerator.findRandomTargetBlockAwayFrom(this.entity, distanceToRun, 4, new Vec3d(this.entity.getAttackTarget().posX, this.entity.getAttackTarget().posY, this.entity.getAttackTarget().posZ));
 				return destinaton != null;
 			}
 		}
@@ -61,14 +61,14 @@ public class EntityAIRangedRunFromMelee extends EntityAIBase
 	{
 		if (destinaton != null)
 		{
-			this.theEntity.getNavigator().tryMoveToXYZ(destinaton.xCoord, destinaton.yCoord, destinaton.zCoord, moveSpeed);
+			this.entity.getNavigator().tryMoveToXYZ(destinaton.xCoord, destinaton.yCoord, destinaton.zCoord, moveSpeed);
 		}
 	}
 
 	@Override
 	public boolean continueExecuting()
 	{
-		return !this.theEntity.getNavigator().noPath();
+		return !this.entity.getNavigator().noPath();
 	}
 
 	public void setMinDistance(double minDistance)

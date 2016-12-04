@@ -10,7 +10,6 @@ import org.lwjgl.util.vector.Vector3f;
  */
 public class GravitationalStabilizerBeamParticle extends MOEntityFX
 {
-	private static final String __OBFID = "CL_00000924";
 	float smokeParticleScale;
 	Vector3f from;
 	Vector3f to;

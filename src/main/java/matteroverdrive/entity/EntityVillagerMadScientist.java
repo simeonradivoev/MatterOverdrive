@@ -63,7 +63,7 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public class EntityVillagerMadScientist extends EntityVillager implements IDialogNpc, IDialogQuestGiver
 {
-	private static final DataParameter<Boolean> VARIANT = EntityDataManager.<Boolean>createKey(EntityVillagerMadScientist.class, DataSerializers.BOOLEAN);
+	private static final DataParameter<Boolean> VARIANT = EntityDataManager.createKey(EntityVillagerMadScientist.class, DataSerializers.BOOLEAN);
 	public static DialogMessage cocktailOfAscensionComplete;
 	private static DialogMessage convertMe;
 	private static DialogMessage canYouConvert;

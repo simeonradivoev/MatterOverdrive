@@ -28,7 +28,6 @@ import net.minecraft.util.math.Vec3d;
  */
 public class EntityAIMoveAlongPath extends EntityAIBase
 {
-	private static final String __OBFID = "CL_00001598";
 	private IPathableMob pathableMob;
 	private double movePosX;
 	private double movePosY;

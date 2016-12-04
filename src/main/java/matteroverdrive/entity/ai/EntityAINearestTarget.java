@@ -39,17 +39,15 @@ public class EntityAINearestTarget<T extends EntityLivingBase> extends EntityAIT
 	private final Predicate<T> targetEntitySelector;
 	private EntityLivingBase targetEntity;
 
-	public EntityAINearestTarget(EntityCreature theEntity, Class targetClass, int targetChance, boolean shouldCheckSight, boolean nearbyOnly, final Predicate<T> predicate)
+	public EntityAINearestTarget(EntityCreature entity, Class targetClass, int targetChance, boolean shouldCheckSight, boolean nearbyOnly, final Predicate<T> predicate)
 	{
-		super(theEntity, shouldCheckSight, nearbyOnly);
+		super(entity, shouldCheckSight, nearbyOnly);
 		this.targetClass = targetClass;
 		this.targetChance = targetChance;
-		this.theNearestAttackableTargetSorter = new EntityAINearestAttackableTarget.Sorter(theEntity);
+		this.theNearestAttackableTargetSorter = new EntityAINearestAttackableTarget.Sorter(entity);
 		this.setMutexBits(1);
 		this.targetEntitySelector = new Predicate<T>()
 		{
-			private static final String __OBFID = "CL_00001621";
-
 			/**
 			 * Return whether the specified entity is applicable to this filter.
 			 */

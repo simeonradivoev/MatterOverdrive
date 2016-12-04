@@ -81,7 +81,7 @@ public class EntityRangedRogueAndroidMob extends EntityRougeAndroidMob implement
 		this.tasks.addTask(6, new EntityAILookIdle(this));
 
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityLivingBase.class, 0, true, true, new AndroidTargetSelector(this)));
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class, 0, true, true, new AndroidTargetSelector(this)));
 
 		if (world != null && !world.isRemote)
 		{

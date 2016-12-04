@@ -36,7 +36,7 @@ public class GravitationalAnomalyParticle extends Particle
 	}
 
 	@Override
-	public void renderParticle(VertexBuffer worldRendererIn, Entity entityIn, float partialTicks, float p_180434_4_, float p_180434_5_, float p_180434_6_, float p_180434_7_, float p_180434_8_)
+	public void renderParticle(VertexBuffer buffer, Entity entity, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)
 	{
 		float f6 = ((float)this.particleAge + partialTicks) / (float)this.particleMaxAge * 32.0F;
 
@@ -51,7 +51,7 @@ public class GravitationalAnomalyParticle extends Particle
 		}
 
 		this.particleScale = this.smokeParticleScale * f6;
-		super.renderParticle(worldRendererIn, entityIn, partialTicks, p_180434_4_, p_180434_5_, p_180434_6_, p_180434_7_, p_180434_8_);
+		super.renderParticle(buffer, entity, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
 	}
 
 	/**

@@ -15,9 +15,9 @@ public class EntityFXGenericAnimatedParticle extends MOEntityFX
 {
 	private boolean bottomPivot;
 
-	public EntityFXGenericAnimatedParticle(World worldIn, double posXIn, double posYIn, double posZIn, float particleSize, ResourceLocation sprite)
+	public EntityFXGenericAnimatedParticle(World world, double posX, double posY, double posZ, float particleSize, ResourceLocation sprite)
 	{
-		super(worldIn, posXIn, posYIn, posZIn);
+		super(world, posX, posY, posZ);
 		this.particleScale = particleSize;
 		TextureAtlasSprite originalSprite = ClientProxy.renderHandler.getRenderParticlesHandler().getSprite(sprite);
 		if (originalSprite instanceof TextureAtlasSpriteParticle)
@@ -41,7 +41,7 @@ public class EntityFXGenericAnimatedParticle extends MOEntityFX
 	}
 
 	@Override
-	public void renderParticle(VertexBuffer worldRendererIn, Entity entityIn, float partialTicks, float p_180434_4_, float p_180434_5_, float p_180434_6_, float p_180434_7_, float p_180434_8_)
+	public void renderParticle(VertexBuffer buffer, Entity entity, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)
 	{
 		if (bottomPivot)
 		{
@@ -65,14 +65,14 @@ public class EntityFXGenericAnimatedParticle extends MOEntityFX
 			int i = this.getBrightnessForRender(partialTicks);
 			int j = i >> 16 & 65535;
 			int k = i & 65535;
-			worldRendererIn.pos((double)(f5 - p_180434_4_ * f4 - p_180434_7_ * f4), (double)(f6), (double)(f7 - p_180434_6_ * f4 - p_180434_8_ * f4)).tex((double)f1, (double)f3).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
-			worldRendererIn.pos((double)(f5 - p_180434_4_ * f4 + p_180434_7_ * f4), (double)(f6 + p_180434_5_ * f4 * 2), (double)(f7 - p_180434_6_ * f4 + p_180434_8_ * f4)).tex((double)f1, (double)f2).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
-			worldRendererIn.pos((double)(f5 + p_180434_4_ * f4 + p_180434_7_ * f4), (double)(f6 + p_180434_5_ * f4 * 2), (double)(f7 + p_180434_6_ * f4 + p_180434_8_ * f4)).tex((double)f, (double)f2).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
-			worldRendererIn.pos((double)(f5 + p_180434_4_ * f4 - p_180434_7_ * f4), (double)(f6), (double)(f7 + p_180434_6_ * f4 - p_180434_8_ * f4)).tex((double)f, (double)f3).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
+			buffer.pos((double)(f5 - rotationX * f4 - rotationXY * f4), (double)(f6), (double)(f7 - rotationYZ * f4 - rotationXZ * f4)).tex((double)f1, (double)f3).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
+			buffer.pos((double)(f5 - rotationX * f4 + rotationXY * f4), (double)(f6 + rotationZ * f4 * 2), (double)(f7 - rotationYZ * f4 + rotationXZ * f4)).tex((double)f1, (double)f2).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
+			buffer.pos((double)(f5 + rotationX * f4 + rotationXY * f4), (double)(f6 + rotationZ * f4 * 2), (double)(f7 + rotationYZ * f4 + rotationXZ * f4)).tex((double)f, (double)f2).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
+			buffer.pos((double)(f5 + rotationX * f4 - rotationXY * f4), (double)(f6), (double)(f7 + rotationYZ * f4 - rotationXZ * f4)).tex((double)f, (double)f3).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).lightmap(j, k).endVertex();
 		}
 		else
 		{
-			super.renderParticle(worldRendererIn, entityIn, partialTicks, p_180434_4_, p_180434_5_, p_180434_6_, p_180434_7_, p_180434_8_);
+			super.renderParticle(buffer, entity, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
 		}
 	}
 

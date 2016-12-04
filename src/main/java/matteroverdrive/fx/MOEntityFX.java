@@ -14,22 +14,22 @@ public abstract class MOEntityFX extends Particle
 {
 	protected float renderDistanceWeight;
 
-	public MOEntityFX(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn)
+	public MOEntityFX(World world, double posX, double posY, double posZ, double xSpeed, double ySpeed, double zSpeed)
 	{
-		super(worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn);
+		super(world, posX, posY, posZ, xSpeed, ySpeed, zSpeed);
 	}
 
-	protected MOEntityFX(World worldIn, double posXIn, double posYIn, double posZIn)
+	protected MOEntityFX(World world, double posX, double posY, double posZ)
 	{
-		super(worldIn, posXIn, posYIn, posZIn);
+		super(world, posX, posY, posZ);
 	}
 
-	public void setColorRGBA(Color colorRGBA)
+	public void setColorRGBA(Color color)
 	{
-		this.particleRed = colorRGBA.getFloatR();
-		this.particleGreen = colorRGBA.getFloatG();
-		this.particleBlue = colorRGBA.getFloatB();
-		this.particleAlpha = colorRGBA.getFloatA();
+		this.particleRed = color.getFloatR();
+		this.particleGreen = color.getFloatG();
+		this.particleBlue = color.getFloatB();
+		this.particleAlpha = color.getFloatA();
 	}
 
 	public void setParticleMaxAge(int maxAge)

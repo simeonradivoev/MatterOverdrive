@@ -15,15 +15,15 @@ public class ReplicatorParticle extends Particle
 	private double centerX, centerY, centerZ;
 	private double pointGravityScale = 1.0D;
 
-	public ReplicatorParticle(World world, double p_i1209_2_, double p_i1209_4_, double p_i1209_6_, double p_i1209_8_, double p_i1209_10_, double p_i1209_12_)
+	public ReplicatorParticle(World world, double posX, double posY, double posZ, double xSpeed, double ySpeed, double zSpeed)
 	{
-		super(world, p_i1209_2_, p_i1209_4_, p_i1209_6_, p_i1209_8_, p_i1209_10_, p_i1209_12_);
-		this.motionX = this.motionX * 0.009999999776482582D + p_i1209_8_;
-		this.motionY = this.motionY * 0.009999999776482582D + p_i1209_10_;
-		this.motionZ = this.motionZ * 0.009999999776482582D + p_i1209_12_;
-		double d6 = p_i1209_2_ + (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.05F);
-		d6 = p_i1209_4_ + (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.05F);
-		d6 = p_i1209_6_ + (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.05F);
+		super(world, posX, posY, posZ, xSpeed, ySpeed, zSpeed);
+		this.motionX = this.motionX * 0.009999999776482582D + xSpeed;
+		this.motionY = this.motionY * 0.009999999776482582D + ySpeed;
+		this.motionZ = this.motionZ * 0.009999999776482582D + zSpeed;
+		double d6 = posX + (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.05F);
+		d6 = posY + (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.05F);
+		d6 = posZ + (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.05F);
 		this.flameScale = this.particleScale;
 		this.particleRed = this.particleGreen = this.particleBlue = 1.0F;
 		this.particleMaxAge = (int)(8.0D / (Math.random() * 0.8D + 0.2D)) + 4;
@@ -32,11 +32,11 @@ public class ReplicatorParticle extends Particle
 	}
 
 	@Override
-	public void renderParticle(VertexBuffer worldRenderer, Entity entity, float p_70539_2_, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_)
+	public void renderParticle(VertexBuffer buffer, Entity entity, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)
 	{
-		float f6 = ((float)this.particleAge + p_70539_2_) / (float)this.particleMaxAge;
+		float f6 = ((float)this.particleAge + partialTicks) / (float)this.particleMaxAge;
 		this.particleScale = this.flameScale * (1.0F - f6 * f6 * 0.5F);
-		super.renderParticle(worldRenderer, entity, p_70539_2_, p_70539_3_, p_70539_4_, p_70539_5_, p_70539_6_, p_70539_7_);
+		super.renderParticle(buffer, entity, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
 	}
 
 	public int getBrightnessForRender(float f)

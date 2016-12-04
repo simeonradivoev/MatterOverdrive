@@ -1,6 +1,5 @@
 package matteroverdrive.entity.ai;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -18,26 +17,26 @@ import net.minecraft.world.World;
  */
 public class EntityAIFollowCreator<T extends EntityLiving & IEntityOwnable> extends EntityAIBase
 {
-	World theWorld;
+	World world;
 	float maxDist;
 	float minDist;
-	private T thePet;
+	private T pet;
 	private Entity theOwner;
 	private double followSpeed;
 	private PathNavigate petPathfinder;
-	private int field_75343_h;
+	private int timeToRecalcPath;
 
-	public EntityAIFollowCreator(T thePetIn, double followSpeedIn, float minDistIn, float maxDistIn)
+	public EntityAIFollowCreator(T pet, double followSpeed, float minDist, float maxDist)
 	{
-		this.thePet = thePetIn;
-		this.theWorld = thePetIn.worldObj;
-		this.followSpeed = followSpeedIn;
-		this.petPathfinder = thePetIn.getNavigator();
-		this.minDist = minDistIn;
-		this.maxDist = maxDistIn;
+		this.pet = pet;
+		this.world = pet.worldObj;
+		this.followSpeed = followSpeed;
+		this.petPathfinder = pet.getNavigator();
+		this.minDist = minDist;
+		this.maxDist = maxDist;
 		this.setMutexBits(3);
 
-		if (!(thePetIn.getNavigator() instanceof PathNavigateFly))
+		if (!(pet.getNavigator() instanceof PathNavigateFly))
 		{
 			throw new IllegalArgumentException("Unsupported mob type for FollowOwnerGoal");
 		}
@@ -45,7 +44,7 @@ public class EntityAIFollowCreator<T extends EntityLiving & IEntityOwnable> exte
 
 	public boolean shouldExecute()
 	{
-		Entity entity = this.thePet.getOwner();
+		Entity entity = this.pet.getOwner();
 
 		if (entity == null)
 		{
@@ -55,7 +54,7 @@ public class EntityAIFollowCreator<T extends EntityLiving & IEntityOwnable> exte
 		{
 			return false;
 		}
-		else if (this.thePet.getDistanceSqToEntity(entity) < (double)(this.minDist * this.minDist))
+		else if (this.pet.getDistanceSqToEntity(entity) < (double)(this.minDist * this.minDist))
 		{
 			return false;
 		}
@@ -71,7 +70,7 @@ public class EntityAIFollowCreator<T extends EntityLiving & IEntityOwnable> exte
 	 */
 	public boolean continueExecuting()
 	{
-		return !this.petPathfinder.noPath() && this.thePet.getDistanceSqToEntity(this.theOwner) > (double)(this.maxDist * this.maxDist);
+		return !this.petPathfinder.noPath() && this.pet.getDistanceSqToEntity(this.theOwner) > (double)(this.maxDist * this.maxDist);
 	}
 
 	/**
@@ -79,7 +78,7 @@ public class EntityAIFollowCreator<T extends EntityLiving & IEntityOwnable> exte
 	 */
 	public void startExecuting()
 	{
-		this.field_75343_h = 0;
+		this.timeToRecalcPath = 0;
 	}
 
 	/**
@@ -93,7 +92,7 @@ public class EntityAIFollowCreator<T extends EntityLiving & IEntityOwnable> exte
 
 	private boolean func_181065_a(BlockPos pos)
 	{
-		IBlockState state = this.theWorld.getBlockState(pos);
+		IBlockState state = this.world.getBlockState(pos);
 		return state.getBlock() == Blocks.AIR || !state.isFullCube();
 	}
 
@@ -102,17 +101,17 @@ public class EntityAIFollowCreator<T extends EntityLiving & IEntityOwnable> exte
 	 */
 	public void updateTask()
 	{
-		this.thePet.getLookHelper().setLookPositionWithEntity(this.theOwner, 10.0F, (float)this.thePet.getVerticalFaceSpeed());
+		this.pet.getLookHelper().setLookPositionWithEntity(this.theOwner, 10.0F, (float)this.pet.getVerticalFaceSpeed());
 
-		if (--this.field_75343_h <= 0)
+		if (--this.timeToRecalcPath <= 0)
 		{
-			this.field_75343_h = 10;
+			this.timeToRecalcPath = 10;
 
 			if (!this.petPathfinder.tryMoveToXYZ(this.theOwner.posX, theOwner.posY + theOwner.getEyeHeight(), theOwner.posZ + 2, this.followSpeed))
 			{
-				if (!this.thePet.getLeashed())
+				if (!this.pet.getLeashed())
 				{
-					if (this.thePet.getDistanceSqToEntity(this.theOwner) >= 144.0D)
+					if (this.pet.getDistanceSqToEntity(this.theOwner) >= 144.0D)
 					{
 						int x = MathHelper.floor_double(this.theOwner.posX) - 1;
 						int z = MathHelper.floor_double(this.theOwner.posZ) - 1;
@@ -124,7 +123,7 @@ public class EntityAIFollowCreator<T extends EntityLiving & IEntityOwnable> exte
 							{
 								if ((xMov < 1 || zMov < 1 || xMov > 2 || zMov > 2) && this.func_181065_a(new BlockPos(x + xMov, y, z + zMov)) && this.func_181065_a(new BlockPos(x + xMov, y + 1, z + zMov)))
 								{
-									this.thePet.setLocationAndAngles((double)((float)(x + xMov) + 0.5F), (double)y, (double)((float)(z + zMov) + 0.5F), this.thePet.rotationYaw, this.thePet.rotationPitch);
+									this.pet.setLocationAndAngles((double)((float)(x + xMov) + 0.5F), (double)y, (double)((float)(z + zMov) + 0.5F), this.pet.rotationYaw, this.pet.rotationPitch);
 									this.petPathfinder.clearPathEntity();
 									return;
 								}

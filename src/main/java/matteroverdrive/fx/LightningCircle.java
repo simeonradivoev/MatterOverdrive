@@ -17,16 +17,16 @@ public class LightningCircle extends MOEntityFX
 	private float scale;
 	private float growth;
 
-	public LightningCircle(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, float randomness, float speed, float scale, float growth)
+	public LightningCircle(World world, double posX, double posY, double posZ, float randomness, float speed, float scale, float growth)
 	{
-		super(worldIn, xCoordIn, yCoordIn, zCoordIn);
+		super(world, posX, posY, posZ);
 		this.particleMaxAge = 10 + (int)(this.rand.nextFloat() * 10);
 		this.randomness = randomness;
 		this.speed = speed;
 		this.scale = scale;
 		this.growth = growth;
 		this.renderDistanceWeight = Minecraft.getMinecraft().gameSettings.renderDistanceChunks / 6f;
-		setEntityBoundingBox(new AxisAlignedBB(xCoordIn - scale - growth, yCoordIn - 2 * randomness, zCoordIn - scale - growth, xCoordIn + scale + growth, yCoordIn + 2 * randomness, zCoordIn + scale + growth));
+		setEntityBoundingBox(new AxisAlignedBB(posX - scale - growth, posY - 2 * randomness, posZ - scale - growth, posX + scale + growth, posY + 2 * randomness, posZ + scale + growth));
 	}
 
 	public void renderParticle(VertexBuffer worldRendererIn, Entity entityIn, float partialTicks, float rotX, float rotXZ, float rotZ, float rotYZ, float rotXY)

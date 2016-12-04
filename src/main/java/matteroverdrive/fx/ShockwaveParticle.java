@@ -16,18 +16,18 @@ public class ShockwaveParticle extends MOEntityFX
 {
 	private float maxScale;
 
-	public ShockwaveParticle(World p_i1218_1_, double p_i1218_2_, double p_i1218_4_, double p_i1218_6_, float maxScale)
+	public ShockwaveParticle(World world, double posX, double posY, double posZ, float maxScale)
 	{
-		super(p_i1218_1_, p_i1218_2_, p_i1218_4_, p_i1218_6_);
+		super(world, posX, posY, posZ);
 		this.maxScale = maxScale;
 		this.particleTexture = ClientProxy.renderHandler.getRenderParticlesHandler().getSprite(RenderParticlesHandler.shockwave);
 		this.particleMaxAge = (int)(maxScale * 5);
-		this.setEntityBoundingBox(new AxisAlignedBB(p_i1218_2_ - maxScale, p_i1218_4_ - 0.5, p_i1218_6_ - maxScale, p_i1218_2_ + maxScale, p_i1218_4_ + 0.5, p_i1218_6_ + maxScale));
+		this.setEntityBoundingBox(new AxisAlignedBB(posX - maxScale, posY - 0.5, posZ - maxScale, posX + maxScale, posY + 0.5, posZ + maxScale));
 		this.renderDistanceWeight = Minecraft.getMinecraft().gameSettings.renderDistanceChunks / 6f;
 	}
 
 	@Override
-	public void renderParticle(VertexBuffer worldRenderer, Entity entity, float partialTicks, float xOffset, float yOffset, float zOffset, float p_70539_6_, float p_70539_7_)
+	public void renderParticle(VertexBuffer worldRenderer, Entity entity, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)
 	{
 		float f6 = (float)this.particleTextureIndexX / 16.0F;
 		float f7 = f6 + 0.0624375F;

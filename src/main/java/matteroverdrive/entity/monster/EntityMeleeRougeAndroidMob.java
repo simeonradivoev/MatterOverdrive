@@ -46,7 +46,7 @@ public class EntityMeleeRougeAndroidMob extends EntityRougeAndroidMob
 		this.tasks.addTask(5, new EntityAILookIdle(this));
 
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityLivingBase.class, 0, false, true, new AndroidTargetSelector(this)));
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class, 0, false, true, new AndroidTargetSelector(this)));
 	}
 
 	@Override

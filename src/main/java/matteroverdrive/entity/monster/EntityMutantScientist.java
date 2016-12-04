@@ -41,7 +41,7 @@ public class EntityMutantScientist extends EntityMob
 		this.tasks.addTask(8, new EntityAILookIdle(this));
 
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityLivingBase.class, 0, true, false, new TargetSelector()));
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class, 0, true, false, new TargetSelector()));
 		setSize(1, 2.3f);
 	}
 

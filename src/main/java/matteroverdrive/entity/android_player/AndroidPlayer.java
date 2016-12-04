@@ -222,16 +222,16 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
 
 	private void registerEffects(AndroidEffects effects)
 	{
-		effects.registerEffect(EFFECT_GLITCH_TIME, Integer.valueOf(0), true, false);
+		effects.registerEffect(EFFECT_GLITCH_TIME, 0, true, false);
 		effects.registerEffect(EFFECT_CLOAKED, false, true, true);
 		effects.registerEffect(EFFECT_SHIELD, false, true, true);
-		effects.registerEffect(EFFECT_SHIELD_LAST_USE, Long.valueOf(0), true, false);
+		effects.registerEffect(EFFECT_SHIELD_LAST_USE, 0L, true, false);
 		effects.registerEffect(EFFECT_NIGHTVISION, false, true, false);
-		effects.registerEffect(EFFECT_SHOCK_LAST_USE, Long.valueOf(0), true, false);
-		effects.registerEffect(EFFECT_LAST_TELEPORT, Long.valueOf(0), true, false);
+		effects.registerEffect(EFFECT_SHOCK_LAST_USE, 0L, true, false);
+		effects.registerEffect(EFFECT_LAST_TELEPORT, 0L, true, false);
 		effects.registerEffect(EFFECT_WIRELESS_CHARGING, false, true, false);
 		effects.registerEffect(EFFECT_HIGH_JUMP, false, true, false);
-		effects.registerEffect(EFFECT_TURNNING, Short.valueOf((short)-1), true, false);
+		effects.registerEffect(EFFECT_TURNNING, (short)-1, true, false);
 		effects.registerEffect(EFFECT_ITEM_MAGNET, false, true, false);
 	}
 

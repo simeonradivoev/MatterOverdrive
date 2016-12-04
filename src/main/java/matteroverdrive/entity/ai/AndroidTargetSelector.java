@@ -48,7 +48,7 @@ public class AndroidTargetSelector implements Predicate<Entity>
 		{
 			if (mob.hasTeam())
 			{
-				return ((EntityPlayer)entity).getTeam() != null && !((EntityPlayer)entity).getTeam().isSameTeam(mob.getTeam());
+				return entity.getTeam() != null && !entity.getTeam().isSameTeam(mob.getTeam());
 			}
 			else
 			{
