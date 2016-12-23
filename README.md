@@ -15,7 +15,7 @@
 * [About](#about)
 * [Features](#features)
 * [Contacts](#contacts)
-* [Isues](#issues)
+* [Issues](#issues)
 * [Building](#building)
 * [IMC](#imc)
 * [Donations](#donations)
