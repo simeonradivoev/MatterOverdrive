@@ -30,7 +30,7 @@ Although it may seem overpowered, Matter Overdrive takes a more realistic approa
 
 ## Features
 * [Matter Scanner](https://mo.simeonradivoev.com/items/matter_scanner/), for scanning matter patterns for replication.
-* [Replicator]https://mo.simeonradivoev.com/items/replicator/), for transforming materials.
+* [Replicator](https://mo.simeonradivoev.com/items/replicator/), for transforming materials.
 * [Decomposer](https://mo.simeonradivoev.com/items/decomposer/), for breaking down materials to basic form.
 * [Transporter](https://mo.simeonradivoev.com/items/transporter/), for beaming up.
 * [Phaser](https://mo.simeonradivoev.com/items/phaser/), to set on stun.
