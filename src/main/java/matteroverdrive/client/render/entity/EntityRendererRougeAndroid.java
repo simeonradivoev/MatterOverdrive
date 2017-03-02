@@ -37,6 +37,7 @@ import org.lwjgl.opengl.GL12;
 public class EntityRendererRougeAndroid extends RenderBiped
 {
     private boolean hologram;
+    public static boolean RENDER_ANDROID_LABEL = true;
     public static final ResourceLocation texture = new ResourceLocation(Reference.PATH_ENTITIES + "android.png");
     public static final ResourceLocation texture_hologram = new ResourceLocation(Reference.PATH_ENTITIES + "android_holo.png");
 
@@ -66,7 +67,7 @@ public class EntityRendererRougeAndroid extends RenderBiped
             return true;
         }else
         {
-            return Minecraft.getMinecraft().thePlayer.getDistanceToEntity(entityLiving) < 18;
+            return RENDER_ANDROID_LABEL && Minecraft.getMinecraft().thePlayer.getDistanceToEntity(entityLiving) < 18;
         }
     }
 

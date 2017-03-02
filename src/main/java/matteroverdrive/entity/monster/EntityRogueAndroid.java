@@ -19,6 +19,7 @@
 package matteroverdrive.entity.monster;
 
 import matteroverdrive.MatterOverdrive;
+import matteroverdrive.client.render.entity.EntityRendererRougeAndroid;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.util.IConfigSubscriber;
 import net.minecraft.entity.EntityLiving;
@@ -96,6 +97,7 @@ public class EntityRogueAndroid implements IConfigSubscriber
 
         EntityRangedRogueAndroidMob.UNLIMITED_WEAPON_ENERGY = config.getBool("unlimited_weapon_energy",ConfigurationHandler.CATEGORY_ENTITIES + ".rogue_android",true,"Do Ranged Rogue Androids have unlimited weapon energy in their weapons");
         MAX_ANDROIDS_PER_CHUNK = config.getInt("max_android_per_chunk",ConfigurationHandler.CATEGORY_ENTITIES + ".rogue_android",4,"The max amount of Rogue Android that can spawn in a given chunk");
+        EntityRendererRougeAndroid.RENDER_ANDROID_LABEL = config.getBool("render_android_label",ConfigurationHandler.CATEGORY_ENTITIES + ".rogue_android",true,"Whether to render the name label above a Rogue Android (without a team)");
     }
 
     private static void loadBiomeBlacklist(ConfigurationHandler config)
