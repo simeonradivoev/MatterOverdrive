@@ -19,6 +19,7 @@
 package matteroverdrive.client.render.entity;
 
 import matteroverdrive.Reference;
+import matteroverdrive.entity.monster.EntityRogueAndroid;
 import matteroverdrive.entity.monster.EntityRougeAndroidMob;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
@@ -51,9 +52,8 @@ public class EntityRendererRougeAndroid<T extends EntityRougeAndroidMob> extends
 	{
 		this(renderManager, new ModelBiped(), 0, hologram);
 	}
-
-	
-	protected ResourceLocation getEntityTexture(Entity entity)
+	@Override
+	protected ResourceLocation getEntityTexture(EntityLiving entity)
 	{
 		if (hologram)
 		{
