@@ -39,7 +39,6 @@ public class EntityRendererMutantScientist extends RenderBiped
 		super(renderManager, new ModelHulkingScientist(), 0, 1);
 	}
 
-	@Override
 	protected ResourceLocation getEntityTexture(Entity entity)
 	{
 		return texture;

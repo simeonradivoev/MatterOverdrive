@@ -52,7 +52,7 @@ public class EntityRendererRougeAndroid<T extends EntityRougeAndroidMob> extends
 		this(renderManager, new ModelBiped(), 0, hologram);
 	}
 
-	@Override
+	
 	protected ResourceLocation getEntityTexture(Entity entity)
 	{
 		if (hologram)
