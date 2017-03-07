@@ -52,8 +52,14 @@ public class EntityRendererRougeAndroid<T extends EntityRougeAndroidMob> extends
 	{
 		this(renderManager, new ModelBiped(), 0, hologram);
 	}
+<<<<<<< HEAD
 	@Override
 	protected ResourceLocation getEntityTexture(EntityLiving entity)
+=======
+
+	@Override
+	protected ResourceLocation getEntityTexture(Entity entity)
+>>>>>>> parent of be1e297... fixed error to make client run
 	{
 		if (hologram)
 		{

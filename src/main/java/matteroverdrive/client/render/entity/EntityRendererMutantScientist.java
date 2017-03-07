@@ -37,8 +37,14 @@ public class EntityRendererMutantScientist extends RenderBiped
 	{
 		super(renderManager, new ModelHulkingScientist(), 0, 1);
 	}
+<<<<<<< HEAD
 	@Override
 	protected ResourceLocation getEntityTexture(EntityLiving entity)
+=======
+
+	@Override
+	protected ResourceLocation getEntityTexture(Entity entity)
+>>>>>>> parent of be1e297... fixed error to make client run
 	{
 		return texture;
 	}
