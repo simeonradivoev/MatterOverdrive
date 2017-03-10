@@ -19,7 +19,7 @@ public class BlockSolarPanel extends MOMatterEnergyStorageBlock<TileEntityMachin
 	{
 		super(material, name, true, false);
 
-		setBoundingBox(new AxisAlignedBB(0, 0, 0, 1, 8/16d, 1));
+		//setBoundingBox(new AxisAlignedBB(0, 0, 0, 1, 8/16d, 1));
 		setHardness(20.0F);
 		this.setResistance(5.0f);
 		this.setHarvestLevel("pickaxe", 2);

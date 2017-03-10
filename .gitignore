@@ -28,6 +28,8 @@ hs_err_pid*
 /.classpath
 /.project
 /bin
+MatterOverdrive1_Client.launch
+MatterOverdrive1_Server.launch
  
 # intellij
 /out

@@ -17,7 +17,7 @@ public class InscriberRecipeManager extends RecipeManager<TileEntityInscriber, I
 
 	public boolean isPrimaryInput(ItemStack stack) {
 		return recipes.stream()
-				.map(InscriberRecipe::getPrimary)
+				.map(InscriberRecipe::getMain)
 				.filter(s -> ItemStack.areItemsEqual(s, stack))
 				.findFirst()
 				.isPresent();
@@ -25,7 +25,7 @@ public class InscriberRecipeManager extends RecipeManager<TileEntityInscriber, I
 
 	public boolean isSecondaryInput(ItemStack stack) {
 		return recipes.stream()
-				.map(InscriberRecipe::getSecondary)
+				.map(InscriberRecipe::getSec)
 				.filter(s -> ItemStack.areItemsEqual(s, stack))
 				.findFirst()
 				.isPresent();

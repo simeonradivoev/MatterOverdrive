@@ -41,7 +41,7 @@ public class BlockInscriber extends MOBlockMachine<TileEntityInscriber>
 		this.setHarvestLevel("pickaxe", 2);
 		setHasGui(true);
 		setHasRotation();
-		setBoundingBox(new AxisAlignedBB(0, 0, 0, 1, 12/16d, 1));
+		//setBoundingBox(new AxisAlignedBB(0, 0, 0, 1, 12/16d, 1));
 	}
 
 	@Override
