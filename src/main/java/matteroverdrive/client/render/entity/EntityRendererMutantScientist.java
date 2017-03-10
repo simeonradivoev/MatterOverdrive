@@ -33,17 +33,21 @@ public class EntityRendererMutantScientist extends RenderBiped
 {
 
 	private final ResourceLocation texture = new ResourceLocation(Reference.PATH_ENTITIES + "hulking_scinetist.png");
-
 	public EntityRendererMutantScientist(RenderManager renderManager)
 	{
 		super(renderManager, new ModelHulkingScientist(), 0, 1);
 	}
+<<<<<<< HEAD
+	@Override
+	protected ResourceLocation getEntityTexture(EntityLiving entity)
+=======
 
 	protected ResourceLocation getEntityTexture(Entity entity)
+>>>>>>> parent of be1e297... fixed error to make client run
 	{
 		return texture;
 	}
-
+	@Override
 	public void doRender(EntityLiving p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_)
 	{
 		super.doRender(p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
