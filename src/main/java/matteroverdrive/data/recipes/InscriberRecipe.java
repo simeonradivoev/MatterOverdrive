@@ -21,8 +21,8 @@ import java.util.List;
 public class InscriberRecipe extends Recipe<TileEntityInscriber>
 {
 
-	private ItemStack primary;
-	private ItemStack secondary;
+	private ItemStack main;
+	private ItemStack sec;
 
 	private ItemStack output;
 
@@ -34,20 +34,19 @@ public class InscriberRecipe extends Recipe<TileEntityInscriber>
 	{
 		ItemStack primary = machine.getStackInSlot(TileEntityInscriber.MAIN_INPUT_SLOT_ID);
 		ItemStack secondary = machine.getStackInSlot(TileEntityInscriber.SEC_INPUT_SLOT_ID);
-		return ItemStack.areItemsEqual(primary, this.primary) &&
-				ItemStack.areItemsEqual(secondary, this.secondary);
+		return ItemStack.areItemsEqual(primary, this.main) &&
+				ItemStack.areItemsEqual(secondary, this.sec);
 	}
 
-	@Override
-	public ItemStack getOutput(TileEntityInscriber machine)
+	public ItemStack getOutput()
 	{
-		return output.copy();
+		return output;
 	}
 
 	@Override
 	public List<ItemStack> getInputs()
 	{
-		return ImmutableList.of(primary, secondary);
+		return ImmutableList.of(main, sec);
 	}
 
 	@Override
@@ -61,10 +60,10 @@ public class InscriberRecipe extends Recipe<TileEntityInscriber>
 			if (node instanceof Element) {
 				switch (node.getNodeName()) {
 					case "primary":
-						primary = getStack((Element)node);
+						main = getStack((Element)node);
 						break;
 					case "secondary":
-						secondary = getStack((Element)node);
+						sec = getStack((Element)node);
 						break;
 					case "output":
 						output = getStack((Element)node);
@@ -72,6 +71,34 @@ public class InscriberRecipe extends Recipe<TileEntityInscriber>
 				}
 			}
 		}
+	}
+
+	public int getEnergy() {
+		// TODO Auto-generated method stub
+		return energy;
+	}
+
+	public int getTime() {
+		// TODO Auto-generated method stub
+		return time;
+	}
+
+
+	public ItemStack getMain() {
+		
+		// TODO Auto-generated method stub
+		return main;
+	}
+
+	@Override
+	public ItemStack getOutput(TileEntityInscriber machine) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ItemStack getSec() {
+		// TODO Auto-generated method stub
+		return sec;
 	}
 
 }

@@ -34,7 +34,7 @@ public class InscriberRecipeWrapper implements IRecipeWrapper
 
 	public InscriberRecipeWrapper(InscriberRecipe recipe)
 	{
-		inputs = ImmutableList.of(recipe.getPrimary(), recipe.getSecondary());
+		inputs = ImmutableList.of(recipe.getMain(), recipe.getSec());
 		outputs = ImmutableList.of(recipe.getOutput());
 		energy = recipe.getEnergy();
 		time = recipe.getTime();
@@ -87,6 +87,18 @@ public class InscriberRecipeWrapper implements IRecipeWrapper
 	public boolean handleClick(@Nonnull Minecraft minecraft, int mouseX, int mouseY, int mouseButton)
 	{
 		return false;
+	}
+
+	@Override
+	public List getInputs() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List getOutputs() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
