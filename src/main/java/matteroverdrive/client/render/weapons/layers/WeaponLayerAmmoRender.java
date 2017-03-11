@@ -24,7 +24,7 @@ public class WeaponLayerAmmoRender implements IWeaponLayer
 	public static final ResourceLocation ammoBackground = new ResourceLocation(Reference.PATH_ELEMENTS + "ammo_background.png");
 
 	@Override
-	public void renderLayer(WeaponMetadataSection weaponMeta, ItemStack weapon, float ticks, int pass)
+	public void renderLayer(WeaponMetadataSection weaponMeta, ItemStack weapon, float ticks)
 	{
 		Vec3d modulePosition = weaponMeta.getModulePosition("ammo_holo", new Vec3d(0.17, 0.13, 0.2));
 

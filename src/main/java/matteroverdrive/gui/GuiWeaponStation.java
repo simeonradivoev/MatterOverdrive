@@ -162,7 +162,7 @@ public class GuiWeaponStation extends MOGuiMachine<TileEntityWeaponStation>
 			GlStateManager.rotate(10, 0, 0, 1);
 			if (weaponItemRenderer != null)
 			{
-				weaponRenderHandler.renderWeaponAndModules(modules, weaponItemRenderer, item, 0, 0);
+				weaponRenderHandler.renderWeaponAndModules(modules, weaponItemRenderer, item, 0);
 			}
 			GlStateManager.popMatrix();
 		}

@@ -8,5 +8,5 @@ import net.minecraft.item.ItemStack;
  */
 public interface IWeaponLayer
 {
-	void renderLayer(WeaponMetadataSection weaponMeta, ItemStack weapon, float ticks, int pass);
+	void renderLayer(WeaponMetadataSection weaponMeta, ItemStack weapon, float ticks);
 }

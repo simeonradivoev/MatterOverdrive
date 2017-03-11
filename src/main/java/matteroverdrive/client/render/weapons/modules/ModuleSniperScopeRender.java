@@ -35,7 +35,7 @@ public class ModuleSniperScopeRender extends ModuleRenderAbstract
 	}
 
 	@Override
-	public void renderModule(WeaponMetadataSection weaponMeta, ItemStack weaponStack, ItemStack moduleStack, float ticks, int pass)
+	public void renderModule(WeaponMetadataSection weaponMeta, ItemStack weaponStack, ItemStack moduleStack, float ticks)
 	{
 		Vec3d scopePos = weaponMeta.getModulePosition("default_scope");
 		if (scopePos != null)

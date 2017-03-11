@@ -30,7 +30,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
-import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.client.event.RenderSpecificHandEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.Project;
@@ -56,16 +56,13 @@ public class WeaponRenderHandler
 	}
 
 	@SubscribeEvent
-	public void onHandRender(RenderHandEvent event)
+	public void onHandRender(RenderSpecificHandEvent event)
 	{
-		ItemStack weapon = Minecraft.getMinecraft().thePlayer.getHeldItem(EnumHand.MAIN_HAND);
+		ItemStack weapon = event.getItemStack();
 
 		if (weapon != null && weapon.getItem() instanceof EnergyWeapon)
 		{
-			if (event.isCancelable())
-			{
-				event.setCanceled(true);
-			}
+			event.setCanceled(true);
 
 			GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
 			EntityRenderer entityRenderer = mc.entityRenderer;
@@ -73,19 +70,9 @@ public class WeaponRenderHandler
 			GlStateManager.loadIdentity();
 			float f = 0.07F;
 
-			if (mc.gameSettings.anaglyph)
-			{
-				GlStateManager.translate((float)(-(event.getRenderPass() * 2 - 1)) * f, 0.0F, 0.0F);
-			}
-
 			Project.gluPerspective(35f, (float)mc.displayWidth / (float)mc.displayHeight, 0.05F, (float)(mc.gameSettings.renderDistanceChunks * 32));
 			GlStateManager.matrixMode(GL11.GL_MODELVIEW);
 			GlStateManager.loadIdentity();
-
-			if (mc.gameSettings.anaglyph)
-			{
-				GlStateManager.translate((float)(event.getRenderPass() * 2 - 1) * 0.1F, 0.0F, 0.0F);
-			}
 
 			GlStateManager.pushMatrix();
 			hurtCameraEffect(event.getPartialTicks());
@@ -106,21 +93,21 @@ public class WeaponRenderHandler
 				WeaponItemRenderer model = getWeaponModel(weapon);
 				if (model != null)
 				{
-					AbstractClientPlayer abstractclientplayer = this.mc.thePlayer;
-					float f1 = abstractclientplayer.getSwingProgress(event.getPartialTicks());
-					float f2 = abstractclientplayer.prevRotationPitch + (abstractclientplayer.rotationPitch - abstractclientplayer.prevRotationPitch) * event.getPartialTicks();
-					float f3 = abstractclientplayer.prevRotationYaw + (abstractclientplayer.rotationYaw - abstractclientplayer.prevRotationYaw) * event.getPartialTicks();
-					this.func_178101_a(f2, f3);
-					this.func_178109_a(abstractclientplayer);
-					this.func_178110_a(model, (EntityPlayerSP)abstractclientplayer, event.getPartialTicks());
+					EntityPlayerSP player = this.mc.thePlayer;
+					float f1 = player.getSwingProgress(event.getPartialTicks());
+					float f2 = player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * event.getPartialTicks();
+					float f3 = player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * event.getPartialTicks();
+					this.rotateAroundXAndY(f2, f3);
+					this.setLightmap(player);
+					this.rotateArm(model, player, event.getPartialTicks());
 					GlStateManager.enableRescaleNormal();
 
 					entityRenderer.enableLightmap();
-					Render<AbstractClientPlayer> render = Minecraft.getMinecraft().getRenderManager().<AbstractClientPlayer>getEntityRenderObject(Minecraft.getMinecraft().thePlayer);
+					Render<AbstractClientPlayer> render = Minecraft.getMinecraft().getRenderManager().getEntityRenderObject(Minecraft.getMinecraft().thePlayer);
 					if (render instanceof RenderPlayer)
 					{
 						GlStateManager.pushMatrix();
-						RenderUtils.bindTexture(abstractclientplayer.getLocationSkin());
+						RenderUtils.bindTexture(player.getLocationSkin());
 						model.transformHand(recoilValue, zoomValue);
 						model.renderHand((RenderPlayer)render);
 						GlStateManager.popMatrix();
@@ -129,8 +116,8 @@ public class WeaponRenderHandler
 					List<ItemStack> modules = MOInventoryHelper.getStacks(weapon);
 					transformFromModules(modules, model.getWeaponMetadata(), weapon, event.getPartialTicks(), zoomValue);
 					model.transformFirstPersonWeapon((EnergyWeapon)weapon.getItem(), weapon, zoomValue, recoilValue);
-					renderWeaponAndModules(modules, model, weapon, event.getPartialTicks(), event.getRenderPass());
-					renderLayers(model.getWeaponMetadata(), weapon, event.getPartialTicks(), event.getRenderPass());
+					renderWeaponAndModules(modules, model, weapon, event.getPartialTicks());
+					renderLayers(model.getWeaponMetadata(), weapon, event.getPartialTicks());
 					entityRenderer.disableLightmap();
 				}
 
@@ -157,10 +144,10 @@ public class WeaponRenderHandler
 		return null;
 	}
 
-	public void renderWeaponAndModules(List<ItemStack> modules, WeaponItemRenderer model, ItemStack weapon, float partialTicks, int renderPass)
+	public void renderWeaponAndModules(List<ItemStack> modules, WeaponItemRenderer model, ItemStack weapon, float partialTicks)
 	{
 		renderWeapon(model, weapon);
-		renderModules(modules, model.getWeaponMetadata(), weapon, partialTicks, renderPass);
+		renderModules(modules, model.getWeaponMetadata(), weapon, partialTicks);
 	}
 
 	public void onModelBake(TextureMap textureMap, RenderHandler renderHandler)
@@ -179,29 +166,29 @@ public class WeaponRenderHandler
 		}
 	}
 
-	private void func_178101_a(float angle, float p_178101_2_)
+	private void rotateAroundXAndY(float angleX, float angleY)
 	{
 		GlStateManager.pushMatrix();
-		GlStateManager.rotate(angle, 1.0F, 0.0F, 0.0F);
-		GlStateManager.rotate(p_178101_2_, 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotate(angleX, 1.0F, 0.0F, 0.0F);
+		GlStateManager.rotate(angleY, 0.0F, 1.0F, 0.0F);
 		RenderHelper.enableStandardItemLighting();
 		GlStateManager.popMatrix();
 	}
 
-	private void func_178109_a(AbstractClientPlayer clientPlayer)
+	private void setLightmap(EntityPlayerSP player)
 	{
-		int i = this.mc.theWorld.getCombinedLight(new BlockPos(clientPlayer.posX, clientPlayer.posY + (double)clientPlayer.getEyeHeight(), clientPlayer.posZ), 0);
+		int i = this.mc.theWorld.getCombinedLight(new BlockPos(player.posX, player.posY + (double)player.getEyeHeight(), player.posZ), 0);
 		float f = (float)(i & 65535);
 		float f1 = (float)(i >> 16);
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, f, f1);
 	}
 
-	private void func_178110_a(WeaponItemRenderer weaponItemRenderer, EntityPlayerSP entityplayerspIn, float partialTicks)
+	private void rotateArm(WeaponItemRenderer weaponItemRenderer, EntityPlayerSP player, float partialTicks)
 	{
-		float f = entityplayerspIn.prevRenderArmPitch + (entityplayerspIn.renderArmPitch - entityplayerspIn.prevRenderArmPitch) * partialTicks;
-		float f1 = entityplayerspIn.prevRenderArmYaw + (entityplayerspIn.renderArmYaw - entityplayerspIn.prevRenderArmYaw) * partialTicks;
-		GlStateManager.rotate((entityplayerspIn.rotationPitch - f) * 0.1F, 1.0F, 0.0F, 0.0F);
-		GlStateManager.rotate((entityplayerspIn.rotationYaw - f1) * weaponItemRenderer.getHorizontalSpeed(), 0.0F, 1.0F, 0.0F);
+		float f = player.prevRenderArmPitch + (player.renderArmPitch - player.prevRenderArmPitch) * partialTicks;
+		float f1 = player.prevRenderArmYaw + (player.renderArmYaw - player.prevRenderArmYaw) * partialTicks;
+		GlStateManager.rotate((player.rotationPitch - f) * 0.1F, 1.0F, 0.0F, 0.0F);
+		GlStateManager.rotate((player.rotationYaw - f1) * weaponItemRenderer.getHorizontalSpeed(), 0.0F, 1.0F, 0.0F);
 	}
 
 	private void renderWeapon(WeaponItemRenderer model, ItemStack weapon)
@@ -224,7 +211,7 @@ public class WeaponRenderHandler
 		}
 	}
 
-	private void renderModules(List<ItemStack> modules, WeaponMetadataSection weaponMeta, ItemStack weapon, float ticks, int pass)
+	private void renderModules(List<ItemStack> modules, WeaponMetadataSection weaponMeta, ItemStack weapon, float ticks)
 	{
 		if (modules != null)
 		{
@@ -234,18 +221,18 @@ public class WeaponRenderHandler
 				if (render != null)
 				{
 					GlStateManager.pushMatrix();
-					render.renderModule(weaponMeta, weapon, module, ticks, pass);
+					render.renderModule(weaponMeta, weapon, module, ticks);
 					GlStateManager.popMatrix();
 				}
 			}
 		}
 	}
 
-	private void renderLayers(WeaponMetadataSection weaponMeta, ItemStack weapon, float ticks, int pass)
+	private void renderLayers(WeaponMetadataSection weaponMeta, ItemStack weapon, float ticks)
 	{
 		for (IWeaponLayer layer : weaponLayers)
 		{
-			layer.renderLayer(weaponMeta, weapon, ticks, pass);
+			layer.renderLayer(weaponMeta, weapon, ticks);
 		}
 	}
 
