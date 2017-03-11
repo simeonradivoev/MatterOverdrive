@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import matteroverdrive.tile.TileEntityInscriber;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.shadowfacts.shadowmc.recipe.Recipe;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -38,9 +39,9 @@ public class InscriberRecipe extends Recipe<TileEntityInscriber>
 				ItemStack.areItemsEqual(secondary, this.sec);
 	}
 
-	public ItemStack getOutput()
+	public ItemStack getOutput(TileEntityInscriber machine)
 	{
-		return output;
+		return output.copy();
 	}
 
 	@Override
@@ -71,34 +72,6 @@ public class InscriberRecipe extends Recipe<TileEntityInscriber>
 				}
 			}
 		}
-	}
-
-	public int getEnergy() {
-		// TODO Auto-generated method stub
-		return energy;
-	}
-
-	public int getTime() {
-		// TODO Auto-generated method stub
-		return time;
-	}
-
-
-	public ItemStack getMain() {
-		
-		// TODO Auto-generated method stub
-		return main;
-	}
-
-	@Override
-	public ItemStack getOutput(TileEntityInscriber machine) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public ItemStack getSec() {
-		// TODO Auto-generated method stub
-		return sec;
 	}
 
 }

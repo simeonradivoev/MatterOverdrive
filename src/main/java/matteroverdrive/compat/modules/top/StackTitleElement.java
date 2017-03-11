@@ -26,10 +26,6 @@ public class StackTitleElement implements IElement
 		this(NetworkTools.readItemStack(buf));
 	}
 
-	public StackTitleElement(ItemStack readItemStack) {
-		// TODO Auto-generated constructor stub
-	}
-
 	@Override
 	public void render(int x, int y)
 	{

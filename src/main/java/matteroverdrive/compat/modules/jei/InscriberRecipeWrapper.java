@@ -89,16 +89,4 @@ public class InscriberRecipeWrapper implements IRecipeWrapper
 		return false;
 	}
 
-	@Override
-	public List getInputs() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List getOutputs() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }
