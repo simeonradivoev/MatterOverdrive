@@ -602,7 +602,7 @@ public class TileEntityMachineDimensionalPylon extends MOTileEntityMachineMatter
 		{
 			return true;
 		}
-		return ((TileEntity)this).hasCapability(capability, facing);
+		return super.hasCapability(capability, facing);
 	}
 
 	@Nonnull
@@ -614,6 +614,6 @@ public class TileEntityMachineDimensionalPylon extends MOTileEntityMachineMatter
 		{
 			return (T)matterStorage;
 		}
-		return ((TileEntity)this).getCapability(capability, facing);
+		return super.getCapability(capability, facing);
 	}
 }
