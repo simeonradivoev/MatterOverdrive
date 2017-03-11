@@ -27,6 +27,7 @@ import matteroverdrive.starmap.GalaxyServer;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -90,6 +91,14 @@ public class CommonProxy
 
 	public void registerItemModel(Block block, int meta, String path) {
 		registerItemModel(Item.getItemFromBlock(block), meta, path);
+	}
+
+	public boolean hasTranslation(String key) {
+		return I18n.canTranslate(key);
+	}
+
+	public String translateToLocal(String key, Object... params) {
+		return I18n.translateToLocalFormatted(key, params);
 	}
 
 }

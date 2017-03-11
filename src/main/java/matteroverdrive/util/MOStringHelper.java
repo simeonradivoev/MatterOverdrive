@@ -18,10 +18,10 @@
 
 package matteroverdrive.util;
 
+import matteroverdrive.MatterOverdrive;
 import matteroverdrive.Reference;
 import matteroverdrive.api.inventory.UpgradeTypes;
 import matteroverdrive.api.starmap.PlanetStatType;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
@@ -104,29 +104,29 @@ public class MOStringHelper
 		return message.substring(0, MathHelper.clamp_int(Math.round(messageCount * percent), 0, messageCount));
 	}
 
-	public static boolean hasTranslation(String string)
+	public static boolean hasTranslation(String key)
 	{
-		return I18n.hasKey(string);
+		return MatterOverdrive.proxy.hasTranslation(key);
 	}
 
-	public static String translateToLocal(String string, Object... params)
+	public static String translateToLocal(String key, Object... params)
 	{
-		return I18n.format(string, params);
+		return MatterOverdrive.proxy.translateToLocal(key, params);
 	}
 
 	public static String translateToLocal(PlanetStatType statType)
 	{
-		return I18n.format("planet_stat." + statType.getUnlocalizedName() + ".name");
+		return translateToLocal("planet_stat." + statType.getUnlocalizedName() + ".name");
 	}
 
 	public static String translateToLocal(UpgradeTypes type)
 	{
-		return I18n.format("upgradetype." + type.name() + ".name");
+		return translateToLocal("upgradetype." + type.name() + ".name");
 	}
 
 	public static String weaponStatTranslateToLocal(int type)
 	{
-		return I18n.format("weaponstat." + type + ".name");
+		return translateToLocal("weaponstat." + type + ".name");
 	}
 
 	public static String toInfo(UpgradeTypes type, double value, boolean good)

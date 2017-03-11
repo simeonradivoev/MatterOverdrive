@@ -40,6 +40,7 @@ import matteroverdrive.starmap.GalaxyClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -198,5 +199,15 @@ public class ClientProxy extends CommonProxy
 	public void registerItemModel(Item item, int meta, String path)
 	{
 		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(Reference.MOD_ID + ":" + path, "inventory"));
+	}
+
+	@Override
+	public boolean hasTranslation(String key) {
+		return I18n.hasKey(key);
+	}
+
+	@Override
+	public String translateToLocal(String key, Object... params) {
+		return I18n.format(key, params);
 	}
 }
