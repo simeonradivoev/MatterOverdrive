@@ -57,20 +57,18 @@ public class EntityRendererRangedRougeAndroid extends EntityRendererRougeAndroid
     }*/
 
 	@Override
-	protected ResourceLocation getEntityTexture(Entity entity)
+	protected ResourceLocation getEntityTexture(EntityRangedRogueAndroidMob entity)
 	{
 		return texture;
 	}
 
 	@Override
-	public void doRender(EntityLiving entityLiving, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_)
+	public void doRender(EntityRangedRogueAndroidMob entity, double x, double y, double z, float entityYaw, float partialTicks)
 	{
-		if (entityLiving instanceof EntityRougeAndroidMob)
-		{
-			visorModel.setColor(new Color(((EntityRougeAndroidMob)entityLiving).getVisorColor()));
-		}
+		visorModel.setColor(new Color(entity.getVisorColor()));
 
 		this.modelBipedMain.rightArmPose = ModelBiped.ArmPose.BOW_AND_ARROW;
-		super.doRender(entityLiving, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
+		super.doRender(entity, x, y, z, entityYaw, partialTicks);
 	}
+
 }

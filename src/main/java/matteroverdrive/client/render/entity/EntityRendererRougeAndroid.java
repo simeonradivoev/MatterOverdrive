@@ -36,7 +36,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Created by Simeon on 5/26/2015.
  */
 @SideOnly(Side.CLIENT)
-public class EntityRendererRougeAndroid<T extends EntityRougeAndroidMob> extends RenderBiped
+public class EntityRendererRougeAndroid<T extends EntityRougeAndroidMob> extends RenderBiped<T>
 {
 	public static final ResourceLocation texture = new ResourceLocation(Reference.PATH_ENTITIES + "android.png");
 	public static final ResourceLocation texture_hologram = new ResourceLocation(Reference.PATH_ENTITIES + "android_holo.png");
@@ -52,7 +52,8 @@ public class EntityRendererRougeAndroid<T extends EntityRougeAndroidMob> extends
 		this(renderManager, new ModelBiped(), 0, hologram);
 	}
 
-	protected ResourceLocation getEntityTexture(Entity entity)
+	@Override
+	protected ResourceLocation getEntityTexture(T entity)
 	{
 		if (hologram)
 		{
@@ -65,28 +66,19 @@ public class EntityRendererRougeAndroid<T extends EntityRougeAndroidMob> extends
 	}
 
 	@Override
-	protected boolean canRenderName(EntityLiving entityLiving)
+	protected boolean canRenderName(T entity)
 	{
-		return entityLiving.getTeam() != null || Minecraft.getMinecraft().thePlayer.getDistanceToEntity(entityLiving) < 18;
+		return entity.getTeam() != null || Minecraft.getMinecraft().thePlayer.getDistanceToEntity(entity) < 18;
 	}
 
 	@Override
-	protected void preRenderCallback(EntityLivingBase entityLiving, float p_77041_2_)
+	protected void preRenderCallback(T entity, float partialTicks)
 	{
-		if (entityLiving instanceof EntityRougeAndroidMob)
+		if (entity.getIsLegendary())
 		{
-			if (((EntityRougeAndroidMob)entityLiving).getIsLegendary())
-			{
-				GlStateManager.scale(1.5, 1.5, 1.5);
-			}
+			GlStateManager.scale(1.5, 1.5, 1.5);
 		}
-		super.preRenderCallback(entityLiving, p_77041_2_);
+		super.preRenderCallback(entity, partialTicks);
 	}
 
-	@Override
-	public void doRender(EntityLiving entity, double x, double y, double z, float entityYaw, float partialTicks)
-	{
-		super.doRender(entity, x, y, z, entityYaw, partialTicks);
-		//this.renderLeash(entity, x, y, z, entityYaw, partialTicks);
-	}
 }
