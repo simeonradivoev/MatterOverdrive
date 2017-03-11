@@ -24,7 +24,7 @@ public class BlockSpacetimeAccelerator extends MOBlockMachine<TileEntityMachineS
 		setHardness(20.0F);
 		this.setResistance(9.0f);
 		this.setHarvestLevel("pickaxe", 2);
-		//setBoundingBox(new AxisAlignedBB(4/16d, 0, 4/16d, 12/16d, 1, 12/16d));
+		setBoundingBox(new AxisAlignedBB(4/16d, 0, 4/16d, 12/16d, 1, 12/16d));
 		setLightLevel(1);
 		setHasGui(true);
 	}

@@ -19,7 +19,7 @@ public class BlockWeaponStation extends MOBlockMachine<TileEntityWeaponStation>
 	public BlockWeaponStation(Material material, String name)
 	{
 		super(material, name);
-		//setBoundingBox(new AxisAlignedBB(0, 0, 0, 1, 9/16d, 1));
+		setBoundingBox(new AxisAlignedBB(0, 0, 0, 1, 9/16d, 1));
 		setHardness(20.0F);
 		this.setResistance(9.0f);
 		this.setHarvestLevel("pickaxe", 2);

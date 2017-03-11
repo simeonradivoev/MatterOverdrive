@@ -47,7 +47,7 @@ public class BlockHoloSign extends BlockMonitor<TileEntityHoloSign> implements I
 	public BlockHoloSign(Material material, String name)
 	{
 		super(material, name);
-		//setBoundingBox(new AxisAlignedBB(0, 1, 0, 1, 14/16d, 1));
+		setBoundingBox(new AxisAlignedBB(0, 1, 0, 1, 14/16d, 1));
 		this.isBlockContainer = true;
 		this.setHardness(20f);
 		setHasRotation();
