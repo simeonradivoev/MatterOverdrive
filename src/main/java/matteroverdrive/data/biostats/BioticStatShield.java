@@ -248,7 +248,7 @@ public class BioticStatShield extends AbstractBioticStat implements IConfigSubsc
 	}
 
 	@Override
-	public Multimap attributes(AndroidPlayer androidPlayer, int level)
+	public Multimap<String, AttributeModifier> attributes(AndroidPlayer androidPlayer, int level)
 	{
 		//Multimap multimap = HashMultimap.create();
 		//multimap.put(SharedMonsterAttributes.movementSpeed.getAttributeUnlocalizedName(),modifyer);

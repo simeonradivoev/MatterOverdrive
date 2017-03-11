@@ -5,6 +5,7 @@ import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.util.MOEnergyHelper;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.util.math.Vec3d;
@@ -87,7 +88,7 @@ public class BioticStatItemMagnet extends AbstractBioticStat
 	}
 
 	@Override
-	public Multimap attributes(AndroidPlayer androidPlayer, int level)
+	public Multimap<String, AttributeModifier> attributes(AndroidPlayer androidPlayer, int level)
 	{
 		return null;
 	}

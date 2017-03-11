@@ -13,6 +13,7 @@ import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
@@ -148,7 +149,7 @@ public class BioticStatShockwave extends AbstractBioticStat
 	}
 
 	@Override
-	public Multimap attributes(AndroidPlayer androidPlayer, int level)
+	public Multimap<String, AttributeModifier> attributes(AndroidPlayer androidPlayer, int level)
 	{
 		return null;
 	}

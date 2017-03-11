@@ -5,6 +5,7 @@ import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.util.MOLog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -124,7 +125,7 @@ public class BioticStatAirDash extends AbstractBioticStat
 	}
 
 	@Override
-	public Multimap attributes(AndroidPlayer androidPlayer, int level)
+	public Multimap<String, AttributeModifier> attributes(AndroidPlayer androidPlayer, int level)
 	{
 		return null;
 	}

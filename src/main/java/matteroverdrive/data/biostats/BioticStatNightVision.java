@@ -29,6 +29,7 @@ import matteroverdrive.util.MOEnergyHelper;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundCategory;
@@ -152,7 +153,7 @@ public class BioticStatNightVision extends AbstractBioticStat implements IConfig
 	}
 
 	@Override
-	public Multimap attributes(AndroidPlayer androidPlayer, int level)
+	public Multimap<String, AttributeModifier> attributes(AndroidPlayer androidPlayer, int level)
 	{
 		return null;
 	}

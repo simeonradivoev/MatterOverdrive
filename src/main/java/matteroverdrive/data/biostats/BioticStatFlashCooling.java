@@ -9,6 +9,7 @@ import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.util.MOEnergyHelper;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextFormatting;
@@ -86,7 +87,7 @@ public class BioticStatFlashCooling extends AbstractBioticStat
 	}
 
 	@Override
-	public Multimap attributes(AndroidPlayer androidPlayer, int level)
+	public Multimap<String, AttributeModifier> attributes(AndroidPlayer androidPlayer, int level)
 	{
 		return null;
 	}

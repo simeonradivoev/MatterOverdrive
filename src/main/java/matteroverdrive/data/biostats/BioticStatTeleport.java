@@ -31,6 +31,7 @@ import matteroverdrive.util.MOPhysicsHelper;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.settings.GameSettings;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -202,7 +203,7 @@ public class BioticStatTeleport extends AbstractBioticStat implements IConfigSub
 	}
 
 	@Override
-	public Multimap attributes(AndroidPlayer androidPlayer, int level)
+	public Multimap<String, AttributeModifier> attributes(AndroidPlayer androidPlayer, int level)
 	{
 		return null;
 	}

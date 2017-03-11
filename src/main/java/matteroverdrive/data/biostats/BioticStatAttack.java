@@ -24,6 +24,7 @@ import matteroverdrive.data.MOAttributeModifier;
 import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
@@ -81,9 +82,9 @@ public class BioticStatAttack extends AbstractBioticStat
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Multimap attributes(AndroidPlayer androidPlayer, int level)
+	public Multimap<String, AttributeModifier> attributes(AndroidPlayer androidPlayer, int level)
 	{
-		Multimap multimap = HashMultimap.create();
+		Multimap<String, AttributeModifier> multimap = HashMultimap.create();
 		multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(), new MOAttributeModifier(modifierID, "Android Attack Damage", getAttackPower(level), 1).setSaved(false));
 		return multimap;
 	}

@@ -24,6 +24,7 @@ import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOStringHelper;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
@@ -102,7 +103,7 @@ public class BioticStatHighJump extends AbstractBioticStat implements IConfigSub
 	}
 
 	@Override
-	public Multimap attributes(AndroidPlayer androidPlayer, int level)
+	public Multimap<String, AttributeModifier> attributes(AndroidPlayer androidPlayer, int level)
 	{
 		return null;
 	}

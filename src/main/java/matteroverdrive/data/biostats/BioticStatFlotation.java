@@ -20,6 +20,7 @@ package matteroverdrive.data.biostats;
 
 import com.google.common.collect.Multimap;
 import matteroverdrive.entity.android_player.AndroidPlayer;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 /**
@@ -72,7 +73,7 @@ public class BioticStatFlotation extends AbstractBioticStat
 	}
 
 	@Override
-	public Multimap attributes(AndroidPlayer androidPlayer, int level)
+	public Multimap<String, AttributeModifier> attributes(AndroidPlayer androidPlayer, int level)
 	{
 		return null;
 	}

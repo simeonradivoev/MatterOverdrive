@@ -24,6 +24,7 @@ import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.init.MatterOverdriveSounds;
 import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOEnergyHelper;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -112,7 +113,7 @@ public class BioticStatCloak extends AbstractBioticStat implements IConfigSubscr
 	}
 
 	@Override
-	public Multimap attributes(AndroidPlayer androidPlayer, int level)
+	public Multimap<String, AttributeModifier> attributes(AndroidPlayer androidPlayer, int level)
 	{
 		return null;
 	}

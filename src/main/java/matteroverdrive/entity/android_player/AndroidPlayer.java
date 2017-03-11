@@ -732,7 +732,7 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
 	public void updateStatModifyers(IBioticStat stat)
 	{
 		int unlockedLevel = getUnlockedLevel(stat);
-		Multimap multimap = stat.attributes(this, unlockedLevel);
+		Multimap<String, AttributeModifier> multimap = stat.attributes(this, unlockedLevel);
 		if (multimap != null)
 		{
 			if (isAndroid())
@@ -765,7 +765,7 @@ public class AndroidPlayer implements IEnergyStorage, IAndroid
 		for (IBioticStat stat : MatterOverdrive.statRegistry.getStats())
 		{
 			int unlockedLevel = getUnlockedLevel(stat);
-			Multimap multimap = stat.attributes(this, unlockedLevel);
+			Multimap<String, AttributeModifier> multimap = stat.attributes(this, unlockedLevel);
 			if (multimap != null)
 			{
 				player.getAttributeMap().removeAttributeModifiers(multimap);

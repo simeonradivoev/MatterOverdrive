@@ -24,6 +24,7 @@ import matteroverdrive.client.render.HoloIcons;
 import matteroverdrive.entity.android_player.AndroidAttributes;
 import matteroverdrive.entity.android_player.AndroidPlayer;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -140,7 +141,7 @@ public interface IBioticStat
 	 * @see AndroidAttributes
 	 * @see net.minecraft.entity.SharedMonsterAttributes
 	 */
-	Multimap attributes(AndroidPlayer androidPlayer, int level);
+	Multimap<String, AttributeModifier> attributes(AndroidPlayer androidPlayer, int level);
 
 	/**
 	 * Returns the root of this stat.

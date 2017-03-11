@@ -26,6 +26,7 @@ import matteroverdrive.handler.ConfigurationHandler;
 import matteroverdrive.util.IConfigSubscriber;
 import matteroverdrive.util.MOStringHelper;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
@@ -93,9 +94,9 @@ public class BiostatNanobots extends AbstractBioticStat implements IConfigSubscr
 	}
 
 	@Override
-	public Multimap attributes(AndroidPlayer androidPlayer, int level)
+	public Multimap<String, AttributeModifier> attributes(AndroidPlayer androidPlayer, int level)
 	{
-		Multimap multimap = HashMultimap.create();
+		Multimap<String, AttributeModifier> multimap = HashMultimap.create();
 		multimap.put(SharedMonsterAttributes.MAX_HEALTH.getAttributeUnlocalizedName(), new MOAttributeModifier(modifierID, "Android Health", getHealthBoost(level), 0).setSaved(false));
 		return multimap;
 	}

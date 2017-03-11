@@ -21,6 +21,7 @@ package matteroverdrive.data.biostats;
 import com.google.common.collect.Multimap;
 import matteroverdrive.entity.android_player.AndroidPlayer;
 import matteroverdrive.util.MOStringHelper;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -79,7 +80,7 @@ public class BioticStatNanoArmor extends AbstractBioticStat
 	}
 
 	@Override
-	public Multimap attributes(AndroidPlayer androidPlayer, int level)
+	public Multimap<String, AttributeModifier> attributes(AndroidPlayer androidPlayer, int level)
 	{
 		return null;
 	}
