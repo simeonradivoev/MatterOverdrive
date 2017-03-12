@@ -154,8 +154,8 @@ public class RenderWeaponsBeam extends RenderBeam<EntityPlayer>
 	protected boolean shouldRenderBeam(EntityPlayer entity)
 	{
 		return entity.isHandActive() &&
-				(entity.getActiveItemStack().getItem() instanceof Phaser ||
-						entity.getActiveItemStack().getItem() instanceof OmniTool);
+				entity.getActiveItemStack() != null &&
+				(entity.getActiveItemStack().getItem() instanceof Phaser || entity.getActiveItemStack().getItem() instanceof OmniTool);
 	}
 
 	@Override
