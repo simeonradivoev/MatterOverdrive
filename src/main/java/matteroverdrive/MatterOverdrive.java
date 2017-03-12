@@ -76,7 +76,6 @@ public class MatterOverdrive
 	public static ConfigurationHandler configHandler;
 	public static GuiHandler guiHandler;
 	public static PacketPipeline packetPipeline;
-	public static BucketHandler bucketHandler;
 	public static MatterOverdriveWorld moWorld;
 	public static EntityHandler entityHandler;
 	public static MatterRegistry matterRegistry;
@@ -117,7 +116,6 @@ public class MatterOverdrive
 		entityHandler = new EntityHandler();
 		configHandler = new ConfigurationHandler(event.getModConfigurationDirectory());
 		playerEventHandler = new PlayerEventHandler(configHandler);
-		bucketHandler = new BucketHandler();
 		matterRegistrationHandler = new MatterRegistrationHandler();
 		weaponFactory = new WeaponFactory();
 		androidPartsFactory = new AndroidPartsFactory();
@@ -147,7 +145,6 @@ public class MatterOverdrive
 		MinecraftForge.EVENT_BUS.register(tickHandler);
 		MinecraftForge.EVENT_BUS.register(playerEventHandler);
 		MinecraftForge.EVENT_BUS.register(playerEventHandler);
-		MinecraftForge.EVENT_BUS.register(bucketHandler);
 		MinecraftForge.EVENT_BUS.register(blockHandler);
 		moWorld = new MatterOverdriveWorld(configHandler);
 		MatterOverdriveEntities.init(event, configHandler);
