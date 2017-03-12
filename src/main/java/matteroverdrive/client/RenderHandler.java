@@ -506,8 +506,6 @@ public class RenderHandler
 		regItemRender(MatterOverdrive.items.hc_battery);
 		regItemRender(MatterOverdrive.items.creative_battery);
 		regItemRender(MatterOverdrive.items.energyPack);
-		regItemRender(MatterOverdrive.items.matterContainer);
-		regItemRender(MatterOverdrive.items.matterContainerFull);
 		regItemRender(MatterOverdrive.items.pattern_drive);
 		//regItemRender(MatterOverdrive.items.creativePatternDrive);
 		regItemRender(MatterOverdrive.items.spacetime_equalizer);
@@ -600,7 +598,17 @@ public class RenderHandler
 		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack,tintIndex) -> tintIndex == 1 ? Reference.COLOR_HOLO_RED.getColor() : -1,MatterOverdrive.items.creative_battery);
 		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack,tintIndex) -> tintIndex == 1 ? Reference.COLOR_YELLOW_STRIPES.getColor() : -1,MatterOverdrive.items.networkFlashDrive);
 		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack,tintIndex) -> tintIndex == 1 ? Reference.COLOR_HOLO_GREEN.getColor() : -1,MatterOverdrive.items.transportFlashDrive);
-		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack,tintIndex) -> tintIndex == 1 ? Reference.COLOR_MATTER.getColor() : tintIndex == 2 ? Reference.COLOR_YELLOW_STRIPES.getColor() : -1,MatterOverdrive.items.matterContainerFull);
+		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack, tintIndex) -> {
+			switch (tintIndex) {
+				case 1:
+					return Reference.COLOR_YELLOW_STRIPES.getColor();
+				case 2:
+				case 3:
+					return Reference.COLOR_MATTER.getColor();
+				default:
+					return -1;
+			}
+		}, MatterOverdrive.items.matterContainer);
 		FMLClientHandler.instance().getClient().getItemColors().registerItemColorHandler((stack, tintIndex) -> {
 			if (tintIndex == 1 && stack != null && stack.getItem() != null)
 			{

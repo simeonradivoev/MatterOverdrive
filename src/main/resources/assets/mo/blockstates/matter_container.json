@@ -1,0 +1,27 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "mo:item/base",
+		"textures": {
+			"layer0": "mo:items/container",
+			"layer1": "mo:items/container_bottom_overlay"
+		}
+	},
+	"variants": {
+		"level": {
+			"empty": {
+			},
+			"partial": {
+				"textures": {
+					"layer2": "mo:items/container_bottom_full"
+				}
+			},
+			"full": {
+				"textures": {
+					"layer2": "mo:items/container_bottom_full",
+					"layer3": "mo:items/container_top_full"
+				}
+			}
+		}
+	}
+}

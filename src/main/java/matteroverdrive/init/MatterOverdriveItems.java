@@ -69,7 +69,6 @@ public class MatterOverdriveItems extends ModItems
 	public Battery hc_battery;
 	public Battery creative_battery;
 	public MatterContainer matterContainer;
-	public MatterContainer matterContainerFull;
 
 //	Crafting
 	public MOBaseItem me_conversion_matrix;
@@ -163,8 +162,7 @@ public class MatterOverdriveItems extends ModItems
 		battery = register(new Battery("battery", 1 << 19, 400, 800));
 		hc_battery = register(new Battery("hc_battery", 1 << 20, 4096, 4096));
 		creative_battery = register(new CreativeBattery("creative_battery", 1 << 24, 8192, 8192));
-		matterContainer = register(new MatterContainer("matter_container", false));
-		matterContainerFull = register(new MatterContainer("matter_container_full", true));
+		matterContainer = register(new MatterContainer("matter_container"));
 
 //		Crafting
 		me_conversion_matrix = register(new MOBaseItem("me_conversion_matrix"));

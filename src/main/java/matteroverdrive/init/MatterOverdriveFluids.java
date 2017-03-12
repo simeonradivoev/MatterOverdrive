@@ -50,6 +50,6 @@ public class MatterOverdriveFluids
 	@SuppressWarnings("deprecation")
 	private static void registerFluidContainers()
 	{
-		FluidContainerRegistry.registerFluidContainer(new FluidStack(matterPlasma, 32), new ItemStack(MatterOverdrive.items.matterContainerFull), new ItemStack(MatterOverdrive.items.matterContainer));
+//		FluidContainerRegistry.registerFluidContainer(new FluidStack(matterPlasma, 32), new ItemStack(MatterOverdrive.items.matterContainerFull), new ItemStack(MatterOverdrive.items.matterContainer));
 	}
 }

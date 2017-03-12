@@ -89,7 +89,7 @@ public class MatterOverdriveGuides
 		//Matter
 		addEntry(generalCategory, new MOGuideEntry("matter_transport").setStackIcons(MatterOverdrive.blocks.heavy_matter_pipe).setGroup("matter"), 6, 0);
 		addEntry(generalCategory, new MOGuideEntry("matter_fail").setStackIcons(MatterOverdrive.items.matter_dust).setGroup("matter"), 7, 0);
-		addEntry(generalCategory, new MOGuideEntry("matter_plasma", new ItemStack(MatterOverdrive.items.matterContainerFull)).setGroup("matter"), 6, 1);
+		addEntry(generalCategory, new MOGuideEntry("matter_plasma", MatterOverdrive.items.matterContainer.getFullStack()).setGroup("matter"), 6, 1);
 		addEntry(generalCategory, new MOGuideEntryItem(MatterOverdrive.items.matter_scanner).setGroup("matter"), 7, 1);
 		addEntry(generalCategory, new MOGuideEntryItem(MatterOverdrive.items.pattern_drive).setGroup("matter"), 6, 2);
 		addEntry(generalCategory, new MOGuideEntryItem(MatterOverdrive.items.portableDecomposer).setGroup("matter"), 7, 2);
