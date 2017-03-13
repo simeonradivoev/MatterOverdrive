@@ -85,13 +85,6 @@ public class BlockFusionReactorController extends MOBlockMachine<TileEntityMachi
 	}
 
 	@Override
-	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
-	{
-		EnumFacing l = BlockPistonBase.getFacingFromEntity(pos, placer);
-		worldIn.setBlockState(pos, state.withProperty(MOBlock.PROPERTY_DIRECTION, l), 2);
-	}
-
-	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		TileEntity tileEntity = worldIn.getTileEntity(pos);

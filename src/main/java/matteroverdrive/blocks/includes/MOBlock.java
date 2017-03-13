@@ -30,6 +30,7 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -148,15 +149,12 @@ public class MOBlock extends Block implements ItemModelProvider
 		}
 	}
 
-	/**
-	 * Called when the block is placed in the world.
-	 */
 	@Override
-	public IBlockState onBlockPlaced(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, ItemStack stack)
 	{
 		if (hasRotation)
 		{
-			EnumFacing enumfacing = (placer == null) ? EnumFacing.NORTH : EnumFacing.fromAngle(placer.rotationYaw).getOpposite();
+			EnumFacing enumfacing = EnumFacing.fromAngle(placer.rotationYaw).getOpposite();
 			return getDefaultState().withProperty(PROPERTY_DIRECTION, enumfacing);
 		}
 		return getDefaultState();

@@ -83,20 +83,4 @@ public class BlockGravitationalStabilizer extends MOBlockMachine<TileEntityMachi
 
 	}
 
-	@Override
-	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
-	{
-		EnumFacing l = BlockPistonBase.getFacingFromEntity(pos, placer);
-
-
-		if (placer.isSneaking())
-		{
-			worldIn.setBlockState(pos, state.withProperty(MOBlock.PROPERTY_DIRECTION, l.getOpposite()), 2);
-		}
-		else
-		{
-			worldIn.setBlockState(pos, state.withProperty(MOBlock.PROPERTY_DIRECTION, l), 2);
-		}
-
-	}
 }
