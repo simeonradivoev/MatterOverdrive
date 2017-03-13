@@ -134,7 +134,7 @@ public class MatterOverdriveItems extends ModItems
 	public PortableDecomposer portableDecomposer;
 	public SecurityProtocol security_protocol;
 	public SpacetimeEqualizer spacetime_equalizer;
-
+	public ItemRecordTransformation recordTransformation;
 
 
 	@Override
@@ -228,7 +228,7 @@ public class MatterOverdriveItems extends ModItems
 		portableDecomposer = register(new PortableDecomposer("portable_decomposer", 128000, 256, 512, 0.1f));
 		security_protocol = register(new SecurityProtocol("security_protocol"));
 		spacetime_equalizer = register(new SpacetimeEqualizer("spacetime_equalizer"));
-
+		recordTransformation = register(new ItemRecordTransformation());
 
 
 		MOLog.info("Finished registering items");
@@ -258,9 +258,10 @@ public class MatterOverdriveItems extends ModItems
 	{
 		weapon_module_color.addToDunguns();
 		androidPill.addToDunguns();
-		addToDungons(emergency_ration, 1, 8, 6);
-		addToDungons(earl_gray_tea, 1, 2, 2);
-		addToDungons(romulan_ale, 1, 2, 2);
+//		addToDungons(emergency_ration, 1, 8, 6);
+//		addToDungons(earl_gray_tea, 1, 2, 2);
+//		addToDungons(romulan_ale, 1, 2, 2);
+//		addToDungons(recordTransformation, 1, 2, 1);
 
 		addToMODungons();
 	}

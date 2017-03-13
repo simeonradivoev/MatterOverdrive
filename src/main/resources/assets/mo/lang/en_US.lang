@@ -95,6 +95,7 @@ item.weapon_handle.name=Weapon Handle
 item.plasma_core.name=Plasma Core
 item.portable_decomposer.name=Portable Decomposer
 item.portable_decomposer.details=Decomposes picked up items into Matter Plasma
+item.record.mo.transformation.desc=BoxCat Games - Trace Route
 
 //////////// Upgrades ////////////
 item.upgrade.speed.name=Speed Upgrade
