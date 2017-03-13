@@ -36,6 +36,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -348,6 +349,7 @@ public class OmniTool extends EnergyWeapon
 		{
 			if (canFire(itemStack, world, entityPlayer))
 			{
+				if (!itemStack.hasTagCompound()) itemStack.setTagCompound(new NBTTagCompound());
 				itemStack.getTagCompound().setLong("LastShot", world.getTotalWorldTime());
 				Vec3d dir = entityPlayer.getLook(1);
 				Vec3d pos = getFirePosition(entityPlayer, dir, Mouse.isButtonDown(1));
