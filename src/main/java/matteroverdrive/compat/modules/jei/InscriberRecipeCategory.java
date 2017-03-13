@@ -4,7 +4,8 @@ import matteroverdrive.Reference;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.recipe.IRecipeCategory;
+import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.BlankRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -17,7 +18,7 @@ import java.util.List;
 /**
  * @author shadowfacts
  */
-public class InscriberRecipeCategory implements IRecipeCategory<InscriberRecipeWrapper>
+public class InscriberRecipeCategory extends BlankRecipeCategory<InscriberRecipeWrapper>
 {
 
 	public static final String UID = "mo.inscriber";
@@ -64,21 +65,16 @@ public class InscriberRecipeCategory implements IRecipeCategory<InscriberRecipeW
 	}
 
 	@Override
-	public void drawAnimations(@Nonnull Minecraft minecraft)
+	public void setRecipe(IRecipeLayout recipeLayout, InscriberRecipeWrapper recipe, IIngredients ingredients)
 	{
-
-	}
-
-	@Override
-	public void setRecipe(@Nonnull IRecipeLayout recipeLayout, @Nonnull InscriberRecipeWrapper recipe)
-	{
-		List inputs = recipe.getInputs();
+		List<List<ItemStack>> inputs = ingredients.getInputs(ItemStack.class);
 		recipeLayout.getItemStacks().init(0, true, 9, 14);
-		recipeLayout.getItemStacks().set(0, (ItemStack)inputs.get(0));
+		recipeLayout.getItemStacks().set(0, inputs.get(0));
 		recipeLayout.getItemStacks().init(1, true, 9, 41);
-		recipeLayout.getItemStacks().set(1, (ItemStack)inputs.get(1));
+		recipeLayout.getItemStacks().set(1, inputs.get(1));
 
 		recipeLayout.getItemStacks().init(2, false, 67, 14);
-		recipeLayout.getItemStacks().set(2, (ItemStack)recipe.getOutputs().get(0));
+		recipeLayout.getItemStacks().set(2, ingredients.getOutputs(ItemStack.class));
 	}
+
 }

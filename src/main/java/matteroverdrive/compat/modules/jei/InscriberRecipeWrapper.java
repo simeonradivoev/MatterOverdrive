@@ -6,10 +6,13 @@ import matteroverdrive.Reference;
 import matteroverdrive.data.recipes.InscriberRecipe;
 import matteroverdrive.util.MOEnergyHelper;
 import matteroverdrive.util.RenderUtils;
+import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.BlankRecipeWrapper;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -20,15 +23,13 @@ import java.util.List;
 /**
  * @author shadowfacts
  */
-public class InscriberRecipeWrapper implements IRecipeWrapper
+public class InscriberRecipeWrapper extends BlankRecipeWrapper
 {
 
 	private static final ResourceLocation ARROW = new ResourceLocation(Reference.TEXTURE_ARROW_PROGRESS);
 
-	@Getter
-	private final List inputs;
-	@Getter
-	private final List outputs;
+	private final List<ItemStack> inputs;
+	private final List<ItemStack> outputs;
 	private final int energy;
 	private final int time;
 
@@ -41,20 +42,10 @@ public class InscriberRecipeWrapper implements IRecipeWrapper
 	}
 
 	@Override
-	public List<FluidStack> getFluidInputs()
+	public void getIngredients(IIngredients ingredients)
 	{
-		return ImmutableList.of();
-	}
-
-	@Override
-	public List<FluidStack> getFluidOutputs()
-	{
-		return ImmutableList.of();
-	}
-
-	@Override
-	public void drawInfo(@Nonnull Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY)
-	{
+		ingredients.setInputs(ItemStack.class, inputs);
+		ingredients.setOutputs(ItemStack.class, outputs);
 	}
 
 	@Override
@@ -74,19 +65,6 @@ public class InscriberRecipeWrapper implements IRecipeWrapper
 		String line2 = I18n.format("mo.jei.time", time / 20);
 		int line2W = minecraft.fontRendererObj.getStringWidth(line2);
 		minecraft.fontRendererObj.drawStringWithShadow(line2, 44 + 69 / 2 - (line2W) / 2, 53, Reference.COLOR_HOLO_RED.getColor());
-	}
-
-	@Nullable
-	@Override
-	public List<String> getTooltipStrings(int mouseX, int mouseY)
-	{
-		return ImmutableList.of();
-	}
-
-	@Override
-	public boolean handleClick(@Nonnull Minecraft minecraft, int mouseX, int mouseY, int mouseButton)
-	{
-		return false;
 	}
 
 }

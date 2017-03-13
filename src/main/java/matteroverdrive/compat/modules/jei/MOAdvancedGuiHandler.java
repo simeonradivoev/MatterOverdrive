@@ -1,7 +1,7 @@
 package matteroverdrive.compat.modules.jei;
 
 import matteroverdrive.gui.MOGuiBase;
-import mezz.jei.api.gui.IAdvancedGuiHandler;
+import mezz.jei.api.gui.BlankAdvancedGuiHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -12,8 +12,9 @@ import java.util.List;
 /**
  * @author shadowfacts
  */
-public class MOAdvancedGuiHandler implements IAdvancedGuiHandler<MOGuiBase>
+public class MOAdvancedGuiHandler extends BlankAdvancedGuiHandler<MOGuiBase>
 {
+
 	@Nonnull
 	@Override
 	public Class<MOGuiBase> getGuiContainerClass()
@@ -39,4 +40,5 @@ public class MOAdvancedGuiHandler implements IAdvancedGuiHandler<MOGuiBase>
 
 		return areas;
 	}
+
 }

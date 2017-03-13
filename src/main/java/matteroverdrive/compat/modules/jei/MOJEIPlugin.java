@@ -4,10 +4,7 @@ import matteroverdrive.MatterOverdrive;
 import matteroverdrive.container.ContainerInscriber;
 import matteroverdrive.gui.GuiInscriber;
 import matteroverdrive.init.MatterOverdriveRecipes;
-import mezz.jei.api.IJeiRuntime;
-import mezz.jei.api.IModPlugin;
-import mezz.jei.api.IModRegistry;
-import mezz.jei.api.JEIPlugin;
+import mezz.jei.api.*;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -16,7 +13,7 @@ import javax.annotation.Nonnull;
  * @author shadowfacts
  */
 @JEIPlugin
-public class MOJEIPlugin implements IModPlugin
+public class MOJEIPlugin extends BlankModPlugin
 {
 
 	@Override
@@ -37,12 +34,6 @@ public class MOJEIPlugin implements IModPlugin
 		registry.addAdvancedGuiHandlers(new MOAdvancedGuiHandler());
 
 		registry.getJeiHelpers().getItemBlacklist().addItemToBlacklist(new ItemStack(MatterOverdrive.blocks.boundingBox));
-	}
-
-	@Override
-	public void onRuntimeAvailable(@Nonnull IJeiRuntime jeiRuntime)
-	{
-
 	}
 
 }
