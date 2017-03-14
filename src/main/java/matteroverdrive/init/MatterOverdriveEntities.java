@@ -42,6 +42,7 @@ public class MatterOverdriveEntities
 	public static EntityRogueAndroid rogueandroid;
 
 	public static VillagerRegistry.VillagerProfession MAD_SCIENTIST_PROFESSION;
+	public static VillagerRegistry.VillagerCareer MAD_SCIENTIST_CAREER;
 
 	public static void init(FMLPreInitializationEvent event, ConfigurationHandler configurationHandler)
 	{
@@ -74,6 +75,7 @@ public class MatterOverdriveEntities
 		MatterOverdrive.configHandler.save();
 
 		MAD_SCIENTIST_PROFESSION = new VillagerRegistry.VillagerProfession("mo.mad_scientist", Reference.PATH_ENTITIES + "mad_scientist.png", Reference.PATH_ENTITIES + "hulking_scinetist.png");
+		MAD_SCIENTIST_CAREER = new VillagerRegistry.VillagerCareer(MAD_SCIENTIST_PROFESSION, "mo.mad_scientist");
 		VillagerRegistry.instance().register(MAD_SCIENTIST_PROFESSION);
 	}
 
