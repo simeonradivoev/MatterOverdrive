@@ -66,8 +66,8 @@ public abstract class WeaponItemRenderer implements IPerspectiveAwareModel
 	protected OBJModel weaponModel;
 	protected WeaponMetadataSection weaponMetadata;
 	protected OBJModel.OBJBakedModel bakedModel;
-	private Matrix4f identity;
-	private Map<ItemCameraTransforms.TransformType, Matrix4f> transforms = new HashMap<>();
+	private final Matrix4f identity;
+	protected Map<ItemCameraTransforms.TransformType, Matrix4f> transforms = new HashMap<>();
 
 	public WeaponItemRenderer(ResourceLocation weaponModelLocation)
 	{
@@ -87,9 +87,9 @@ public abstract class WeaponItemRenderer implements IPerspectiveAwareModel
 
 		mat = new Matrix4f();
 		mat.setIdentity();
-		mat.mul(getCombinedRotation(45f, 135f, 0f));
-		mat.setTranslation(new Vector3f(-0.3f, 1.3f, 0f));
-		mat.setScale(1.75f);
+		mat.mul(getCombinedRotation(45f, 120f, 0f));
+		mat.setTranslation(new Vector3f(0f, 1.6f, 0f));
+		mat.setScale(2f);
 		transforms.put(ItemCameraTransforms.TransformType.GUI, mat);
 
 		mat = new Matrix4f();
@@ -148,12 +148,6 @@ public abstract class WeaponItemRenderer implements IPerspectiveAwareModel
 	@Override
 	public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType type)
 	{
-		if (type == ItemCameraTransforms.TransformType.GUI) {
-			Matrix4f mat = new Matrix4f();
-			mat.setIdentity();
-
-			return ImmutablePair.of(this, mat);
-		}
 		Matrix4f mat = transforms.get(type);
 		if (mat == null) mat = identity;
 		return ImmutablePair.of(this, mat);
@@ -243,7 +237,7 @@ public abstract class WeaponItemRenderer implements IPerspectiveAwareModel
 		return ItemOverrideList.NONE;
 	}
 
-	private static Matrix4f getCombinedRotation(float x, float y, float z) {
+	protected static Matrix4f getCombinedRotation(float x, float y, float z) {
 		Matrix4f xMat = new Matrix4f();
 		xMat.rotX((float)Math.toRadians(x));
 		Matrix4f yMat = new Matrix4f();

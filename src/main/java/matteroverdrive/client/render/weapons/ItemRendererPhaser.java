@@ -21,8 +21,12 @@ package matteroverdrive.client.render.weapons;
 import matteroverdrive.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.util.ResourceLocation;
+
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
 
 /**
  * Created by Simeon on 3/11/2015.
@@ -37,6 +41,13 @@ public class ItemRendererPhaser extends WeaponItemRenderer
 	{
 		super(new ResourceLocation(MODEL));
 		phaserTextureColorMask = new ResourceLocation(TEXTURE_COLOR_MASK);
+
+		Matrix4f mat = new Matrix4f();
+		mat.setIdentity();
+		mat.mul(getCombinedRotation(45f, 120f, 0f));
+		mat.setTranslation(new Vector3f(0.2f, 2.1f, 0f));
+		mat.setScale(2.65f);
+		transforms.put(ItemCameraTransforms.TransformType.GUI, mat);
 	}
 
 	@Override
