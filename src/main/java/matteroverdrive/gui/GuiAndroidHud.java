@@ -207,32 +207,29 @@ public class GuiAndroidHud extends Gui implements IConfigSubscriber
 
 	public void renderCrosshair(RenderGameOverlayEvent event)
 	{
-		if (ClientWeaponHandler.ZOOM_TIME == 0)
-		{
-			GlStateManager.pushAttrib();
-			GlStateManager.pushMatrix();
-			float scale = 6 + ClientProxy.instance().getClientWeaponHandler().getEquippedWeaponAccuracyPercent(Minecraft.getMinecraft().thePlayer) * 256;
-			GlStateManager.enableBlend();
-			GlStateManager.tryBlendFuncSeparate(GL11.GL_ONE_MINUS_DST_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR, 1, 0);
-			GlStateManager.enableAlpha();
-			//RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO,0.5f);
-			GlStateManager.color(1, 1, 1);
-			crosshairIcon = ClientProxy.holoIcons.getIcon("crosshair");
-			GlStateManager.translate(event.getResolution().getScaledWidth() / 2, event.getResolution().getScaledHeight() / 2, 0);
-			GlStateManager.pushMatrix();
-			ClientProxy.holoIcons.bindSheet();
-			GlStateManager.rotate(90, 0, 0, 1);
-			ClientProxy.holoIcons.renderIcon(crosshairIcon, -1, -scale);
-			GlStateManager.rotate(90, 0, 0, 1);
-			ClientProxy.holoIcons.renderIcon(crosshairIcon, -2, -scale);
-			GlStateManager.rotate(90, 0, 0, 1);
-			ClientProxy.holoIcons.renderIcon(crosshairIcon, -1.8, -scale + 1);
-			GlStateManager.rotate(90, 0, 0, 1);
-			ClientProxy.holoIcons.renderIcon(crosshairIcon, -1, -scale + 1);
-			GlStateManager.popMatrix();
-			GlStateManager.popMatrix();
-			GlStateManager.popAttrib();
-		}
+		GlStateManager.pushAttrib();
+		GlStateManager.pushMatrix();
+		float scale = 6 + ClientProxy.instance().getClientWeaponHandler().getEquippedWeaponAccuracyPercent(Minecraft.getMinecraft().thePlayer) * 256;
+		GlStateManager.enableBlend();
+		GlStateManager.tryBlendFuncSeparate(GL11.GL_ONE_MINUS_DST_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR, 1, 0);
+		GlStateManager.enableAlpha();
+		//RenderUtils.applyColorWithMultipy(Reference.COLOR_HOLO,0.5f);
+		GlStateManager.color(1, 1, 1);
+		crosshairIcon = ClientProxy.holoIcons.getIcon("crosshair");
+		GlStateManager.translate(event.getResolution().getScaledWidth() / 2, event.getResolution().getScaledHeight() / 2, 0);
+		GlStateManager.pushMatrix();
+		ClientProxy.holoIcons.bindSheet();
+		GlStateManager.rotate(90, 0, 0, 1);
+		ClientProxy.holoIcons.renderIcon(crosshairIcon, -1, -scale);
+		GlStateManager.rotate(90, 0, 0, 1);
+		ClientProxy.holoIcons.renderIcon(crosshairIcon, -2, -scale);
+		GlStateManager.rotate(90, 0, 0, 1);
+		ClientProxy.holoIcons.renderIcon(crosshairIcon, -1.8, -scale + 1);
+		GlStateManager.rotate(90, 0, 0, 1);
+		ClientProxy.holoIcons.renderIcon(crosshairIcon, -1, -scale + 1);
+		GlStateManager.popMatrix();
+		GlStateManager.popMatrix();
+		GlStateManager.popAttrib();
 	}
 
 	public void renderRadialMenu(RenderGameOverlayEvent event)
