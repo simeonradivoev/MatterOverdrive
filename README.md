@@ -40,7 +40,7 @@ Although it may seem overpowered, Matter Overdrive takes a more realistic approa
 * [Androids](https://mo.simeonradivoev.com/android-guide/), become an Android and learn powerful RPG like abilities, such as Teleportation and Forefield Shields.
 
 
-![Matter Overdrive Blocks and Items](https://mo.simeonradivoev.com/wp-content/uploads/2015/05/main_screenshot.png)
+![Matter Overdrive Blocks and Items](https://media-elerium.cursecdn.com/attachments/210/237/main_screenshot.png)
 
 ## Issues
 If you have any crashes, problems or suggestions just open a [new Issue](https://github.com/simeonradivoev/MatterOverdrive/issues/new).
@@ -66,4 +66,4 @@ See the example on [IMC](https://github.com/simeonradivoev/MatterOverdrive/blob/
 ## Donations
 Donations go a long way to helping me continue working on Matter Overdrive, making exiting new features.
 
-[![Donate](https://mo.simeonradivoev.com/wp-content/uploads/2015/06/paypal1.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KGKJSVXZQXWXS)
+[![Donate](https://www.paypalobjects.com/webstatic/en_US/i/btn/png/btn_donate_92x26.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KGKJSVXZQXWXS)
