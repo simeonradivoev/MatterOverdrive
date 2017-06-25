@@ -64,6 +64,6 @@ If your crash or problem was fixed, but is not yet released as a public download
 See the example on [IMC](https://github.com/simeonradivoev/MatterOverdrive/blob/master/src/main/java/matteroverdrive/api/IMC.java) or you can see the [IMC handler](https://github.com/simeonradivoev/MatterOverdrive/blob/master/src/main/java/matteroverdrive/imc/MOIMCHandler.java).
 
 ## Donations
-Donations go a long way to helping me continue working on Matter Overdrive, making exiting new features.
+Donations go a long way to helping me continue working on Matter Overdrive, making exciting new features.
 
 [![Donate](https://www.paypalobjects.com/webstatic/en_US/i/btn/png/btn_donate_92x26.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KGKJSVXZQXWXS)
