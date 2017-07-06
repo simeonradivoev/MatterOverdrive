@@ -50,7 +50,7 @@ If your crash or problem was fixed, but is not yet released as a public download
 1. Clone this repository via 
   - SSH `git clone git@github.com:simeonradivoev/MatterOverdrive.git` or 
   - HTTPS `git clone https://github.com/simeonradivoev/MatterOverdrive.git`
-2. Setup workspace 
+2. Setup workspace (This currently does not work due to a ping timeout on rx14's mvn server.)
   - Decompiled source `gradlew setupDecompWorkspace`
   - Obfuscated source `gradlew setupDevWorkspace`
   - CI server `gradlew setupCIWorkspace`
