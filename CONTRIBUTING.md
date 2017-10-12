@@ -8,3 +8,4 @@ Please make sure to include the following.
 - Matter Overdrive Version
 - A Complete list of any other mods
 - If there is a crash report or error log, put it on [pastebin](https://pastebin.com)
+# I WILL NOT SUPPORT MC VERSION 1.7.10! ANY ISSUES ASKING ME TO DO SO WILL BE CLOSED PROMPTLY.
