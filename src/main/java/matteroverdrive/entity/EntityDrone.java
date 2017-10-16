@@ -46,7 +46,7 @@ public class EntityDrone extends EntityCreature implements IEntityOwnable
 
 		@Nonnull
 		@Override
-		public Optional<UUID> read(@Nonnull PacketBuffer buf) throws IOException
+		public Optional<UUID> read(@Nonnull PacketBuffer buf)
 		{
 			return buf.readBoolean() ? Optional.of(buf.readUuid()) : Optional.empty();
 		}

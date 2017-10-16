@@ -39,6 +39,6 @@ public class WeightedRandomMOWorldGenBuilding extends WeightedRandom.Item
 
 	public int getWeight(Random random, World world, BlockPos pos)
 	{
-		return worldGenBuilding.shouldGenerate(random, world, pos) && worldGenBuilding.isLocationValid(world, pos) ? itemWeight : Math.max(1, (int)(itemWeight * 0.1));
+		return worldGenBuilding.shouldGenerate(random, world, pos) && worldGenBuilding.isLocationValid(world, pos) ? itemWeight : Math.max(1, (int)(itemWeight * 0.5));
 	}
 }

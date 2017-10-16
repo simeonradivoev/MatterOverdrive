@@ -1,6 +1,6 @@
 # Matter Overdrive
 ![alt tag](https://raw.githubusercontent.com/simeonradivoev/MatterOverdrive/master/MatterOverdriveLogo.png)
-
+<!--
 <h2 align="center">
 <a href='https://mo.simeonradivoev.com/'>Website</a> | 
 <a href='https://mo.simeonradivoev.com/category/gettingstarted/'>Getting Started</a> |
@@ -8,7 +8,7 @@
 <a href='https://mo.simeonradivoev.com/download_category/downloads/'>Downloads</a> | 
 <a href='https://mo.simeonradivoev.com/builds/'>Dev Builds</a>
 </h2>
-
+-->
 [![Build Status](https://travis-ci.org/simeonradivoev/MatterOverdrive.svg?branch=1.8.9)](https://travis-ci.org/simeonradivoev/MatterOverdrive)
 
 ## Table of Contents
@@ -28,6 +28,7 @@ Although it may seem overpowered, Matter Overdrive takes a more realistic approa
 * [Simeon Radivoev](simeonradivoev@gmail.com) (DEPRECATED)
 * [Dev_Osmium](mailto:devosmium@gmail.com)
 * [@DevOsmium](https://twitter.com/DevOsmium)
+* [Website](http://devosmium.ddns.net/matteroverdrive/matteroverdrive.html)
 * IRC: **#matteroverdrive** at **irc.esper.net**
 
 ## Features
