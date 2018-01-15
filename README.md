@@ -9,7 +9,12 @@
 <a href='https://mo.simeonradivoev.com/builds/'>Dev Builds</a>
 </h2>
 -->
+
 [![Build Status](https://travis-ci.org/simeonradivoev/MatterOverdrive.svg?branch=1.8.9)](https://travis-ci.org/simeonradivoev/MatterOverdrive)
+
+<aside class="warning">
+### The project is no longer being activly mantained !
+</aside>
 
 ## Table of Contents
 * [About](#about)
