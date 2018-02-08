@@ -1,6 +1,6 @@
 # Matter Overdrive
 
-# THIS REPO IS NOT BEING ACTIVELY MAINTAINED! PLEASE DIRECT ALL ISSUES TO HERE: [https://github.com/Dev-Osmium/MatterOverdrive](https://github.com/Dev-Osmium/MatterOverdrive)
+# THIS REPO IS NOT BEING ACTIVELY MAINTAINED! PLEASE DIRECT ALL ISSUES TO HERE: [https://github.com/MatterOverdrive/MatterOverdrive](https://github.com/MatterOverdrive/MatterOverdrive)
 
 ![alt tag](https://raw.githubusercontent.com/simeonradivoev/MatterOverdrive/master/MatterOverdriveLogo.png)
 <!--
